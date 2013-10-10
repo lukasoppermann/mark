@@ -1,0 +1,49 @@
+# Project Files #
+#################
+*.tmproj
+*.psd
+*.ai
+*.orig
+_*.*
+_*/
+logs/
+log-
+0*_*/
+*cache*/*.php
+sessions/
+storage/
+images/
+media/
+movies/
+files/
+
+# db files #
+############
+database.php
+
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
