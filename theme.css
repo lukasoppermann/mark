@@ -57,9 +57,32 @@ html, body{
 /*------------------*/
 body{
 	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
-    font-weight: 400;
+	font-weight: 400;
 	background: rgb(255,255,255);
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
 /*------------------*/
+#mark{
+	height: 100%;
+	width: 100%;
+}
+#mark{
+	background: rgb(255,255,255);
+	color: rgb(50,50,50);
+}
+.ace_markup{
+	color: rgb(225,225,225);
+}
+#mark .ace_scroller{
+	left: 80px !important;
+	overflow: visible;
+}
+.ace_layer.ace_text-layer{
+	overflow: visible;
+}
+.ace_markup.ace_heading{
+	text-align: right;
+	width: 36px;
+	margin-left: -40px;
+}
