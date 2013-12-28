@@ -1,0 +1,6 @@
+[submodule "mark"]
+	path = mark
+	url = https://github.com/lukasoppermann/mark
+[submodule "codemirror"]
+	path = codemirror
+	url = https://github.com/marijnh/CodeMirror.git
