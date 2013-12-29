@@ -7,49 +7,80 @@
 	<meta name="robots" content="index,follow" />
 	<meta name="language" content="en" />
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport">
-	<link rel="stylesheet" type="text/css" href="./theme.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="./codemirror/lib/codemirror.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="./mark.css" media="screen" />
 	<title>Mark</title>
 </head>
 <body>
-
-<div contentEditable="false" id="mark" class="class"># MARK 0.1
+<textarea class="mark">
+# MARK 0.1
+## headline 2
+### headline 3
+#### headline 4
+##### headline 5
+###### headline 6
 * item
 * item
 some normal copy
-<!-- <h1># MARK 0.1</h1>
-		<h2>## h2 Subheadline</h2>
-		<h3>### h3 Subheadline</h3>
-		<h4>#### h3 Subheadline</h4>
-		<p>A normal paragraph.</p>
-		<blockquote>> This is blockquote</blockquote>
-		<ul>
-			<li><span>-</span> item</li>
-			<li><span>-</span> item</li>
-			<li>- item</li>
-		</ul>
-		<ul>
-			<li>* "item"</li>
-			<li>* item</li>
-			<li>* item</li>
-		</ul>
-		<ul>
-			<li>+ item</li>
-			<li>+ item</li>
-			<li>+ item</li>
-		</ul>
-		<ol>
-			<li>1. item</li>
-			<li>2. item</li>
-			<li>3. item</li>
-		</ol>
-		<span>***</span>
-		<p>Some special text formatting like **bold**</p>
-		<em>*single asterisks*</em>
-		<em>_single underscores_</em>
-		<strong>**double asterisks**</strong>
-		<strong>__double underscores__</strong>
-	</div> -->
-	<script charset="utf-8" src="./src-min-noconflict/ace.js"></script>
+
+[LINK text](http://www.vea.re)
+
+**bold**
+*italic*
+
+1. List
+2. List
+
+- list
+- list
+
+- [ ] item
+- [x] done
+
+```javascript
+for (var i = 0; i < items.length; i++) {
+    console.log(items[i], i); // log them
+}
+```
+
+```html
+<html>
+<ul>
+	<li>list</li>
+</ul>
+</html>
+```
+
+```css
+#id{
+	color: red;
+}
+.class{
+	opacity: 0.5;
+}
+```
+
+> Quote
+>> quote in quote
+</textarea>
+	<script charset="utf-8" src="./codemirror/lib/codemirror.js"></script>
+	<script src="./codemirror/mode/xml/xml.js"></script>
+	<script src="./codemirror/mode/markdown/markdown.js"></script>
+	<script src="./codemirror/mode/gfm/gfm.js"></script>
+	<script src="./codemirror/mode/javascript/javascript.js"></script>
+	<script src="./codemirror/mode/css/css.js"></script>
+	<script src="./codemirror/mode/htmlmixed/htmlmixed.js"></script>
+	<script src="./codemirror/addon/fold/xml-fold.js"></script>
+	<script src="./codemirror/addon/edit/continuelist.js"></script>
+	<script src="./codemirror/addon/edit/matchbrackets.js"></script>
+	<script src="./codemirror/addon/edit/closebrackets.js"></script>
+	<script src="./codemirror/addon/edit/matchtags.js"></script>
+	<script src="./codemirror/addon/edit/trailingspace.js"></script>	
+	<script src="./codemirror/addon/edit/closetag.js"></script>	
+	<script src="./codemirror/addon/selection/mark-selection.js"></script>
+	<script src="./codemirror/addon/selection/active-line.js"></script>
+	<script src="./codemirror/addon/display/placeholder.js"></script>	
+	<script src="./codemirror/addon/mode/overlay.js"></script>	
 	<script charset="utf-8" src="./mark-0.0.1.js"></script>
 </body>
 </html>
