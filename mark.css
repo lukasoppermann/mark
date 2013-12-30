@@ -187,5 +187,12 @@ body{
 	top: 0;
 	left: 40%;
 }
+#editOptions{
+	position: absolute;
+	height: 30px;
+	width: 100px;
+	background: rgb(60,60,60);
+	border-radius: 3px;
+}
 
 
