@@ -41,9 +41,9 @@ Array.prototype.slice.call(nodeList,0).forEach(function(editor){
 		}
 	});
 	// add edit Options
-	// myCodeMirror.on("cursorActivity", function(cm){
-	// 	editOptions(cm)
-	// });
+	myCodeMirror.on("cursorActivity", function(cm){
+		editOptions(cm)
+	});
 	
 });
 
@@ -216,28 +216,28 @@ var isHeadline = function(cm, cursor)
 //
 // EditOptions fn: 
 //
-// var editOptions = function(cm)
-// {
-// 	var elem = document.getElementById('editOptions');
-// 	//
-// 	if( cm.getSelection().length > 0 )
-// 	{
-// 		if( typeof(elem) === undefined || elem === null)
-// 		{
-// 			elem = document.createElement('div');
-// 			cm.addWidget({line:0,ch:0},elem);
-// 		}
-// 		var cords = cm.cursorCoords();
-// 		elem.id = 'editOptions';
-// 		elem.style.top = cords.top-20+'px';
-// 		elem.style.left = cords.left+'px';
-// 		elem.style.zIndex = 999;
-// 		console.log(cords);
-// 	}
-// 	else if( typeof(elem) !== undefined || elem !== null )
-// 	{
-// 		console.log(elem);
-// 		elem.remove();
-// 	}
-// };
+var editOptions = function(cm)
+{
+	var elem = document.getElementById('editOptions');
+	//
+	if( cm.getSelection().length > 0 )
+	{
+		if( typeof(elem) === undefined || elem === null)
+		{
+			elem = document.createElement('div');
+			cm.addWidget({line:0,ch:0},elem);
+		}
+		var cords = cm.cursorCoords();
+		elem.id = 'editOptions';
+		elem.style.top = cords.top-20+'px';
+		elem.style.left = cords.left+'px';
+		elem.style.zIndex = 999;
+		console.log(cords);
+	}
+	else if( typeof(elem) !== undefined || elem !== null )
+	{
+		console.log(elem);
+		elem.remove();
+	}
+};
 
