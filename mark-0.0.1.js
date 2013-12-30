@@ -33,10 +33,10 @@ Array.prototype.slice.call(nodeList,0).forEach(function(editor){
 				wrap(cm, "**");
 			},
 			"Cmd-I": function(cm){
-				wrap(cm, "_");
+				wrap(cm, ["_","*"]);
 			},
 			"Ctrl-I": function(cm){
-				wrap(cm, "_");
+				wrap(cm, ["_","*"]);
 			}
 		}
 	});
@@ -76,7 +76,15 @@ var wrap = function(cm, wrap, check)
 			endCharOrigin: cursor.end.ch,
 			selLength: cm.getSelection().length
 		}
-		
+		// build regex
+		wrapReg = wrap;
+		if( typeof(wrap) === "object" )
+		{
+			wrapReg = wrap.join("|");
+			wrap = wrap[0];
+		}
+		wrapReg = new RegExp(wrapReg.replace(/\*/g,"\\*"));
+		// set selection to middle of selection
 		if( selection.selLength > 0 )
 		{
 			selection.stChar = selection.endChar = selection.stChar+Math.floor(selection.selLength/2);
@@ -89,16 +97,22 @@ var wrap = function(cm, wrap, check)
 			ch: selection.endChar
 		});
 		selection.sel = cm.getSelection();
-		
+		// define done
 		var done = {
 			start: false,
 			end: false
 		};
-		
+		var i = 0;
 		while( done.start === false || done.end === false )
 		{
+			i++;
+			console.log(i);
+			if( i > 30 )
+			{
+				return;
+			}
 			// find beginning of string
-			if( !/\s/.test(selection.sel.substr(0, 1)) && selection.stChar > 0 && selection.sel.substr(0,wrap.length) != wrap && done.start === false )
+			if( !/\s/.test(selection.sel.substr(0, 1)) && selection.stChar > 0 && !wrapReg.test(selection.sel.substr(0,wrap.length)) && done.start === false )
 			{
 				selection.stChar--;
 			}
@@ -106,13 +120,13 @@ var wrap = function(cm, wrap, check)
 			{
 				selection.stChar++;
 				done.start = true;
-			}			
-			if( ( selection.stChar <= 0 || selection.sel.substr(0,wrap.length) === wrap ) && done.start === false )
+			}
+			if( ( selection.stChar <= 0 || wrapReg.test(selection.sel.substr(0,wrap.length)) ) && done.start === false )
 			{
 				done.start = true;
 			}
 			// find end of string
-			if( (!/\s/.test(selection.sel.substr(-1)) && selection.endChar < selection.endLine.length ) && selection.sel.substr(-wrap.length) != wrap && done.end === false)
+			if( (!/\s/.test(selection.sel.substr(-1)) && selection.endChar < selection.endLine.length ) && !wrapReg.test(selection.sel.substr(-wrap.length)) && done.end === false)
 			{
 				selection.endChar++;
 			}
@@ -121,7 +135,7 @@ var wrap = function(cm, wrap, check)
 				selection.endChar--;
 				done.end = true;
 			}
-			if( ( selection.endChar >= selection.endLine.length || selection.sel.substr(-wrap.length) === wrap ) && done.end === false)
+			if( ( selection.endChar >= selection.endLine.length || wrapReg.test(selection.sel.substr(-wrap.length)) ) && done.end === false)
 			{
 				done.end = true;
 			}
@@ -144,7 +158,7 @@ var wrap = function(cm, wrap, check)
 			ch: selection.endChar
 		});
 		// check if new selection matches wrap
-		if( selection.sel.substr(0,wrap.length) == wrap && selection.sel.substr(-wrap.length) == wrap )
+		if( wrapReg.test(selection.sel.substr(0,wrap.length)) && wrapReg.test(selection.sel.substr(-wrap.length)) )
 		{
 			for( i = 0; i < check.length; i++ )
 			{
