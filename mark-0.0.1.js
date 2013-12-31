@@ -12,7 +12,7 @@ Array.prototype.slice.call(nodeList,0).forEach(function(editor){
 		lineNumbers: false,
 		lineWrapping: true,
 		flattenSpans: true,
-		cursorHeight: 0.66,
+		cursorHeight: 1,
 		matchBrackets: true,
 		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
 		matchTags: true,
@@ -40,9 +40,10 @@ Array.prototype.slice.call(nodeList,0).forEach(function(editor){
 			}
 		}
 	});
-	// add edit Options
+	
+	// add edit Options	
 	myCodeMirror.on("cursorActivity", function(cm){
-		editOptions(cm)
+		editOptions(cm);
 	});
 	
 });
@@ -216,28 +217,77 @@ var isHeadline = function(cm, cursor)
 //
 // EditOptions fn: 
 //
-var editOptions = function(cm)
+var f, editOptions = function(cm)
 {
+	// get element
 	var elem = document.getElementById('editOptions');
-	//
+	// clear timeout
+	window.clearTimeout(f);
+	// check for selection
 	if( cm.getSelection().length > 0 )
 	{
-		if( typeof(elem) === undefined || elem === null)
+		// ------------------------------
+		// start timeout
+		f = window.setTimeout(function()
 		{
-			elem = document.createElement('div');
-			cm.addWidget({line:0,ch:0},elem);
-		}
-		var cords = cm.cursorCoords();
-		elem.id = 'editOptions';
-		elem.style.top = cords.top-20+'px';
-		elem.style.left = cords.left+'px';
-		elem.style.zIndex = 999;
-		console.log(cords);
+			// check for element	
+			if( typeof(elem) === undefined || elem === null)
+			{
+				elem = document.createElement('div');
+				cm.addWidget({line:0,ch:0},elem);
+				elem.id = 'editOptions';
+				elem = document.getElementById('editOptions');
+			}
+			// get cursor
+			var cursor = {
+				start: cm.getCursor(true),
+				end: cm.getCursor(false)
+			};
+			// get coords
+			var coords = {
+				start: cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
+				end: cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
+			};
+			// add active class
+			elem.classList.add('active');
+			// ------------------------------
+			// calculate top
+			var arrowHeight = 7+2;
+			var top = (cm.heightAtLine(cursor.start.line)-arrowHeight-window.getComputedStyle(elem).height.replace('px',''));
+			// remove class
+			elem.classList.remove('from-top');
+			if( top < 0 ){ 
+				top = (cm.heightAtLine(cursor.end.line)+arrowHeight+parseInt(window.getComputedStyle(elem).height.replace('px','')));
+				console.log(top);
+				elem.classList.add('from-top');
+			}
+			
+			elem.style.top = top+'px';
+			// ------------------------------
+			// calculate horizontal position
+			//
+			var middle = coords.end.left-((coords.end.left-coords.start.left)/2);
+			var left = Math.floor(middle-(window.getComputedStyle(elem).width.replace('px','')/2));
+			// remove classes
+			elem.classList.remove('from-left');
+			elem.classList.remove('from-right');
+			if( left < 1 ){ 
+				left = 2;
+				elem.classList.add('from-left');
+			}
+			else if( left + parseInt(window.getComputedStyle(elem).width.replace('px','')) >= window.innerWidth )
+			{
+				left = window.innerWidth - (parseInt(window.getComputedStyle(elem).width.replace('px','')) + 2);
+				elem.classList.add('from-right');
+			}
+			// set position
+			elem.style.left = left+'px';
+		// close timeout
+		}, 200);
 	}
 	else if( typeof(elem) !== undefined || elem !== null )
 	{
-		console.log(elem);
-		elem.remove();
+		elem.classList.remove('active');
 	}
 };
 
