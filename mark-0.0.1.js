@@ -244,6 +244,7 @@ var f, editOptions = function(cm)
 				end: cm.getCursor(false)
 			};
 			// get coords
+			console.log(cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}));
 			var coords = {
 				start: cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
 				end: cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
@@ -253,12 +254,11 @@ var f, editOptions = function(cm)
 			// ------------------------------
 			// calculate top
 			var arrowHeight = 7+2;
-			var top = (cm.heightAtLine(cursor.start.line)-arrowHeight-window.getComputedStyle(elem).height.replace('px',''));
+			var top = (coords.start.top-arrowHeight-window.getComputedStyle(elem).height.replace('px',''));
 			// remove class
 			elem.classList.remove('from-top');
 			if( top < 0 ){ 
-				top = (cm.heightAtLine(cursor.end.line)+arrowHeight+parseInt(window.getComputedStyle(elem).height.replace('px','')));
-				console.log(top);
+				top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(elem).height.replace('px','')));
 				elem.classList.add('from-top');
 			}
 			
