@@ -43,7 +43,6 @@ html, body{
 	width: 100%;
 	height: 100%; 
 	position: relative;
-	font-size: 16px;
 	color: rgb(0,0,0);
 	text-rendering: optimizeLegability;
 }
@@ -183,15 +182,15 @@ body{
 }
 #editOptions{
 	position: absolute;
-	height: 40px;
-	min-width: 50px;
+	height: 2.5em;
 	background: rgb(15,15,15);
 	box-shadow: 0 1px 2px rgba(0,0,0,0.5);
 	border-radius: 3px;
 	z-index: 999;
 	margin-top: 10px;
-/*	display: none;*/
 	opacity: 0;
+	transform: translate(-9999px,0);
+	-webkit-transform: translate(-9999px,0);
 	transition: opacity .3s ease .1s, margin .3s ease .1s;
 	-webkit-transition: opacity .3s ease .1s, margin .3s ease .1s;
 }
@@ -201,6 +200,8 @@ body{
 	opacity: 1;
 	transition: opacity .3s ease .1s, margin .3s ease .1s;
 	-webkit-transition: opacity .3s ease .1s, margin .3s ease .1s;
+	transform: translate(0,0);
+	-webkit-transform: translate(0,0);
 }
 #editOptions:before{
 	position: absolute;
@@ -229,4 +230,40 @@ body{
 	right: 7px;
 	margin-left: 0;
 }
-
+/* edit Options content */
+#editOptions .button{
+	height: 100%;
+	padding: 0 .5em;
+	color: rgb(255,255,255);
+	font-size: 1.5em;
+	text-align: center;
+	line-height: 1.5em;
+	float: left;
+	position: relative;
+}
+#editOptions #bold{
+	font-weight: 600;
+	font-family: courier;
+}
+#editOptions #italic{
+	font-style: italic;
+	font-family: times;
+}
+#editOptions #quote{
+	width: 1em;
+	font-weight: 600;
+	font-family: times;
+}
+#editOptions #quote:before, #editOptions #quote:after{
+	font-size: 1.8em;
+	position: absolute;
+	top: .25em;
+}
+#editOptions #quote:before{
+	content: "\2018";
+	left: .49em;
+}
+#editOptions #quote:after{
+	content: "\2018";
+	left: .25em;
+}

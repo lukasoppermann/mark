@@ -10,6 +10,7 @@ Array.prototype.slice.call(nodeList,0).forEach(function(editor){
 			highlightFormatting: true
 		},
 		lineNumbers: false,
+		addModeClass: false,
 		lineWrapping: true,
 		flattenSpans: true,
 		cursorHeight: 1,
@@ -27,10 +28,10 @@ Array.prototype.slice.call(nodeList,0).forEach(function(editor){
 		extraKeys: {
 			"Enter": "newlineAndIndentContinueMarkdownList",
 			"Cmd-B": function(cm){
-				wrap(cm, "**");
+				makeBold(cm);
 			},
 			"Ctrl-B": function(cm){
-				wrap(cm, "**");
+				makeBold(cm);
 			},
 			"Cmd-I": function(cm){
 				wrap(cm, ["_","*"]);
@@ -64,6 +65,8 @@ var wrap = function(cm, wrap, check)
 		end: cm.getCursor(false)
 	}
 	
+	console.log(isQuote(cm, cursor));
+	
 	if( typeof(wrap) != undefined && !isHeadline(cm, cursor) )
 	{
 		// get selection
@@ -89,15 +92,37 @@ var wrap = function(cm, wrap, check)
 		if( selection.selLength > 0 )
 		{
 			selection.stChar = selection.endChar = selection.stChar+Math.floor(selection.selLength/2);
+			cm.setSelection({
+				line: cursor.start.line, 
+				ch: selection.stChar
+			}, {
+				line: cursor.end.line, 
+				ch: selection.endChar
+			});
+			// reset selection
+			selection.sel = cm.getSelection();
 		}
-		cm.setSelection({
-			line: cursor.start.line, 
-			ch: selection.stChar
-		}, {
-			line: cursor.end.line, 
-			ch: selection.endChar
-		});
-		selection.sel = cm.getSelection();
+		else if( selection.selLength == 0 )
+		{
+			cm.setSelection({
+				line: cursor.start.line, 
+				ch: selection.stChar-1
+			}, {
+				line: cursor.end.line, 
+				ch: selection.endChar+1
+			});
+			if( cm.getSelection().replace(/^\s+|\s+$/g,'').length <= 1 )
+			{
+				cm.setSelection({
+					line: cursor.start.line, 
+					ch: selection.stCharOrigin
+				}, {
+					line: cursor.end.line, 
+					ch: selection.endCharOrigin
+				});
+				return false;
+			}
+		}
 		// define done
 		var done = {
 			start: false,
@@ -191,26 +216,159 @@ var wrap = function(cm, wrap, check)
 
 /* ------------------ */
 //
-/* functions */
+// makeBold: makes the selection bold or not bold
 //
-// Wrap fn: wrapping element with characters
-//
-var isHeadline = function(cm, cursor)
+var makeBold = function(cm)
 {
-	// check for headline
-	var isHeadline = cm.getLine(cursor.start.line).substr(0,1) === '#' ? true : false;
-	// reset selection
-	cm.setSelection({
-		line: cursor.start.line, 
-		ch: cursor.start.ch
-	}, {
-		line: cursor.end.line, 
-		ch: cursor.end.ch
+	var position = getMiddle(cm, true);
+	console.log(position);
+	
+};
+/* ------------------ */
+//
+// getMiddle: get the middle of a given range
+//
+var getMiddle = function(cm, setMiddle)
+{
+	// selection
+	var sel = cm.getSelection();
+	// get cursor
+	var cursor = {
+		start: cm.getCursor(true),
+		end: cm.getCursor(false)
+	}
+	console.log(cursor);
+	// get middle
+	var length = 0, lineNum = false, chNum = Math.floor(sel.length/2) - 1;
+	selLength = chNum + cursor.start.ch;
+	chNum = selLength+1
+	lineNum = cursor.start.line;
+	// loop through lines
+	
+	// cm.eachLine(cursor.start.line, cursor.end.line+1, function(line)
+	// {
+	// 	length += line.text.length;
+	// 	if( length >= selLength && lineNum == false)
+	// 	{
+	// 		lineNum = cm.getLineNumber(line);
+	// 	}
+	// 	if( lineNum == false )
+	// 	{
+	// 		chNum -= line.text.length;
+	// 	}
+	// });
+	// get middle
+	if( typeof(setMiddle) != undefined && setMiddle != null && setMiddle != false && sel.length > 0  )
+	{
+		// reset selection
+		cm.setSelection({
+			line: lineNum, 
+			ch: chNum
+		}, {
+			line: lineNum, 
+			ch: chNum
+		});	
+	}
+	// get middle position
+	return { line: lineNum , ch: chNum }
+};
+/* ------------------ */
+//
+/* detect styling */
+//
+// isHeadline: check if element is headline
+//
+var isHeadline = function(cm)
+{
+	// get type
+	var type = cm.getTokenTypeAt({
+		line: cm.getCursor(true).line, 
+		ch: cm.getCursor(true).ch
 	});
+	//
+	if( type != null )
+	{
+		// match headline
+		var match = type.match(/header(\d+)/);
+	}
 	// return
-	return isHeadline;
+	return match != null ? match[1] : false;
 }
-
+//
+// isBold: check if element is bold
+//
+var isBold = function(cm)
+{
+	// get type
+	var type = cm.getTokenTypeAt({
+		line: cm.getCursor(true).line, 
+		ch: cm.getCursor(true).ch
+	});
+	if( type != null )
+	{
+		// match headline
+		var match = type.match(/strong/);
+	}
+	// return
+	return match != null ? true : false;
+}
+//
+// isItalic: check if element is italic
+//
+var isItalic = function(cm)
+{
+	// get type
+	var type = cm.getTokenTypeAt({
+		line: cm.getCursor(true).line, 
+		ch: cm.getCursor(true).ch
+	});
+	if( type != null )
+	{
+		// match headline
+		var match = type.match(/em/);
+	}
+	// return
+	return match != null ? true : false;
+}
+//
+// isQuote: check if element is quote
+//
+var isQuote = function(cm, cursor)
+{
+	// get type
+	var type = cm.getTokenTypeAt({
+		line: cm.getCursor(true).line, 
+		ch: cm.getCursor(true).ch
+	});
+	//
+	if( type != null )
+	{
+		// match headline
+		var match = type.match(/quote-(\d+)/);
+	}
+	// return
+	return match != null ? match[1] : false;
+}
+//
+// isLink: check if element is link
+//
+var isLink = function(cm, cursor)
+{
+	// get type
+	var type = cm.getTokenTypeAt({
+		line: cm.getCursor(true).line, 
+		ch: cm.getCursor(true).ch
+	});
+	//
+	if( type != null )
+	{
+		// match headline
+		var match = type.match(/link/);
+		match == undefined ? match = type.match(/string/) : null;
+	}
+	// return
+	return match != null ? true : false;
+}
 /* ------------------ */
 //
 /* functions */
@@ -233,9 +391,18 @@ var f, editOptions = function(cm)
 			// check for element	
 			if( typeof(elem) === undefined || elem === null)
 			{
+				// create element
 				elem = document.createElement('div');
 				cm.addWidget({line:0,ch:0},elem);
 				elem.id = 'editOptions';
+				// add buttons
+				elem.innerHTML = 	'<div id="bold" class="button">B</div>'+
+										'<div id="italic" class="button">i</div>'+
+										'<div id="headline-1" class="button">H1</div>'+
+										'<div id="headline-2" class="button">H2</div>'+
+										'<div id="quote" class="button"></div>'+
+										'<div id="link" class="button">&</div>';
+				// select elements
 				elem = document.getElementById('editOptions');
 			}
 			// get cursor
@@ -244,7 +411,6 @@ var f, editOptions = function(cm)
 				end: cm.getCursor(false)
 			};
 			// get coords
-			console.log(cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}));
 			var coords = {
 				start: cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
 				end: cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
@@ -261,7 +427,6 @@ var f, editOptions = function(cm)
 				top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(elem).height.replace('px','')));
 				elem.classList.add('from-top');
 			}
-			
 			elem.style.top = top+'px';
 			// ------------------------------
 			// calculate horizontal position
@@ -285,7 +450,7 @@ var f, editOptions = function(cm)
 		// close timeout
 		}, 200);
 	}
-	else if( typeof(elem) !== undefined || elem !== null )
+	else if( typeof(elem) !== undefined && elem !== null )
 	{
 		elem.classList.remove('active');
 	}
