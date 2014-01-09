@@ -220,9 +220,102 @@ var wrap = function(cm, wrap, check)
 //
 var makeBold = function(cm)
 {
+	// store original selection
+	var sel = cm.getSelection(),
+		 selLength = sel.length;
+	// get cursor
+	var cursor = {
+		start: cm.getCursor(true),
+		end: cm.getCursor(false)
+	}
+	// go to middle
 	var position = getMiddle(cm, true);
-	console.log(position);
-	
+	// check if bold
+	if( isBold(cm) )
+	{
+		var match = {
+			'*' : sel.match(/(\*\*)/g),
+			'_' : sel.match(/(__)/g)
+		};
+		if( (match['*'] != undefined && match['*'].length >= 2) || (match['_'] != undefined && match['_'].length >= 2))
+		{
+			// reset selection
+			cm.setSelection({
+				line: cursor.start.line, 
+				ch: cursor.start.ch
+			}, {
+				line: cursor.end.line, 
+				ch: cursor.end.ch
+			});
+			// replace
+			cm.replaceSelection(sel.replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
+		}
+		else
+		{
+			// get cursor position
+			var curCursor = cm.getCursor(true);
+			// get line
+			var line = cm.getLine(curCursor.line);
+			// get boundries
+			var right = false, left = false, i = 0, str;
+			// left
+			while( left === false  )
+			{
+				i++;
+				str = line.substring((curCursor.ch-i),curCursor.ch-(i-2));
+				if( str == '**' || str == '__' )
+				{
+					left = i;
+				}
+				
+			}
+			i = 0;
+			// right
+			while( right === false  )
+			{
+				i++;
+				str = line.substring((curCursor.ch+i),curCursor.ch+(i+2));
+				if( str == '**' || str == '__' )
+				{
+					right = i;
+				}
+			}
+			// get selection
+			if( right !== false && left !== false )
+			{
+				cm.setSelection({
+					line: curCursor.line, 
+					ch: curCursor.ch-left
+				}, {
+					line: curCursor.line, 
+					ch: curCursor.ch+right+2
+				});
+				// replace selection
+				cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
+			}
+			return false;
+		}
+	}
+	else
+	{
+		if( selLength == 0 )
+		{
+			getWordBoundaries(cm, true);
+		}
+		else
+		{			
+			// reset selection
+			cm.setSelection({
+				line: cursor.start.line, 
+				ch: cursor.start.ch
+			}, {
+				line: cursor.end.line, 
+				ch: cursor.end.ch
+			});
+		}
+		// add bold chars
+		cm.replaceSelection('**'+sel+'**');
+	}
 };
 /* ------------------ */
 //
