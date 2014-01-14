@@ -505,11 +505,11 @@ var options = {
 		},
 		// check for formatting
 		hasFormat: function(format, middle){
-			var block = ["headline", "quote", "code"], isBlock = false,
-				 inline = ["bold", "italic", "link"], isInline = false,
+			var block = ["header", "quote", "code"], isBlock = false,
+				 inline = ["strong", "em", "link"], isInline = false,
 				 pos;
 			// if inline 
-			if( inline.indexOf(format) )
+			if( inline.indexOf(format) !== -1 )
 			{
 				isInline = true;
 				// set selection to middle of selection
@@ -517,18 +517,37 @@ var options = {
 			}
 			else{ 
 				isBlock = true; 
-				// get type
 				pos = {
 					line: options.cm.getCursor(false).line, 
 					ch: options.cm.getCursor(false).ch
 				};
 			}
+			// check if any type is present
 			var type = options.cm.getTokenTypeAt({
 				line: pos.line, 
 				ch: pos.ch
 			});
-			console.log(type);
-			
+			var match = false;
+			if( type != null )
+			{
+				if( isInline === true )
+				{
+					if(new RegExp(format).test(type) || (format === 'link' && new RegExp('string').test(type)) )
+					{
+						match = true;
+					}
+				}
+				else if( isBlock === true )
+				{
+					var tmpMatch = type.match(new RegExp(format+'-?(\\d+)'));
+					if( tmpMatch !== null && tmpMatch[1] !== null )
+					{
+						match = parseInt(tmpMatch[1]);
+					}
+				}
+			}
+			// return
+			return match;
 		}
 	},
 	ffn: {
@@ -918,7 +937,8 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 	});
 	// add edit Options	
 	options.cm.on("cursorActivity", function(cm){
-		options.fn.hasFormat('italic');
+		options.fn.hasFormat('header');
+		options.fn.hasFormat('quote');
 		editOptions(cm);
 	});
 	
