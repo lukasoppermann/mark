@@ -57,7 +57,7 @@ body{
 /*------------------*/
 /* mark theme */
 .cm-s-mark.CodeMirror {
-	height: 100%;
+	height: auto;
 	background: transparent; 
 	color: rgb(60,60,60);
 	font-family: inherit;
@@ -130,7 +130,6 @@ body{
 	background: rgb(200,80,70); 
 	color: rgb(255,255,255);
 }
-
 .cm-s-mark .CodeMirror-matchingbracket {
   text-decoration: underline;
 	color: rgb(55,115,215) !important;
@@ -242,14 +241,21 @@ body{
 	line-height: 1.5em;
 	float: left;
 	position: relative;
+	cursor: pointer;
 }
 #editOptions #bold{
 	font-weight: 600;
 	font-family: courier;
 }
+#editOptions.bold #bold{
+	color: rgb(55,115,215);
+}
 #editOptions #italic{
 	font-style: italic;
 	font-family: times;
+}
+#editOptions.italic #italic{
+	color: rgb(55,115,215);
 }
 #editOptions #quote{
 	width: 1em;
@@ -263,9 +269,15 @@ body{
 }
 #editOptions #quote:before{
 	content: "\2018";
-	left: .49em;
+	left: .25em;
 }
 #editOptions #quote:after{
 	content: "\2018";
-	left: .25em;
+	left: .49em;
+}
+#editOptions.quote-1 #quote:before{
+	color: rgb(55,115,215);	
+}
+#editOptions.quote-2 #quote{
+	color: rgb(55,115,215);
 }
