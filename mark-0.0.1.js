@@ -1,55 +1,3 @@
-nodeList = document.getElementsByClassName('mark');
-
-Array.prototype.slice.call(nodeList,0).forEach(function(editor){
-	
-	var myCodeMirror = CodeMirror.fromTextArea(editor, {
-		theme: "mark",
-	  // value: "function myScript(){return 100;}\n",
-		mode: {
-			name: "gfm",
-			highlightFormatting: true
-		},
-		lineNumbers: true,
-		addModeClass: true,
-		lineWrapping: true,
-		flattenSpans: true,
-		cursorHeight: 1,
-		matchBrackets: true,
-		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
-		matchTags: true,
-		showTrailingSpace: true,
-		autoCloseTags: true,
-		styleSelectedText: true,
-		styleActiveLine: true,
-		placeholder: "",
-      tabMode: 'indent',
-		tabindex: "2",
-		dragDrop: false,
-		extraKeys: {
-			"Enter": "newlineAndIndentContinueMarkdownList",
-			"Cmd-B": function(cm){
-				makeBold(cm);
-			},
-			"Ctrl-B": function(cm){
-				makeBold(cm);
-			},
-			"Cmd-I": function(cm){
-				makeItalic(cm);
-			},
-			"Ctrl-I": function(cm){
-				makeItalic(cm);
-			}
-		}
-	});
-	
-	// add edit Options	
-	myCodeMirror.on("cursorActivity", function(cm){
-		options.fn.hasFormat('italic');
-		editOptions(cm);
-	});
-	
-});
-
 /* ------------------ */
 //
 /* functions */
@@ -565,17 +513,17 @@ var options = {
 			{
 				isInline = true;
 				// set selection to middle of selection
-				pos = getMiddle(cm, false); // remove cm !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+				pos = getMiddle(options.cm, false); // remove cm !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 			}
 			else{ 
 				isBlock = true; 
 				// get type
 				pos = {
-					line: cm.getCursor(false).line, 
-					ch: cm.getCursor(false).ch
+					line: options.cm.getCursor(false).line, 
+					ch: options.cm.getCursor(false).ch
 				};
 			}
-			var type = cm.getTokenTypeAt({
+			var type = options.cm.getTokenTypeAt({
 				line: pos.line, 
 				ch: pos.ch
 			});
@@ -857,13 +805,13 @@ var f, editOptions = function(cm)
 			}
 			// check which elements are active
 			var add = "", remove = "";
-			isBold(cm) ? add += ' bold' : remove += '|bold';
-			isItalic(cm) ? add += ' italic' : remove += '|italic';
-			isQuote(cm) === 1 ? add += ' quote-1' : remove += '|quote-1';
-			isQuote(cm) === 2 ? add += ' quote-2' : remove += '|quote-2';
+			isBold(cm) ? add += 'bold, ' : remove += 'bold, ';
+			isItalic(cm) ? add += 'italic, ' : remove += 'italic, ';
+			isQuote(cm) === 1 ? add += 'quote-1, ' : remove += 'quote-1, ';
+			isQuote(cm) === 2 ? add += 'quote-2, ' : remove += 'quote-2, ';
 			// add & remove classes
-			options.ffn.addClass(panel, add);
-			options.ffn.removeClass(panel, remove);
+			options.ffn.addClass(panel, add.replace(/\,\s+$/gm, ''));
+			options.ffn.removeClass(panel, remove.replace(/\,\s+$/gm, ''));
 			// ------------------------------
 			// get cursor
 			var cursor = {
@@ -922,3 +870,56 @@ var f, editOptions = function(cm)
 	}
 };
 
+/* ------------------ */
+//
+/* RUN EDITOR */
+//
+// run codemirror on every instance of .mark
+Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
+	
+	options.cm = CodeMirror.fromTextArea(editor, {
+		theme: "mark",
+	  // value: "function myScript(){return 100;}\n",
+		mode: {
+			name: "gfm",
+			highlightFormatting: true
+		},
+		lineNumbers: true,
+		addModeClass: false,
+		lineWrapping: true,
+		flattenSpans: true,
+		cursorHeight: 1,
+		matchBrackets: true,
+		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
+		matchTags: true,
+		showTrailingSpace: true,
+		autoCloseTags: true,
+		styleSelectedText: true,
+		styleActiveLine: true,
+		placeholder: "",
+      tabMode: 'indent',
+		tabindex: "2",
+		dragDrop: false,
+		extraKeys: {
+			"Enter": "newlineAndIndentContinueMarkdownList",
+			"Cmd-B": function(cm){
+				makeBold(cm);
+			},
+			"Ctrl-B": function(cm){
+				makeBold(cm);
+			},
+			"Cmd-I": function(cm){
+				makeItalic(cm);
+			},
+			"Ctrl-I": function(cm){
+				makeItalic(cm);
+			}
+		}
+	});
+	// add edit Options	
+	options.cm.on("cursorActivity", function(cm){
+		options.fn.hasFormat('italic');
+		editOptions(cm);
+	});
+	
+});
