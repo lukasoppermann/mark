@@ -553,20 +553,13 @@ var options = {
 	ffn: {
 		addClass: function (el, classes) 
 		{
-			if( classes !== undefined && classes.trim().length > 0 )
-			{
-				classes = Array.prototype.slice.call (arguments, 1);
-				for (var i = classes.length; i--;) 
-				{
-					classes[i] = classes[i].trim ().split (/\s*,\s*|\s+/);
-					for (var j = classes[i].length; j--;)
-					{
-			      	el.classList.add(classes[i][j]);
-					}
-				}
-			}
+			options.ffn.changeClass(el, classes, 'add');
 		},
 		removeClass: function (el, classes) 
+		{
+			options.ffn.changeClass(el, classes, 'remove');
+		},
+		changeClass: function(el, classes, type)
 		{
 			if( classes !== undefined && classes.trim().length > 0 )
 			{
@@ -576,7 +569,7 @@ var options = {
 					classes[i] = classes[i].trim ().split (/\s*,\s*|\s+/);
 					for (var j = classes[i].length; j--;)
 					{
-						el.classList.remove (classes[i][j]);
+						el.classList[type](classes[i][j]);
 					}
 				}
 			}
@@ -802,12 +795,12 @@ var f, editOptions = function(cm)
 				// create element
 				panel = document.createElement('div');
 				panel.id = 'editOptions';
-				panel.innerHTML = '<div id="bold" data-class="bold" data-fn="makeBold" class="button">B</div>'+
-										'<div id="italic" data-class="italic" data-fn="makeItalic" class="button">i</div>'+
-										'<div id="headline_1" data-class="headline-1" data-fn="makeHeadline" data-parameters="1" class="button">H1</div>'+
-										'<div id="headline_2" data-class="headline-2" data-fn="makeHeadline" data-parameters="2" class="button">H2</div>'+
-										'<div id="quote" data-class="quote" data-fn="makeQuote" data-parameters="false" class="button"></div>'+
-										'<div id="link" data-class="link" data-fn="makeLink" class="button">&</div>';
+				panel.innerHTML = '<div data-class="strong" data-fn="makeBold" class="strong button">B</div>'+
+										'<div data-class="em" data-fn="makeItalic" class="em button">i</div>'+
+										'<div data-class="header1" data-fn="makeHeadline" data-parameters="1" class="header1 button">H1</div>'+
+										'<div data-class="header2" data-fn="makeHeadline" data-parameters="2" class="header2 button">H2</div>'+
+										'<div data-class="quote" data-fn="makeQuote" data-parameters="false" class="quote button"></div>'+
+										'<div data-class="link" data-fn="makeLink" class="link button">&</div>';
 				// add panel to editor
 				cm.addWidget({line:0,ch:0},panel);
 				// select elements
@@ -824,10 +817,12 @@ var f, editOptions = function(cm)
 			}
 			// check which elements are active
 			var add = "", remove = "";
-			isBold(cm) ? add += 'bold, ' : remove += 'bold, ';
-			isItalic(cm) ? add += 'italic, ' : remove += 'italic, ';
-			isQuote(cm) === 1 ? add += 'quote-1, ' : remove += 'quote-1, ';
-			isQuote(cm) === 2 ? add += 'quote-2, ' : remove += 'quote-2, ';
+			options.fn.hasFormat('strong') ? add += 'strong, ' : remove += 'strong, ';
+			options.fn.hasFormat('em') ? add += 'em, ' : remove += 'em, ';
+			options.fn.hasFormat('quote') === 1 ? add += 'quote-1, ' : remove += 'quote-1, ';
+			options.fn.hasFormat('quote') === 2 ? add += 'quote-2, ' : remove += 'quote-2, ';
+			options.fn.hasFormat('header') === 1 ? add += 'header1, ' : remove += 'header1, ';
+			options.fn.hasFormat('header') === 2 ? add += 'header2, ' : remove += 'header2, ';
 			// add & remove classes
 			options.ffn.addClass(panel, add.replace(/\,\s+$/gm, ''));
 			options.ffn.removeClass(panel, remove.replace(/\,\s+$/gm, ''));

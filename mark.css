@@ -243,41 +243,47 @@ body{
 	position: relative;
 	cursor: pointer;
 }
-#editOptions #bold{
+#editOptions .strong{
 	font-weight: 600;
 	font-family: courier;
 }
-#editOptions.bold #bold{
+#editOptions.strong .strong{
 	color: rgb(55,115,215);
 }
-#editOptions #italic{
+#editOptions .em{
 	font-style: italic;
 	font-family: times;
 }
-#editOptions.italic #italic{
+#editOptions.em .em{
 	color: rgb(55,115,215);
 }
-#editOptions #quote{
+#editOptions .quote{
 	width: 1em;
 	font-weight: 600;
 	font-family: times;
 }
-#editOptions #quote:before, #editOptions #quote:after{
+#editOptions .quote:before, #editOptions .quote:after{
 	font-size: 1.8em;
 	position: absolute;
 	top: .25em;
 }
-#editOptions #quote:before{
+#editOptions .quote:before{
 	content: "\2018";
 	left: .25em;
 }
-#editOptions #quote:after{
+#editOptions .quote:after{
 	content: "\2018";
 	left: .49em;
 }
-#editOptions.quote-1 #quote:before{
+#editOptions.quote-1 .quote:before{
 	color: rgb(55,115,215);	
 }
-#editOptions.quote-2 #quote{
+#editOptions.quote-2 .quote{
+	color: rgb(55,115,215);
+}
+#editOptions.header1 .header1{
+	color: rgb(55,115,215);
+}
+#editOptions.header2 .header2{
 	color: rgb(55,115,215);
 }
