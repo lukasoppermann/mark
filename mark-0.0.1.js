@@ -84,7 +84,7 @@ var options = {
 							ch: curCursor.ch+right+2
 						});
 						// replace selection
-						options.cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
+						options.cm.replaceSelection(options.cm.getSelection().replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
 					}
 				}
 			}
@@ -185,7 +185,7 @@ var options = {
 							ch: curCursor.ch+right+1
 						});
 						// replace selection
-						options.cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{1}/g, '').replace(/[\*||_]{1}$/g,''));
+						options.cm.replaceSelection(options.cm.getSelection().replace(/^[\*||_]{1}/g, '').replace(/[\*||_]{1}$/g,''));
 					}
 					return false;
 				}
@@ -213,12 +213,12 @@ var options = {
 				options.cm.replaceSelection('_'+sel+'_');
 			}
 			// set focus
-			cm.focus();
+			options.cm.focus();
 		},
 		// makeHeadline: makes headline for
-		makeHeadline: function(cm, setLevel)
+		makeHeadline: function(setLevel)
 		{
-			var level = isHeadline(cm),
+			var level = options.fn.hasFormat('header'),
 				 curCursor = options.cm.getCursor(true),
 				 setLevel = (setLevel !== undefined) ? parseInt(setLevel) : 1;
 		
@@ -239,16 +239,16 @@ var options = {
 			 
 				if( level == setLevel )
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num));
+					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num));
 				}
 				else if( level > setLevel )
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(level-setLevel));
+					options.cm.replaceSelection(options.cm.getSelection().substr(level-setLevel));
 				}
 				// level < setLevel
 				else
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '#' )+' ');
+					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '#' )+' ');
 				}
 			}
 			else
@@ -262,7 +262,7 @@ var options = {
 					ch: 0
 				});
 				// add #
-				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '#' )+' '+cm.getSelection());
+				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '#' )+' '+options.cm.getSelection());
 			}
 			// reset selection
 			options.cm.setSelection({
@@ -273,12 +273,12 @@ var options = {
 				ch: options.cm.getLine(curCursor.line).length
 			});
 			// set focus
-			cm.focus();
+			options.cm.focus();
 		},
 		// makeQuote: makes quotes
-		makeQuote: function(cm, setLevel)
+		makeQuote: function(setLevel)
 		{
-			var level = isQuote(cm),
+			var level = options.fn.hasFormat('quote'),
 				 curCursor = options.cm.getCursor(true),
 				 setLevel = (setLevel !== undefined && typeof(setLevel) === "number") ? setLevel : (level === false ? 1 : (parseInt(level) === 1 ? 2 : false));
 			// check if line is headline
@@ -298,20 +298,20 @@ var options = {
 			 
 				if ( setLevel === false )
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(level+num))
+					options.cm.replaceSelection(options.cm.getSelection().substr(level+num))
 				}
 				else if( level == setLevel )
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num));
+					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num));
 				}
 				else if( level > setLevel )
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(level-setLevel));
+					options.cm.replaceSelection(options.cm.getSelection().substr(level-setLevel));
 				}
 				// level < setLevel
 				else
 				{
-					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '>' )+' ');
+					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '>' )+' ');
 				}
 			}
 			else
@@ -325,7 +325,7 @@ var options = {
 					ch: 0
 				});
 				// add #
-				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '>' )+' '+cm.getSelection());
+				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '>' )+' '+options.cm.getSelection());
 			}
 			// reset selection
 			options.cm.setSelection({
@@ -336,7 +336,7 @@ var options = {
 				ch: options.cm.getLine(curCursor.line).length
 			});
 			// set focus
-			cm.focus();
+			options.cm.focus();
 		},
 		// format
 		toggleFormat: function(format){
@@ -576,14 +576,14 @@ var getWordBoundaries = function(setSelection)
 //
 // EditOptions fn: 
 //
-var f, editOptions = function(cm)
+var f, editOptions = function()
 {
 	// get element
 	var panel = document.getElementById('editOptions');
 	// clear timeout
 	window.clearTimeout(f);
 	// check for selection
-	if( cm.getSelection().length > 0 )
+	if( options.cm.getSelection().length > 0 )
 	{
 		// ------------------------------
 		// start timeout
@@ -602,17 +602,17 @@ var f, editOptions = function(cm)
 										'<div data-class="quote" data-fn="makeQuote" data-parameters="false" class="quote button"></div>'+
 										'<div data-class="link" data-fn="makeLink" class="link button">&</div>';
 				// add panel to editor
-				cm.addWidget({line:0,ch:0},panel);
+				options.cm.addWidget({line:0,ch:0},panel);
 				// select elements
 				panel = document.getElementById('editOptions');
 				// add events			
 				panel.addEventListener("click", function(e) 
 				{
 					// run function
-					options.fn[e.target.getAttribute("data-fn")](cm, e.target.getAttribute("data-parameters"));
+					options.fn[e.target.getAttribute("data-fn")](e.target.getAttribute("data-parameters"));
 					panel.classList.toggle(e.target.getAttribute("data-class"));
 					// set focus
-					cm.focus();
+					options.cm.focus();
 				});
 			}
 			// check which elements are active
@@ -634,8 +634,8 @@ var f, editOptions = function(cm)
 			};
 			// get coords
 			var coords = {
-				start: cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
-				end: cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
+				start: options.cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
+				end: options.cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
 			};
 			// add active class
 			panel.classList.add('active');
@@ -731,8 +731,8 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 		}
 	});
 	// add edit Options	
-	options.cm.on("cursorActivity", function(cm){
-		editOptions(cm);
+	options.cm.on("cursorActivity", function(){
+		editOptions();
 	});
 	
 });
