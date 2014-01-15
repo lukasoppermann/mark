@@ -348,7 +348,7 @@ var options = {
  			{
  				// isInline = true;
  				// // set selection to middle of selection
- 				// pos = getMiddle(options.cm, false); // remove cm !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+ 				// pos = getMiddle(false);
  			}
  			else{ 
 				// check if style is active
@@ -379,7 +379,7 @@ var options = {
 			{
 				isInline = true;
 				// set selection to middle of selection
-				pos = getMiddle(options.cm, false); // remove cm !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+				pos = getMiddle(false);
 			}
 			else{ 
 				isBlock = true; 
@@ -493,7 +493,7 @@ var getMiddle = function(cm, setMiddle)
 	lineNum = cursor.start.line;
 	// loop through lines
 	
-	// cm.eachLine(cursor.start.line, cursor.end.line+1, function(line)
+	// options.cm.eachLine(cursor.start.line, cursor.end.line+1, function(line)
 	// {
 	// 	length += line.text.length;
 	// 	if( length >= selLength && lineNum == false)
