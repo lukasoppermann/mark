@@ -222,15 +222,20 @@ body{
 	z-index: 1;
 }
 #editOptions.from-top:before{
-	border-color: transparent transparent rgb(35,35,35) transparent;
+	border-color: transparent transparent rgb(245,245,245) transparent;
 	bottom: auto;
 	top: -14px;
 }
-#editOptions.from-left:before{
+#editOptions.from-top:after{
+	border-color: transparent transparent rgba(0,0,0,0.1) transparent;
+	bottom: auto;
+	top: -14px;
+}
+#editOptions.from-left:before, #editOptions.from-left:after{
 	left: 7px;
 	margin-left: 0;
 }
-#editOptions.from-right:before{
+#editOptions.from-right:before, #editOptions.from-right:after{
 	left: auto;
 	right: 7px;
 	margin-left: 0;
