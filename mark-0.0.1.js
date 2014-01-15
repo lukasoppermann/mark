@@ -1,168 +1,3 @@
-/* ------------------ */
-//
-/* functions */
-// KILL THIS ONE !!!!!!!!!!!!!!!!!
-// Wrap fn: wrapping element with characters
-//
-// var wrap = function(cm, wrap, check)
-// {
-// 	// define check if undefined
-// 	check === undefined ? check = {} : '';
-// 	// get cursor position
-// 	var cursor = {
-// 		start: cm.getCursor(true),
-// 		end: cm.getCursor(false)
-// 	}
-// 	
-// 	console.log(isQuote(cm, cursor));
-// 	
-// 	if( typeof(wrap) != undefined && !isHeadline(cm, cursor) )
-// 	{
-// 		// get selection
-// 		var selection = {
-// 			sel: cm.getSelection(),
-// 			stLine: cm.getLine(cursor.start.line),
-// 			endLine: cm.getLine(cursor.end.line),
-// 			stChar: cursor.start.ch,
-// 			stCharOrigin: cursor.start.ch,
-// 			endChar: cursor.end.ch,
-// 			endCharOrigin: cursor.end.ch,
-// 			selLength: cm.getSelection().length
-// 		}
-// 		// build regex
-// 		wrapReg = wrap;
-// 		if( typeof(wrap) === "object" )
-// 		{
-// 			wrapReg = wrap.join("|");
-// 			wrap = wrap[0];
-// 		}
-// 		wrapReg = new RegExp(wrapReg.replace(/\*/g,"\\*"));
-// 		// set selection to middle of selection
-// 		if( selection.selLength > 0 )
-// 		{
-// 			selection.stChar = selection.endChar = selection.stChar+Math.floor(selection.selLength/2);
-// 			cm.setSelection({
-// 				line: cursor.start.line, 
-// 				ch: selection.stChar
-// 			}, {
-// 				line: cursor.end.line, 
-// 				ch: selection.endChar
-// 			});
-// 			// reset selection
-// 			selection.sel = cm.getSelection();
-// 		}
-// 		else if( selection.selLength == 0 )
-// 		{
-// 			cm.setSelection({
-// 				line: cursor.start.line, 
-// 				ch: selection.stChar-1
-// 			}, {
-// 				line: cursor.end.line, 
-// 				ch: selection.endChar+1
-// 			});
-// 			if( cm.getSelection().replace(/^\s+|\s+$/g,'').length <= 1 )
-// 			{
-// 				cm.setSelection({
-// 					line: cursor.start.line, 
-// 					ch: selection.stCharOrigin
-// 				}, {
-// 					line: cursor.end.line, 
-// 					ch: selection.endCharOrigin
-// 				});
-// 				return false;
-// 			}
-// 		}
-// 		// define done
-// 		var done = {
-// 			start: false,
-// 			end: false
-// 		};
-// 		var i = 0;
-// 		while( done.start === false || done.end === false )
-// 		{
-// 			i++;
-// 			console.log(i);
-// 			if( i > 30 )
-// 			{
-// 				return;
-// 			}
-// 			// find beginning of string
-// 			if( !/\s/.test(selection.sel.substr(0, 1)) && selection.stChar > 0 && !wrapReg.test(selection.sel.substr(0,wrap.length)) && done.start === false )
-// 			{
-// 				selection.stChar--;
-// 			}
-// 			else if( /\s/.test(selection.sel.substr(0, 1)) && done.start === false )
-// 			{
-// 				selection.stChar++;
-// 				done.start = true;
-// 			}
-// 			if( ( selection.stChar <= 0 || wrapReg.test(selection.sel.substr(0,wrap.length)) ) && done.start === false )
-// 			{
-// 				done.start = true;
-// 			}
-// 			// find end of string
-// 			if( (!/\s/.test(selection.sel.substr(-1)) && selection.endChar < selection.endLine.length ) && !wrapReg.test(selection.sel.substr(-wrap.length)) && done.end === false)
-// 			{
-// 				selection.endChar++;
-// 			}
-// 			else if( /\s/.test(selection.sel.substr(-1)) )
-// 			{
-// 				selection.endChar--;
-// 				done.end = true;
-// 			}
-// 			if( ( selection.endChar >= selection.endLine.length || wrapReg.test(selection.sel.substr(-wrap.length)) ) && done.end === false)
-// 			{
-// 				done.end = true;
-// 			}
-// 			// set selection
-// 			cm.setSelection({
-// 				line: cursor.start.line, 
-// 				ch: selection.stChar
-// 			}, {
-// 				line: cursor.end.line, 
-// 				ch: selection.endChar
-// 			});
-// 			selection.sel = cm.getSelection();
-// 		}
-// 		// reset selection (exclude whitespace)
-// 		cm.setSelection({
-// 			line: cursor.start.line, 
-// 			ch: selection.stChar
-// 		}, {
-// 			line: cursor.end.line, 
-// 			ch: selection.endChar
-// 		});
-// 		// check if new selection matches wrap
-// 		if( wrapReg.test(selection.sel.substr(0,wrap.length)) && wrapReg.test(selection.sel.substr(-wrap.length)) )
-// 		{
-// 			for( i = 0; i < check.length; i++ )
-// 			{
-// 				if( selection.sel.substr(0,check[i].length) == wrap && selection.sel.substr(-check[i].length) )
-// 				{
-// 					break;
-// 				}
-// 			}
-// 			cm.replaceSelection(selection.sel.substr(wrap.length, selection.sel.length-(wrap.length*2)));
-// 		}
-// 		// otherwise add wrap
-// 		else
-// 		{
-// 			if( selection.selLength !== 0 )
-// 			{
-// 				cm.setSelection({
-// 					line: cursor.start.line, 
-// 					ch: selection.stCharOrigin
-// 				}, {
-// 					line: cursor.end.line, 
-// 					ch: selection.endCharOrigin
-// 				});
-// 				selection.sel = cm.getSelection();
-// 			}
-// 			cm.replaceSelection(wrap+selection.sel+wrap);
-// 		}
-// 	}
-// };
-
 // polyfills
 if (!String.prototype.trim) {
   String.prototype.trim = function () {
@@ -189,7 +24,7 @@ var options = {
 			// go to middle
 			var position = getMiddle(cm, true);
 			// check if bold
-			if( isBold(cm) )
+			if( options.fn.hasFormat('strong') )
 			{
 				var match = {
 					'*' : sel.match(/(\*\*)/g),
@@ -290,7 +125,7 @@ var options = {
 			// go to middle
 			var position = getMiddle(cm, true);
 			// check if bold
-			if( isItalic(cm) )
+			if( options.fn.hasFormat('em') )
 			{
 				var match = {
 					'*' : sel.match(/(\*)/g),
@@ -503,8 +338,39 @@ var options = {
 			// set focus
 			cm.focus();
 		},
+		// format
+		toggleFormat: function(format){
+			var block = ["header", "quote", "code"], isBlock = false,
+				 inline = ["strong", "em", "link"], isInline = false,
+				 pos;
+ 			// if inline 
+ 			if( inline.indexOf(format) !== -1 )
+ 			{
+ 				// isInline = true;
+ 				// // set selection to middle of selection
+ 				// pos = getMiddle(options.cm, false); // remove cm !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+ 			}
+ 			else{ 
+				// check if style is active
+				// if true: remove
+				// if false: add
+ 				isBlock = true;
+				// remove format
+				if( options.fn.hasFormat(format) !== false )
+				{
+					
+				}
+				// add format
+				else
+				{
+					
+				}
+				
+ 			}	 
+			
+		},
 		// check for formatting
-		hasFormat: function(format, middle){
+		hasFormat: function(format){
 			var block = ["header", "quote", "code"], isBlock = false,
 				 inline = ["strong", "em", "link"], isInline = false,
 				 pos;
@@ -517,10 +383,7 @@ var options = {
 			}
 			else{ 
 				isBlock = true; 
-				pos = {
-					line: options.cm.getCursor(false).line, 
-					ch: options.cm.getCursor(false).ch
-				};
+				pos = options.fn.getLineEndPos();
 			}
 			// check if any type is present
 			var type = options.cm.getTokenTypeAt({
@@ -548,6 +411,40 @@ var options = {
 			}
 			// return
 			return match;
+		},
+		// get last position of selection
+		getLastPos: function( setPos )
+		{
+			var pos = {
+				line: options.cm.getCursor(false).line, 
+				ch: options.cm.getCursor(false).ch
+			};
+			// set selection to position
+			if( setPos === true )
+			{
+				options.cm.setSelection({
+					line: pos.line, 
+					ch: pos.ch
+				});
+			}
+			// return pos object
+			return pos;
+		},
+		// get last position of selection
+		getLineEndPos: function( setPos )
+		{
+			var pos = { line: options.cm.getCursor(true).line };
+				 pos.ch = options.cm.getLine(pos.line).length;
+			// set selection to position
+			if( setPos === true )
+			{
+				options.cm.setSelection({
+					line: pos.line, 
+					ch: pos.ch
+				});
+			}
+			// return pos object
+			return pos;
 		}
 	},
 	ffn: {
@@ -672,103 +569,6 @@ var getWordBoundaries = function(cm, setSelection)
 	// return word boundaries
 	return [{ line: curCursor.line, ch: curCursor.ch-left+1 },
 			  { line: curCursor.line, ch: curCursor.ch+right-1 }];
-}
-/* ------------------ */
-//
-/* detect styling */
-//
-// isHeadline: check if element is headline
-//
-var isHeadline = function(cm)
-{
-	// get type
-	var type = cm.getTokenTypeAt({
-		line: cm.getCursor(true).line, 
-		ch: cm.getCursor(true).ch
-	});
-	//
-	if( type != null )
-	{
-		// match headline
-		var match = type.match(/header(\d+)/);
-	}
-	// return
-	return match != null ? parseInt(match[1]) : false;
-}
-//
-// isBold: check if element is bold
-//
-var isBold = function(cm)
-{
-	// get type
-	var type = cm.getTokenTypeAt({
-		line: cm.getCursor(true).line, 
-		ch: cm.getCursor(false).ch
-	});
-	if( type != null )
-	{
-		// match headline
-		var match = type.match(/strong/);
-	}
-	// return
-	return match != null ? true : false;
-}
-//
-// isItalic: check if element is italic
-//
-var isItalic = function(cm)
-{
-	// get type
-	var type = cm.getTokenTypeAt({
-		line: cm.getCursor(true).line, 
-		ch: cm.getCursor(true).ch
-	});
-	if( type != null )
-	{
-		// match headline
-		var match = type.match(/em/);
-	}
-	// return
-	return match != null ? true : false;
-}
-//
-// isQuote: check if element is quote
-//
-var isQuote = function(cm)
-{
-	// get type
-	var type = cm.getTokenTypeAt({
-		line: cm.getCursor(true).line, 
-		ch: cm.getCursor(false).ch
-	});
-	//
-	if( type != null )
-	{
-		// match headline
-		var match = type.match(/quote-(\d+)/);
-	}
-	// return
-	return match != null ? parseInt(match[1]) : false;
-}
-//
-// isLink: check if element is link
-//
-var isLink = function(cm, cursor)
-{
-	// get type
-	var type = cm.getTokenTypeAt({
-		line: cm.getCursor(true).line, 
-		ch: cm.getCursor(true).ch
-	});
-	//
-	if( type != null )
-	{
-		// match headline
-		var match = type.match(/link/);
-		match == undefined ? match = type.match(/string/) : null;
-	}
-	// return
-	return match != null ? true : false;
 }
 /* ------------------ */
 //
@@ -908,7 +708,7 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 		matchTags: true,
 		showTrailingSpace: true,
 		autoCloseTags: true,
-		styleSelectedText: true,
+		styleSelectedText: false,
 		styleActiveLine: true,
 		placeholder: "",
       tabMode: 'indent',
@@ -923,7 +723,7 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 				makeBold(cm);
 			},
 			"Cmd-I": function(cm){
-				makeItalic(cm);
+				options.fn.toggleFormat('header1');
 			},
 			"Ctrl-I": function(cm){
 				makeItalic(cm);
@@ -932,8 +732,6 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 	});
 	// add edit Options	
 	options.cm.on("cursorActivity", function(cm){
-		options.fn.hasFormat('header');
-		options.fn.hasFormat('quote');
 		editOptions(cm);
 	});
 	

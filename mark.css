@@ -66,10 +66,7 @@ body{
 		line-height: 140%;
 }
 .cm-s-mark .CodeMirror-selected {
-	background: rgb(55,115,215) !important;
-}
-.cm-s-mark .CodeMirror-selectedtext{
-	color: rgb(255,255,255) !important;
+	background: rgb(180,215,255) !important;
 }
 .cm-s-mark .CodeMirror-gutters {
 	background: rgba(0,0,0,0.05); border-right: 0px;
@@ -83,7 +80,9 @@ body{
 /*	border-left: 2px solid rgb(55,115,215) !important;*/
 	border: 0 !important;
 	width: 2px !important;
-	background: rgb(55,115,215);
+	background-color: rgb(55,170,225);
+/*	background: rgb(55,115,215);*/
+	
 /*	transform: translate3d(0, 29%, 0);
 	-webkit-transform: translate3d(0, 29%, 0);*/
 }
@@ -182,10 +181,9 @@ body{
 #editOptions{
 	position: absolute;
 	height: 2.5em;
-	background-color: rgb(15,15,15);
-	background-image: linear-gradient( top, rgb(35,35,35), rgb(15,15,15));
-	background-image: -webkit-linear-gradient( top, rgb(35,35,35), rgb(15,15,15));
-	box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+	background-color: rgb(245,245,245);
+	color: rgb(100,100,100);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.15);
 	border-radius: 3px;
 	z-index: 999;
 	margin-top: 10px;
@@ -204,7 +202,7 @@ body{
 	transform: translate(0,0);
 	-webkit-transform: translate(0,0);
 }
-#editOptions:before{
+#editOptions:before, #editOptions:after{
 	position: absolute;
 	bottom: -14px;
 	left: 50%;
@@ -214,11 +212,17 @@ body{
 	height: 0;
 	border-width: 7px 7px;
 	border-style: solid;
-	border-color: rgb(0,0,0) transparent transparent transparent;
+	border-color: rgb(245,245,245) transparent transparent transparent;
 	display: block;
+	z-index: 2;
+}
+#editOptions:after{
+	border-color: rgba(0,0,0,0.1) transparent transparent transparent;
+	bottom: -15px;
+	z-index: 1;
 }
 #editOptions.from-top:before{
-	border-color: transparent transparent rgb(0,0,0) transparent;
+	border-color: transparent transparent rgb(35,35,35) transparent;
 	bottom: auto;
 	top: -14px;
 }
@@ -234,31 +238,49 @@ body{
 /* edit Options content */
 #editOptions .button{
 	height: 100%;
-	padding: 0 .5em;
-	color: rgb(255,255,255);
+	width: 1.7em;
+	padding: 0;
+	display: block;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
 	font-size: 1.5em;
 	text-align: center;
 	line-height: 1.5em;
 	float: left;
 	position: relative;
 	cursor: pointer;
+	transition: color .4s ease;
+	background: transparent;
+}
+#editOptions .button:first-child{
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}
+#editOptions .button:last-child{
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+#editOptions .button:hover{
+/*	background: rgb(0,0,0);
+	transition: background .5s ease;*/
+	color: rgb(0,0,0);
+	transition: color .5s ease;
 }
 #editOptions .strong{
 	font-weight: 600;
 	font-family: courier;
 }
-#editOptions.strong .strong{
-	color: rgb(55,115,215);
-}
 #editOptions .em{
 	font-style: italic;
+	font-weight: 600;
 	font-family: times;
 }
-#editOptions.em .em{
-	color: rgb(55,115,215);
+#editOptions .header1, #editOptions .header2{
+	font-family: "Source Sans Pro";
+	font-weight: 600;
 }
 #editOptions .quote{
-	width: 1em;
 	font-weight: 600;
 	font-family: times;
 }
@@ -275,15 +297,16 @@ body{
 	content: "\2018";
 	left: .49em;
 }
-#editOptions.quote-1 .quote:before{
-	color: rgb(55,115,215);	
+#editOptions.quote-1 .quote:after{
+/*	color: rgba(0,0,0,0.35);*/
+	color: rgba(255,255,255,0.35);	
 }
-#editOptions.quote-2 .quote{
+#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1, 
+#editOptions.header2 .header2, #editOptions.quote-1 .quote, #editOptions.quote-2 .quote{
+/*	background: rgb(55,115,215);*/
+/*	box-shadow: -1px 0 0 rgba(0,0,0,0.075);*/
 	color: rgb(55,115,215);
 }
-#editOptions.header1 .header1{
-	color: rgb(55,115,215);
-}
-#editOptions.header2 .header2{
-	color: rgb(55,115,215);
+#editOptions.strong .strong{
+	box-shadow: none;
 }
