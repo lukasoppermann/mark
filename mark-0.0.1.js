@@ -14,12 +14,12 @@ var options = {
 		makeBold: function(cm)
 		{
 			// store original selection
-			var sel = cm.getSelection(),
+			var sel = options.cm.getSelection(),
 				 selLength = sel.length;
 			// get cursor
 			var cursor = {
-				start: cm.getCursor(true),
-				end: cm.getCursor(false)
+				start:options.cm.getCursor(true),
+				end:options.cm.getCursor(false)
 			}
 			// go to middle
 			var position = getMiddle(cm, true);
@@ -33,7 +33,7 @@ var options = {
 				if( (match['*'] != undefined && match['*'].length >= 2) || (match['_'] != undefined && match['_'].length >= 2))
 				{
 					// reset selection
-					cm.setSelection({
+					options.cm.setSelection({
 						line: cursor.start.line, 
 						ch: cursor.start.ch
 					}, {
@@ -41,14 +41,14 @@ var options = {
 						ch: cursor.end.ch
 					});
 					// replace
-					cm.replaceSelection(sel.replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
+					options.cm.replaceSelection(sel.replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
 				}
 				else
 				{
 					// get cursor position
-					var curCursor = cm.getCursor(true);
+					var curCursor = options.cm.getCursor(true);
 					// get line
-					var line = cm.getLine(curCursor.line);
+					var line = options.cm.getLine(curCursor.line);
 					// get boundries
 					var right = false, left = false, i = 0, str;
 					// left
@@ -76,7 +76,7 @@ var options = {
 					// get selection
 					if( right !== false && left !== false )
 					{
-						cm.setSelection({
+						options.cm.setSelection({
 							line: curCursor.line, 
 							ch: curCursor.ch-left
 						}, {
@@ -84,7 +84,7 @@ var options = {
 							ch: curCursor.ch+right+2
 						});
 						// replace selection
-						cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
+						options.cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{2}/g, '').replace(/[\*||_]{2}$/g,''));
 					}
 				}
 			}
@@ -92,35 +92,35 @@ var options = {
 			{
 				if( selLength == 0 )
 				{
-					getWordBoundaries(cm, true);
-					sel = cm.getSelection();
+					getWordBoundaries(true);
+					sel = options.cm.getSelection();
 				}
 				else
 				{			
 					// reset selection
-					cm.setSelection({
+					options.cm.setSelection({
 						line: cursor.start.line, 
 						ch: cursor.start.ch
 					}, {
 						line: cursor.end.line, 
 						ch: cursor.end.ch
 					});
-					sel = cm.getSelection();
+					sel = options.cm.getSelection();
 				}
 				// add bold chars
-				cm.replaceSelection('**'+sel+'**');
+				options.cm.replaceSelection('**'+sel+'**');
 			}
 		},
 		// makeItalic: makes the selection bold or not bold
 		makeItalic: function(cm)
 		{
 			// store original selection
-			var sel = cm.getSelection(),
+			var sel = options.cm.getSelection(),
 				 selLength = sel.length;
 			// get cursor
 			var cursor = {
-				start: cm.getCursor(true),
-				end: cm.getCursor(false)
+				start:options.cm.getCursor(true),
+				end:options.cm.getCursor(false)
 			}
 			// go to middle
 			var position = getMiddle(cm, true);
@@ -134,7 +134,7 @@ var options = {
 				if( (match['*'] != undefined && match['*'].length >= 2) || (match['_'] != undefined && match['_'].length >= 2))
 				{
 					// reset selection
-					cm.setSelection({
+					options.cm.setSelection({
 						line: cursor.start.line, 
 						ch: cursor.start.ch
 					}, {
@@ -142,14 +142,14 @@ var options = {
 						ch: cursor.end.ch
 					});
 					// replace
-					cm.replaceSelection(sel.replace(/^[\*||_]{1}/g, '').replace(/[\*||_]{1}$/g,''));
+					options.cm.replaceSelection(sel.replace(/^[\*||_]{1}/g, '').replace(/[\*||_]{1}$/g,''));
 				}
 				else
 				{
 					// get cursor position
-					var curCursor = cm.getCursor(true);
+					var curCursor = options.cm.getCursor(true);
 					// get line
-					var line = cm.getLine(curCursor.line);
+					var line = options.cm.getLine(curCursor.line);
 					// get boundries
 					var right = false, left = false, i = 0, str;
 					// left
@@ -177,7 +177,7 @@ var options = {
 					// get selection
 					if( right !== false && left !== false )
 					{
-						cm.setSelection({
+						options.cm.setSelection({
 							line: curCursor.line, 
 							ch: curCursor.ch-left
 						}, {
@@ -185,7 +185,7 @@ var options = {
 							ch: curCursor.ch+right+1
 						});
 						// replace selection
-						cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{1}/g, '').replace(/[\*||_]{1}$/g,''));
+						options.cm.replaceSelection(cm.getSelection().replace(/^[\*||_]{1}/g, '').replace(/[\*||_]{1}$/g,''));
 					}
 					return false;
 				}
@@ -194,23 +194,23 @@ var options = {
 			{
 				if( selLength == 0 )
 				{
-					getWordBoundaries(cm, true);
-					sel = cm.getSelection();
+					getWordBoundaries(true);
+					sel = options.cm.getSelection();
 				}
 				else
 				{			
 					// reset selection
-					cm.setSelection({
+					options.cm.setSelection({
 						line: cursor.start.line, 
 						ch: cursor.start.ch
 					}, {
 						line: cursor.end.line, 
 						ch: cursor.end.ch
 					});
-					sel = cm.getSelection();
+					sel = options.cm.getSelection();
 				}
 				// add bold chars
-				cm.replaceSelection('_'+sel+'_');
+				options.cm.replaceSelection('_'+sel+'_');
 			}
 			// set focus
 			cm.focus();
@@ -219,14 +219,14 @@ var options = {
 		makeHeadline: function(cm, setLevel)
 		{
 			var level = isHeadline(cm),
-				 curCursor = cm.getCursor(true),
+				 curCursor = options.cm.getCursor(true),
 				 setLevel = (setLevel !== undefined) ? parseInt(setLevel) : 1;
 		
 			// check if line is headline
 			if( level !== false )
 			{
 				// set selection
-				cm.setSelection({
+				options.cm.setSelection({
 					line: curCursor.line, 
 					ch: 0
 				}, {
@@ -234,27 +234,27 @@ var options = {
 					ch: parseInt(level)+1
 				});
 				// get selection
-				var sel = cm.getSelection(),
+				var sel = options.cm.getSelection(),
 					 num = (sel.substr(-1) == ' ' ? 1 : 0);
 			 
 				if( level == setLevel )
 				{
-					cm.replaceSelection(cm.getSelection().substr(setLevel+num));
+					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num));
 				}
 				else if( level > setLevel )
 				{
-					cm.replaceSelection(cm.getSelection().substr(level-setLevel));
+					options.cm.replaceSelection(cm.getSelection().substr(level-setLevel));
 				}
 				// level < setLevel
 				else
 				{
-					cm.replaceSelection(cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '#' )+' ');
+					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '#' )+' ');
 				}
 			}
 			else
 			{
 				// set selection
-				cm.setSelection({
+				options.cm.setSelection({
 					line: curCursor.line, 
 					ch: 0
 				}, {
@@ -262,15 +262,15 @@ var options = {
 					ch: 0
 				});
 				// add #
-				cm.replaceSelection(new Array( setLevel + 1 ).join( '#' )+' '+cm.getSelection());
+				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '#' )+' '+cm.getSelection());
 			}
 			// reset selection
-			cm.setSelection({
+			options.cm.setSelection({
 				line: curCursor.line, 
 				ch: 0
 			}, {
 				line: curCursor.line, 
-				ch: cm.getLine(curCursor.line).length
+				ch: options.cm.getLine(curCursor.line).length
 			});
 			// set focus
 			cm.focus();
@@ -279,13 +279,13 @@ var options = {
 		makeQuote: function(cm, setLevel)
 		{
 			var level = isQuote(cm),
-				 curCursor = cm.getCursor(true),
+				 curCursor = options.cm.getCursor(true),
 				 setLevel = (setLevel !== undefined && typeof(setLevel) === "number") ? setLevel : (level === false ? 1 : (parseInt(level) === 1 ? 2 : false));
 			// check if line is headline
 			if( level !== false )
 			{
 				// set selection
-				cm.setSelection({
+				options.cm.setSelection({
 					line: curCursor.line, 
 					ch: 0
 				}, {
@@ -293,31 +293,31 @@ var options = {
 					ch: parseInt(level)+1
 				});
 				// get selection
-				var sel = cm.getSelection(),
+				var sel = options.cm.getSelection(),
 					 num = (sel.substr(-1) == ' ' ? 1 : 0);
 			 
 				if ( setLevel === false )
 				{
-					cm.replaceSelection(cm.getSelection().substr(level+num))
+					options.cm.replaceSelection(cm.getSelection().substr(level+num))
 				}
 				else if( level == setLevel )
 				{
-					cm.replaceSelection(cm.getSelection().substr(setLevel+num));
+					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num));
 				}
 				else if( level > setLevel )
 				{
-					cm.replaceSelection(cm.getSelection().substr(level-setLevel));
+					options.cm.replaceSelection(cm.getSelection().substr(level-setLevel));
 				}
 				// level < setLevel
 				else
 				{
-					cm.replaceSelection(cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '>' )+' ');
+					options.cm.replaceSelection(cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '>' )+' ');
 				}
 			}
 			else
 			{
 				// set selection
-				cm.setSelection({
+				options.cm.setSelection({
 					line: curCursor.line, 
 					ch: 0
 				}, {
@@ -325,15 +325,15 @@ var options = {
 					ch: 0
 				});
 				// add #
-				cm.replaceSelection(new Array( setLevel + 1 ).join( '>' )+' '+cm.getSelection());
+				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '>' )+' '+cm.getSelection());
 			}
 			// reset selection
-			cm.setSelection({
+			options.cm.setSelection({
 				line: curCursor.line, 
 				ch: 0
 			}, {
 				line: curCursor.line, 
-				ch: cm.getLine(curCursor.line).length
+				ch: options.cm.getLine(curCursor.line).length
 			});
 			// set focus
 			cm.focus();
@@ -480,11 +480,11 @@ var options = {
 var getMiddle = function(cm, setMiddle)
 {
 	// selection
-	var sel = cm.getSelection();
+	var sel = options.cm.getSelection();
 	// get cursor
 	var cursor = {
-		start: cm.getCursor(true),
-		end: cm.getCursor(false)
+		start:options.cm.getCursor(true),
+		end:options.cm.getCursor(false)
 	}
 	// get middle
 	var length = 0, lineNum = false, chNum = Math.floor(sel.length/2) - 1;
@@ -498,7 +498,7 @@ var getMiddle = function(cm, setMiddle)
 	// 	length += line.text.length;
 	// 	if( length >= selLength && lineNum == false)
 	// 	{
-	// 		lineNum = cm.getLineNumber(line);
+	// 		lineNum = options.cm.getLineNumber(line);
 	// 	}
 	// 	if( lineNum == false )
 	// 	{
@@ -509,7 +509,7 @@ var getMiddle = function(cm, setMiddle)
 	if( typeof(setMiddle) != undefined && setMiddle != null && setMiddle != false && sel.length > 0 )
 	{
 		// reset selection
-		cm.setSelection({
+		options.cm.setSelection({
 			line: lineNum, 
 			ch: chNum
 		}, {
@@ -524,12 +524,12 @@ var getMiddle = function(cm, setMiddle)
 //
 // getWordBoundaries: get the bundaries of a word
 //
-var getWordBoundaries = function(cm, setSelection)
+var getWordBoundaries = function(setSelection)
 {
 	// get cursor position
-	var curCursor = cm.getCursor(true);
+	var curCursor = options.cm.getCursor(true);
 	// get line
-	var line = cm.getLine(curCursor.line);
+	var line = options.cm.getLine(curCursor.line);
 	// get boundries
 	var right = false, left = false, i = 0, str;
 	// left
@@ -557,7 +557,7 @@ var getWordBoundaries = function(cm, setSelection)
 	// set selection
 	if( typeof(setSelection) != undefined && setSelection != null && setSelection != false  )
 	{
-		cm.setSelection({
+		options.cm.setSelection({
 			line: curCursor.line, 
 			ch: parseInt(curCursor.ch)-parseInt(left)+1
 		}, {
@@ -629,8 +629,8 @@ var f, editOptions = function(cm)
 			// ------------------------------
 			// get cursor
 			var cursor = {
-				start: cm.getCursor(true),
-				end: cm.getCursor(false)
+				start:options.cm.getCursor(true),
+				end:options.cm.getCursor(false)
 			};
 			// get coords
 			var coords = {
