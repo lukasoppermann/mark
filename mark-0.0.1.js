@@ -22,7 +22,7 @@ var options = {
 				end:options.cm.getCursor(false)
 			}
 			// go to middle
-			var position = getMiddle(cm, true);
+			var position = options.fn.getMiddlePos(true);
 			// check if bold
 			if( options.fn.hasFormat('strong') )
 			{
@@ -123,7 +123,7 @@ var options = {
 				end:options.cm.getCursor(false)
 			}
 			// go to middle
-			var position = getMiddle(cm, true);
+			var position = options.fn.getMiddlePos(true);
 			// check if bold
 			if( options.fn.hasFormat('em') )
 			{
@@ -348,7 +348,7 @@ var options = {
  			{
  				// isInline = true;
  				// // set selection to middle of selection
- 				// pos = getMiddle(false);
+ 				// pos = options.fn.getMiddlePos(false);
  			}
  			else{ 
 				// check if style is active
@@ -379,7 +379,7 @@ var options = {
 			{
 				isInline = true;
 				// set selection to middle of selection
-				pos = getMiddle(false);
+				pos = options.fn.getMiddlePos(false);
 			}
 			else{ 
 				isBlock = true; 
@@ -454,25 +454,22 @@ var options = {
 			// get line
 			var line = options.cm.getLine(curCursor.line);
 			// get boundries
-			var right = false, left = false, i = 0, str;
+			var right = false, left = false, i = 0;
 			// left
 			while( left === false  )
 			{
 				i++;
-				str = line.substring((curCursor.ch-i),curCursor.ch-(i-1));
-				if( str == ' ')
+				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ')
 				{
 					left = i;
 				}
-		
 			}
 			i = 0;
 			// right
 			while( right === false  )
 			{
 				i++;
-				str = line.substring((curCursor.ch+i),curCursor.ch+(i+1));
-				if( str == ' ')
+				if( line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == ' ')
 				{
 					right = i;
 				}
@@ -487,11 +484,53 @@ var options = {
 					line: curCursor.line, 
 					ch: parseInt(curCursor.ch)+parseInt(right)-1
 				});
-		
 			}
 			// return word boundaries
 			return [{ line: curCursor.line, ch: curCursor.ch-left+1 },
 					  { line: curCursor.line, ch: curCursor.ch+right-1 }];
+		},
+		// getMiddlePos: get the middle of a given range
+		getMiddlePos: function(setPos)
+		{
+			// selection
+			var sel = options.cm.getSelection();
+			// get cursor
+			var cursor = {
+				start:options.cm.getCursor(true),
+				end:options.cm.getCursor(false)
+			}
+			// get middle
+			var length = 0, lineNum = false, chNum = Math.floor(sel.length/2) - 1;
+			selLength = chNum + cursor.start.ch;
+			chNum = selLength+1
+			lineNum = cursor.start.line;
+			// loop through lines
+	
+			// options.cm.eachLine(cursor.start.line, cursor.end.line+1, function(line)
+			// {
+			// 	length += line.text.length;
+			// 	if( length >= selLength && lineNum == false)
+			// 	{
+			// 		lineNum = options.cm.getLineNumber(line);
+			// 	}
+			// 	if( lineNum == false )
+			// 	{
+			// 		chNum -= line.text.length;
+			// 	}
+			// });
+			// set middle
+			if( typeof(setPos) != undefined && setPos != null && setPos != false && sel.length > 0 )
+			{
+				options.cm.setSelection({
+					line: lineNum, 
+					ch: chNum
+				}, {
+					line: lineNum, 
+					ch: chNum
+				});	
+			}
+			// return middle position
+			return { line: lineNum , ch: chNum }
 		}
 	},
 	ffn: {
@@ -519,53 +558,6 @@ var options = {
 			}
 		}
 	}
-};
-/* ------------------ */
-//
-// getMiddle: get the middle of a given range
-//
-var getMiddle = function(cm, setMiddle)
-{
-	// selection
-	var sel = options.cm.getSelection();
-	// get cursor
-	var cursor = {
-		start:options.cm.getCursor(true),
-		end:options.cm.getCursor(false)
-	}
-	// get middle
-	var length = 0, lineNum = false, chNum = Math.floor(sel.length/2) - 1;
-	selLength = chNum + cursor.start.ch;
-	chNum = selLength+1
-	lineNum = cursor.start.line;
-	// loop through lines
-	
-	// options.cm.eachLine(cursor.start.line, cursor.end.line+1, function(line)
-	// {
-	// 	length += line.text.length;
-	// 	if( length >= selLength && lineNum == false)
-	// 	{
-	// 		lineNum = options.cm.getLineNumber(line);
-	// 	}
-	// 	if( lineNum == false )
-	// 	{
-	// 		chNum -= line.text.length;
-	// 	}
-	// });
-	// get middle
-	if( typeof(setMiddle) != undefined && setMiddle != null && setMiddle != false && sel.length > 0 )
-	{
-		// reset selection
-		options.cm.setSelection({
-			line: lineNum, 
-			ch: chNum
-		}, {
-			line: lineNum, 
-			ch: chNum
-		});	
-	}
-	// get middle position
-	return { line: lineNum , ch: chNum }
 };
 /* ------------------ */
 //
@@ -714,7 +706,7 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 		extraKeys: {
 			"Enter": "newlineAndIndentContinueMarkdownList",
 			"Cmd-B": function(){
-				makeBold();
+				options.fn.makeBold();
 			},
 			"Ctrl-B": function(){
 				makeBold();
