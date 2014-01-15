@@ -92,7 +92,7 @@ var options = {
 			{
 				if( selLength == 0 )
 				{
-					getWordBoundaries(true);
+					options.fn.getWordBoundaries(true);
 					sel = options.cm.getSelection();
 				}
 				else
@@ -194,7 +194,7 @@ var options = {
 			{
 				if( selLength == 0 )
 				{
-					getWordBoundaries(true);
+					options.fn.getWordBoundaries(true);
 					sel = options.cm.getSelection();
 				}
 				else
@@ -445,6 +445,53 @@ var options = {
 			}
 			// return pos object
 			return pos;
+		},
+		// getWordBoundaries: get the bundaries of a word
+		getWordBoundaries: function(setSelection)
+		{
+			// get cursor position
+			var curCursor = options.cm.getCursor(true);
+			// get line
+			var line = options.cm.getLine(curCursor.line);
+			// get boundries
+			var right = false, left = false, i = 0, str;
+			// left
+			while( left === false  )
+			{
+				i++;
+				str = line.substring((curCursor.ch-i),curCursor.ch-(i-1));
+				if( str == ' ')
+				{
+					left = i;
+				}
+		
+			}
+			i = 0;
+			// right
+			while( right === false  )
+			{
+				i++;
+				str = line.substring((curCursor.ch+i),curCursor.ch+(i+1));
+				if( str == ' ')
+				{
+					right = i;
+				}
+			}
+			// set selection
+			if( typeof(setSelection) != undefined && setSelection != null && setSelection != false  )
+			{
+				options.cm.setSelection({
+					line: curCursor.line, 
+					ch: parseInt(curCursor.ch)-parseInt(left)+1
+				}, {
+					line: curCursor.line, 
+					ch: parseInt(curCursor.ch)+parseInt(right)-1
+				});
+		
+			}
+			// return word boundaries
+			return [{ line: curCursor.line, ch: curCursor.ch-left+1 },
+					  { line: curCursor.line, ch: curCursor.ch+right-1 }];
 		}
 	},
 	ffn: {
@@ -520,56 +567,6 @@ var getMiddle = function(cm, setMiddle)
 	// get middle position
 	return { line: lineNum , ch: chNum }
 };
-/* ------------------ */
-//
-// getWordBoundaries: get the bundaries of a word
-//
-var getWordBoundaries = function(setSelection)
-{
-	// get cursor position
-	var curCursor = options.cm.getCursor(true);
-	// get line
-	var line = options.cm.getLine(curCursor.line);
-	// get boundries
-	var right = false, left = false, i = 0, str;
-	// left
-	while( left === false  )
-	{
-		i++;
-		str = line.substring((curCursor.ch-i),curCursor.ch-(i-1));
-		if( str == ' ')
-		{
-			left = i;
-		}
-		
-	}
-	i = 0;
-	// right
-	while( right === false  )
-	{
-		i++;
-		str = line.substring((curCursor.ch+i),curCursor.ch+(i+1));
-		if( str == ' ')
-		{
-			right = i;
-		}
-	}
-	// set selection
-	if( typeof(setSelection) != undefined && setSelection != null && setSelection != false  )
-	{
-		options.cm.setSelection({
-			line: curCursor.line, 
-			ch: parseInt(curCursor.ch)-parseInt(left)+1
-		}, {
-			line: curCursor.line, 
-			ch: parseInt(curCursor.ch)+parseInt(right)-1
-		});
-		
-	}
-	// return word boundaries
-	return [{ line: curCursor.line, ch: curCursor.ch-left+1 },
-			  { line: curCursor.line, ch: curCursor.ch+right-1 }];
-}
 /* ------------------ */
 //
 /* functions */
@@ -716,17 +713,17 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 		dragDrop: false,
 		extraKeys: {
 			"Enter": "newlineAndIndentContinueMarkdownList",
-			"Cmd-B": function(cm){
-				makeBold(cm);
+			"Cmd-B": function(){
+				makeBold();
 			},
-			"Ctrl-B": function(cm){
-				makeBold(cm);
+			"Ctrl-B": function(){
+				makeBold();
 			},
-			"Cmd-I": function(cm){
+			"Cmd-I": function(){
 				options.fn.toggleFormat('header1');
 			},
-			"Ctrl-I": function(cm){
-				makeItalic(cm);
+			"Ctrl-I": function(){
+				makeItalic();
 			}
 		}
 	});
