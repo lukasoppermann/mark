@@ -339,7 +339,7 @@ var options = {
 			options.cm.focus();
 		},
 		// format
-		toggleFormat: function(format){
+		toggleFormat: function(format, params){
 			var block = ["header", "quote", "code"], isBlock = false,
 				 inline = ["strong", "em", "link"], isInline = false,
 				 pos;
@@ -347,6 +347,7 @@ var options = {
  			if( inline.indexOf(format) !== -1 )
  			{
  				// isInline = true;
+				var boundaries = options.fn.getWordBoundaries(true);
  				// // set selection to middle of selection
  				// pos = options.fn.getMiddlePos(false);
  			}
@@ -356,9 +357,17 @@ var options = {
 				// if false: add
  				isBlock = true;
 				// remove format
-				if( options.fn.hasFormat(format) !== false )
+				var level = options.fn.hasFormat(format);
+				if( level !== false )
 				{
-					
+					if( typeof(level) === 'number' )
+					{
+						options.fn.blockFormatFront(params);
+					}
+					else
+					{
+						
+					}
 				}
 				// add format
 				else
@@ -367,6 +376,11 @@ var options = {
 				}
 				
  			}	 
+			
+		},
+		// blockFormatFront
+		blockFormatFront: function( params )
+		{
 			
 		},
 		// check for formatting
@@ -492,45 +506,22 @@ var options = {
 		// getMiddlePos: get the middle of a given range
 		getMiddlePos: function(setPos)
 		{
-			// selection
-			var sel = options.cm.getSelection();
-			// get cursor
-			var cursor = {
-				start:options.cm.getCursor(true),
-				end:options.cm.getCursor(false)
-			}
-			// get middle
-			var length = 0, lineNum = false, chNum = Math.floor(sel.length/2) - 1;
-			selLength = chNum + cursor.start.ch;
-			chNum = selLength+1
-			lineNum = cursor.start.line;
-			// loop through lines
-	
-			// options.cm.eachLine(cursor.start.line, cursor.end.line+1, function(line)
-			// {
-			// 	length += line.text.length;
-			// 	if( length >= selLength && lineNum == false)
-			// 	{
-			// 		lineNum = options.cm.getLineNumber(line);
-			// 	}
-			// 	if( lineNum == false )
-			// 	{
-			// 		chNum -= line.text.length;
-			// 	}
-			// });
+			var sel = options.cm.getSelection(),
+				 curCursor = options.cm.getCursor(true),
+				 chNum = curCursor.ch + Math.floor(sel.length/2);
 			// set middle
 			if( typeof(setPos) != undefined && setPos != null && setPos != false && sel.length > 0 )
 			{
 				options.cm.setSelection({
-					line: lineNum, 
+					line: curCursor.line, 
 					ch: chNum
 				}, {
-					line: lineNum, 
+					line: curCursor.line, 
 					ch: chNum
 				});	
 			}
 			// return middle position
-			return { line: lineNum , ch: chNum }
+			return { line: curCursor.line , ch: chNum }
 		}
 	},
 	ffn: {
@@ -709,10 +700,10 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 				options.fn.makeBold();
 			},
 			"Ctrl-B": function(){
-				makeBold();
+				console.log(options.fn.getMiddlePos(true));
 			},
 			"Cmd-I": function(){
-				options.fn.toggleFormat('header1');
+				options.fn.toggleFormat('header', {"level":1});
 			},
 			"Ctrl-I": function(){
 				makeItalic();
