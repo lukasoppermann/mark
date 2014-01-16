@@ -343,6 +343,7 @@ var options = {
 			var block = ["header", "quote", "code"],
 				 inline = ["strong", "em", "link"],
 				 pos;
+			params.format = format
  			// if inline 
  			if( inline.indexOf(format) !== -1 )
  			{
@@ -353,11 +354,10 @@ var options = {
  			}
 			// if block
  			else
-			{ 
+			{
 				if( format === "header" )
 				{
 					params.indicator = '#';
-					params.format = format;
 					options.fn.blockFormatFront(params);
 				}
 				else if( format === "quote" )
@@ -370,7 +370,6 @@ var options = {
 					// needs to be implemented
 				}
  			}	 
-			
 		},
 		// blockFormatFront
 		blockFormatFront: function( params )
@@ -378,15 +377,27 @@ var options = {
 			var level = options.fn.hasFormat(params.format);
 			if( level !== false && typeof(level) === 'number' )
 			{
+				options.cm.setSelection({
+					line: options.cm.getCursor(true).line,
+					ch: 0
+				}, {
+					line: options.cm.getCursor(true).line, 
+					ch: parseInt(level)+1
+				});
+				var sel = options.cm.getSelection();
 				// remove format
 				if( level === params.level )
 				{
-					
+					options.cm.replaceSelection( sel.substr(params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) );
 				}
 				// change format
+				else if( level > params.level)
+				{
+					options.cm.replaceSelection( sel.substr(level - params.level));
+				}
 				else
 				{
-					
+					options.cm.replaceSelection( sel.substr( params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator )+' ');
 				}
 			}
 			// add format
@@ -722,7 +733,7 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 				console.log(options.fn.getMiddlePos(true));
 			},
 			"Cmd-I": function(){
-				options.fn.toggleFormat('header', {"level":1});
+				options.fn.toggleFormat('quote', {"level":1});
 			},
 			"Ctrl-I": function(){
 				options.fn.toggleFormat('quote', {"level":2});
