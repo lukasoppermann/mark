@@ -356,15 +356,18 @@ var options = {
 			{ 
 				if( format === "header" )
 				{
-					
+					params.indicator = '#';
+					params.format = format;
+					options.fn.blockFormatFront(params);
 				}
 				else if( format === "quote" )
 				{
-					
+					params.indicator = '>';
+					options.fn.blockFormatFront(params);
 				}
 				else if( format === "code" )
 				{
-					
+					// needs to be implemented
 				}
  			}	 
 			
@@ -372,13 +375,15 @@ var options = {
 		// blockFormatFront
 		blockFormatFront: function( params )
 		{
-			var level = options.fn.hasFormat(format);
-			if( level !== false )
+			var level = options.fn.hasFormat(params.format);
+			if( level !== false && typeof(level) === 'number' )
 			{
-				if( typeof(level) === 'number' )
+				// remove format
+				if( level === params.level )
 				{
-					options.fn.blockFormatFront(params);
+					
 				}
+				// change format
 				else
 				{
 					
@@ -387,7 +392,15 @@ var options = {
 			// add format
 			else
 			{
-				
+				options.cm.setSelection({
+					line: options.cm.getCursor(true).line, 
+					ch: 0
+				}, {
+					line: options.cm.getCursor(true).line, 
+					ch: 0
+				});
+				// add indicator
+				options.cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator )+' ');
 			}
 		},
 		// check for formatting
@@ -586,8 +599,7 @@ var f, editOptions = function()
 										'<div data-class="em" data-fn="makeItalic" class="em button">i</div>'+
 										'<div data-class="header1" data-fn="makeHeadline" data-parameters="1" class="header1 button">H1</div>'+
 										'<div data-class="header2" data-fn="makeHeadline" data-parameters="2" class="header2 button">H2</div>'+
-										'<div data-class="quote" data-fn="makeQuote" data-parameters="false" class="quote button"></div>'+
-										'<div data-class="link" data-fn="makeLink" class="link button">&</div>';
+										'<div data-class="quote" data-fn="makeQuote" data-parameters="false" class="quote button"></div>';
 				// add panel to editor
 				options.cm.addWidget({line:0,ch:0},panel);
 				// select elements
@@ -713,7 +725,7 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 				options.fn.toggleFormat('header', {"level":1});
 			},
 			"Ctrl-I": function(){
-				makeItalic();
+				options.fn.toggleFormat('quote', {"level":2});
 			}
 		}
 	});
