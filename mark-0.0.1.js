@@ -340,8 +340,8 @@ var options = {
 		},
 		// format
 		toggleFormat: function(format, params){
-			var block = ["header", "quote", "code"], isBlock = false,
-				 inline = ["strong", "em", "link"], isInline = false,
+			var block = ["header", "quote", "code"],
+				 inline = ["strong", "em", "link"],
 				 pos;
  			// if inline 
  			if( inline.indexOf(format) !== -1 )
@@ -351,37 +351,44 @@ var options = {
  				// // set selection to middle of selection
  				// pos = options.fn.getMiddlePos(false);
  			}
- 			else{ 
-				// check if style is active
-				// if true: remove
-				// if false: add
- 				isBlock = true;
-				// remove format
-				var level = options.fn.hasFormat(format);
-				if( level !== false )
-				{
-					if( typeof(level) === 'number' )
-					{
-						options.fn.blockFormatFront(params);
-					}
-					else
-					{
-						
-					}
-				}
-				// add format
-				else
+			// if block
+ 			else
+			{ 
+				if( format === "header" )
 				{
 					
 				}
-				
+				else if( format === "quote" )
+				{
+					
+				}
+				else if( format === "code" )
+				{
+					
+				}
  			}	 
 			
 		},
 		// blockFormatFront
 		blockFormatFront: function( params )
 		{
-			
+			var level = options.fn.hasFormat(format);
+			if( level !== false )
+			{
+				if( typeof(level) === 'number' )
+				{
+					options.fn.blockFormatFront(params);
+				}
+				else
+				{
+					
+				}
+			}
+			// add format
+			else
+			{
+				
+			}
 		},
 		// check for formatting
 		hasFormat: function(format){
