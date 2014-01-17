@@ -218,7 +218,7 @@ var options = {
 		// format
 		toggleFormat: function(format, params){
 			var block = {"header":["#"], "quote":[">"], "code":["```"]},
-				 inline = {"strong":["**","__"], "em":["_","*"], "link":[""]},
+				 inline = {"strong":["**",/[__|\*\*]/], "em":["_",/[.^_]?_[.^_]?|\*/], "link":[""]},
 				 pos, params = (params === undefined || params === null) ? {} : params;
 			params.format = format;
 			console.log(params);
@@ -308,13 +308,16 @@ var options = {
 			if( options.fn.hasFormat(params.format) !== false )
 			{
 				console.log('has');
-				// var boundaries = options.fn.getWordBoundaries(true);
+				// 1. go to middle of selection
+				// 1.5 get word boundary as selection
+				// 2. cut part right & cut part left
+				// 3. match all occurrences of indicator  in left and right
 			}
 			// add
 			else
 			{
 				var sel = options.cm.getSelection();
-				if( sel.length > 0 )
+				if( sel.trim().length > 0)
 				{
 					options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
 				}
@@ -323,14 +326,8 @@ var options = {
 				{
 					if( options.fn.inWord() )
 					{
-						// reset selection
-						options.cm.setSelection({
-							line: curCursor.line, 
-							ch: curCursor.ch-1
-						}, {
-							line: curCursor.line, 
-							ch: curCursor.ch+1
-						});
+						options.fn.getWordBoundaries(true);
+						options.cm.replaceSelection(params.indicator[0]+options.cm.getSelection()+params.indicator[0]);
 					}
 				}
 			}
@@ -425,7 +422,7 @@ var options = {
 			while( left === false  )
 			{
 				i++;
-				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ')
+				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ' || curCursor.ch-i <= 0)
 				{
 					left = i;
 				}
@@ -435,11 +432,12 @@ var options = {
 			while( right === false  )
 			{
 				i++;
-				if( line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == ' ')
+				if( /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+(i))) || curCursor.ch+i >= line.length)
 				{
 					right = i;
 				}
 			}
+			console.log(left+' '+right);
 			// set selection
 			if( typeof(setSelection) != undefined && setSelection != null && setSelection != false  )
 			{
@@ -498,8 +496,8 @@ var options = {
 				line: curCursor.end.line, 
 				ch: curCursor.end.ch
 			});
-			// check if in wird
-			if( tmpSel.trim().length >= 2 && (tmpSel.substring(1,2).trim().length > 0) )
+			// check if in word
+			if( tmpSel.trim().length >= 2 && tmpSel.substring(1,2).trim().length > 0 )
 			{
 				return true;
 			}
