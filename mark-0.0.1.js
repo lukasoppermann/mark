@@ -303,6 +303,7 @@ var options = {
 		// inlineFormat
 		inlineFormat: function( params )
 		{
+			console.log(options.fn.inWord());
 			// remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
@@ -320,7 +321,17 @@ var options = {
 				// only a carat is set, no selection
 				else
 				{
-					var boundaries = options.fn.getWordBoundaries(true);
+					if( options.fn.inWord() )
+					{
+						// reset selection
+						options.cm.setSelection({
+							line: curCursor.line, 
+							ch: curCursor.ch-1
+						}, {
+							line: curCursor.line, 
+							ch: curCursor.ch+1
+						});
+					}
 				}
 			}
 		},
@@ -463,6 +474,36 @@ var options = {
 			}
 			// return middle position
 			return { line: curCursor.line , ch: chNum }
+		},
+		inWord: function()
+		{
+			var curCursor = {
+				start: options.cm.getCursor(true),
+				end: options.cm.getCursor(false)
+			};
+			// set selection for inWord 
+			options.cm.setSelection({
+				line: curCursor.start.line, 
+				ch: curCursor.start.ch-1
+			}, {
+				line: curCursor.end.line, 
+				ch: curCursor.end.ch+1
+			});
+			var tmpSel = options.cm.getSelection();
+			// reset selection
+			options.cm.setSelection({
+				line: curCursor.start.line, 
+				ch: curCursor.start.ch
+			}, {
+				line: curCursor.end.line, 
+				ch: curCursor.end.ch
+			});
+			// check if in wird
+			if( tmpSel.trim().length >= 2 && (tmpSel.substring(1,2).trim().length > 0) )
+			{
+				return true;
+			}
+			return false;
 		}
 	},
 	ffn: {
