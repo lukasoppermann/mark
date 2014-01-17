@@ -217,20 +217,23 @@ var options = {
 		},
 		// format
 		toggleFormat: function(format, params){
-			var block = {"header":"#", "quote":">", "code":"```"},
-				 inline = {"strong":["**","__"], "em":["_","*"], "link":""},
+			var block = {"header":["#"], "quote":[">"], "code":["```"]},
+				 inline = {"strong":["**","__"], "em":["_","*"], "link":[""]},
 				 pos, params = (params === undefined || params === null) ? {} : params;
 			params.format = format;
 			console.log(params);
  			// if inline 
  			if( inline.hasOwnProperty(format) )
  			{
-				console.log('inline');
- 				// isInline = true;
-				var boundaries = options.fn.getWordBoundaries(true);
- 				// // set selection to middle of selection
- 				// pos = options.fn.getMiddlePos(false);
-				options.fn.inlineFormat();
+				if( format === "strong" || format === "em" )
+				{
+					params.indicator = inline[format];
+					options.fn.inlineFormat(params);
+				}
+				else if( format === "link" )
+				{
+					// needs to be implemented
+				}
  			}
 			// if block
  			else
@@ -273,7 +276,7 @@ var options = {
 				}
 				else
 				{
-					options.cm.replaceSelection( sel.substr( params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator )+' ');
+					options.cm.replaceSelection( sel.substr( params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');
 				}
 			}
 			// add format
@@ -287,7 +290,7 @@ var options = {
 					ch: 0
 				});
 				// add indicator
-				options.cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator )+' ');
+				options.cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator[0] )+' ');
 			}
 			options.cm.setSelection({
 				line: curCursor.line, 
@@ -298,9 +301,28 @@ var options = {
 			});
 		},
 		// inlineFormat
-		inlineFormat: function( )
+		inlineFormat: function( params )
 		{
-			
+			// remove
+			if( options.fn.hasFormat(params.format) !== false )
+			{
+				console.log('has');
+				// var boundaries = options.fn.getWordBoundaries(true);
+			}
+			// add
+			else
+			{
+				var sel = options.cm.getSelection();
+				if( sel.length > 0 )
+				{
+					options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
+				}
+				// only a carat is set, no selection
+				else
+				{
+					var boundaries = options.fn.getWordBoundaries(true);
+				}
+			}
 		},
 		// check for formatting
 		hasFormat: function(format){
@@ -503,7 +525,7 @@ var f, editOptions = function()
 				panel = document.createElement('div');
 				panel.id = 'editOptions';
 				panel.innerHTML = '<div data-class="strong" data-format="strong" class="strong button">B</div>'+
-										'<div data-class="em" data-format="italic" class="em button">i</div>'+
+										'<div data-class="em" data-format="em" class="em button">i</div>'+
 										'<div data-class="header1" data-format="header" data-parameters=\'{"level":1}\' class="header1 button">H1</div>'+
 										'<div data-class="header2" data-format="header" data-parameters=\'{"level":2}\' class="header2 button">H2</div>'+
 										'<div data-class="quote" data-format="quote" data-parameters=\'{"level":1}\' class="quote button"></div>';
@@ -629,7 +651,7 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 		extraKeys: {
 			"Enter": "newlineAndIndentContinueMarkdownList",
 			"Cmd-B": function(){
-				options.fn.makeBold();
+				options.fn.toggleFormat('strong');
 			},
 			"Ctrl-B": function(){
 				console.log(options.fn.getMiddlePos(true));
