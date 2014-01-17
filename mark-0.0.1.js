@@ -312,6 +312,8 @@ var options = {
 				// 1.5 get word boundary as selection
 				// 2. cut part right & cut part left
 				// 3. match all occurrences of indicator  in left and right
+				// (^|[^_?])(_|___)([^_?]|$) -> works, but needs testing
+				// http://leaverou.github.io/regexplained/
 			}
 			// add
 			else
