@@ -255,7 +255,6 @@ body{
 	float: left;
 	position: relative;
 	cursor: pointer;
-	transition: color .4s ease;
 	background: transparent;
 }
 #editOptions .button:first-child{
@@ -270,7 +269,6 @@ body{
 /*	background: rgb(0,0,0);
 	transition: background .5s ease;*/
 	color: rgb(0,0,0);
-	transition: color .5s ease;
 }
 #editOptions .strong{
 	font-weight: 600;
@@ -304,7 +302,7 @@ body{
 }
 #editOptions.quote-1 .quote:after{
 /*	color: rgba(0,0,0,0.35);*/
-	color: rgba(255,255,255,0.35);	
+	color: rgba(0,0,0,0.25);	
 }
 #editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1, 
 #editOptions.header2 .header2, #editOptions.quote-1 .quote, #editOptions.quote-2 .quote{

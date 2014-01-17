@@ -215,154 +215,29 @@ var options = {
 			// set focus
 			options.cm.focus();
 		},
-		// makeHeadline: makes headline for
-		makeHeadline: function(setLevel)
-		{
-			var level = options.fn.hasFormat('header'),
-				 curCursor = options.cm.getCursor(true),
-				 setLevel = (setLevel !== undefined) ? parseInt(setLevel) : 1;
-		
-			// check if line is headline
-			if( level !== false )
-			{
-				// set selection
-				options.cm.setSelection({
-					line: curCursor.line, 
-					ch: 0
-				}, {
-					line: curCursor.line, 
-					ch: parseInt(level)+1
-				});
-				// get selection
-				var sel = options.cm.getSelection(),
-					 num = (sel.substr(-1) == ' ' ? 1 : 0);
-			 
-				if( level == setLevel )
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num));
-				}
-				else if( level > setLevel )
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(level-setLevel));
-				}
-				// level < setLevel
-				else
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '#' )+' ');
-				}
-			}
-			else
-			{
-				// set selection
-				options.cm.setSelection({
-					line: curCursor.line, 
-					ch: 0
-				}, {
-					line: curCursor.line, 
-					ch: 0
-				});
-				// add #
-				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '#' )+' '+options.cm.getSelection());
-			}
-			// reset selection
-			options.cm.setSelection({
-				line: curCursor.line, 
-				ch: 0
-			}, {
-				line: curCursor.line, 
-				ch: options.cm.getLine(curCursor.line).length
-			});
-			// set focus
-			options.cm.focus();
-		},
-		// makeQuote: makes quotes
-		makeQuote: function(setLevel)
-		{
-			var level = options.fn.hasFormat('quote'),
-				 curCursor = options.cm.getCursor(true),
-				 setLevel = (setLevel !== undefined && typeof(setLevel) === "number") ? setLevel : (level === false ? 1 : (parseInt(level) === 1 ? 2 : false));
-			// check if line is headline
-			if( level !== false )
-			{
-				// set selection
-				options.cm.setSelection({
-					line: curCursor.line, 
-					ch: 0
-				}, {
-					line: curCursor.line, 
-					ch: parseInt(level)+1
-				});
-				// get selection
-				var sel = options.cm.getSelection(),
-					 num = (sel.substr(-1) == ' ' ? 1 : 0);
-			 
-				if ( setLevel === false )
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(level+num))
-				}
-				else if( level == setLevel )
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num));
-				}
-				else if( level > setLevel )
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(level-setLevel));
-				}
-				// level < setLevel
-				else
-				{
-					options.cm.replaceSelection(options.cm.getSelection().substr(setLevel+num)+new Array( setLevel + 1 ).join( '>' )+' ');
-				}
-			}
-			else
-			{
-				// set selection
-				options.cm.setSelection({
-					line: curCursor.line, 
-					ch: 0
-				}, {
-					line: curCursor.line, 
-					ch: 0
-				});
-				// add #
-				options.cm.replaceSelection(new Array( setLevel + 1 ).join( '>' )+' '+options.cm.getSelection());
-			}
-			// reset selection
-			options.cm.setSelection({
-				line: curCursor.line, 
-				ch: 0
-			}, {
-				line: curCursor.line, 
-				ch: options.cm.getLine(curCursor.line).length
-			});
-			// set focus
-			options.cm.focus();
-		},
 		// format
 		toggleFormat: function(format, params){
-			var block = ["header", "quote", "code"],
-				 inline = ["strong", "em", "link"],
-				 pos;
-			params.format = format
+			var block = {"header":"#", "quote":">", "code":"```"},
+				 inline = {"strong":["**","__"], "em":["_","*"], "link":""},
+				 pos, params = (params === undefined || params === null) ? {} : params;
+			params.format = format;
+			console.log(params);
  			// if inline 
- 			if( inline.indexOf(format) !== -1 )
+ 			if( inline.hasOwnProperty(format) )
  			{
+				console.log('inline');
  				// isInline = true;
 				var boundaries = options.fn.getWordBoundaries(true);
  				// // set selection to middle of selection
  				// pos = options.fn.getMiddlePos(false);
+				options.fn.inlineFormat();
  			}
 			// if block
  			else
 			{
-				if( format === "header" )
+				if( format === "header" || format === "quote" )
 				{
-					params.indicator = '#';
-					options.fn.blockFormatFront(params);
-				}
-				else if( format === "quote" )
-				{
-					params.indicator = '>';
+					params.indicator = block[format];
 					options.fn.blockFormatFront(params);
 				}
 				else if( format === "code" )
@@ -374,7 +249,8 @@ var options = {
 		// blockFormatFront
 		blockFormatFront: function( params )
 		{
-			var level = options.fn.hasFormat(params.format);
+			var level = options.fn.hasFormat(params.format),
+				 curCursor = options.cm.getCursor(true);
 			if( level !== false && typeof(level) === 'number' )
 			{
 				options.cm.setSelection({
@@ -404,15 +280,27 @@ var options = {
 			else
 			{
 				options.cm.setSelection({
-					line: options.cm.getCursor(true).line, 
+					line: curCursor.line, 
 					ch: 0
 				}, {
-					line: options.cm.getCursor(true).line, 
+					line: curCursor.line, 
 					ch: 0
 				});
 				// add indicator
 				options.cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator )+' ');
 			}
+			options.cm.setSelection({
+				line: curCursor.line, 
+				ch: 0
+			}, {
+				line: curCursor.line, 
+				ch: options.cm.getLine(curCursor.line).length
+			});
+		},
+		// inlineFormat
+		inlineFormat: function( )
+		{
+			
 		},
 		// check for formatting
 		hasFormat: function(format){
@@ -578,6 +466,14 @@ var options = {
 					}
 				}
 			}
+		},
+		hasClass: function(el, classname)
+		{
+			if( el.classList.contains(classname) )
+			{
+				return true;
+			}
+			return false;
 		}
 	}
 };
@@ -606,11 +502,11 @@ var f, editOptions = function()
 				// create element
 				panel = document.createElement('div');
 				panel.id = 'editOptions';
-				panel.innerHTML = '<div data-class="strong" data-fn="makeBold" class="strong button">B</div>'+
-										'<div data-class="em" data-fn="makeItalic" class="em button">i</div>'+
-										'<div data-class="header1" data-fn="makeHeadline" data-parameters="1" class="header1 button">H1</div>'+
-										'<div data-class="header2" data-fn="makeHeadline" data-parameters="2" class="header2 button">H2</div>'+
-										'<div data-class="quote" data-fn="makeQuote" data-parameters="false" class="quote button"></div>';
+				panel.innerHTML = '<div data-class="strong" data-format="strong" class="strong button">B</div>'+
+										'<div data-class="em" data-format="italic" class="em button">i</div>'+
+										'<div data-class="header1" data-format="header" data-parameters=\'{"level":1}\' class="header1 button">H1</div>'+
+										'<div data-class="header2" data-format="header" data-parameters=\'{"level":2}\' class="header2 button">H2</div>'+
+										'<div data-class="quote" data-format="quote" data-parameters=\'{"level":1}\' class="quote button"></div>';
 				// add panel to editor
 				options.cm.addWidget({line:0,ch:0},panel);
 				// select elements
@@ -619,7 +515,13 @@ var f, editOptions = function()
 				panel.addEventListener("click", function(e) 
 				{
 					// run function
-					options.fn[e.target.getAttribute("data-fn")](e.target.getAttribute("data-parameters"));
+					var params = e.target.getAttribute("data-parameters");
+					if( e.target.getAttribute("data-format") === "quote" && ( options.ffn.hasClass(panel, "quote-1") || options.ffn.hasClass(panel, "quote-2")) )
+					{
+						params = '{"level":2}';
+					}
+					
+					options.fn.toggleFormat(e.target.getAttribute("data-format"), JSON.parse( params )); /// !!!!!!!!!! NEEDS PARAMETERS AS JSON IF PRESENT
 					panel.classList.toggle(e.target.getAttribute("data-class"));
 					// set focus
 					options.cm.focus();
