@@ -218,7 +218,7 @@ var options = {
 		// format
 		toggleFormat: function(format, params){
 			var block = {"header":["#"], "quote":[">"], "code":["```"]},
-				 inline = {"strong":["**",/[__|\*\*]/], "em":["_",/[.^_]?_[.^_]?|\*/], "link":[""]},
+				 inline = {"strong":["**"], "em":["_"], "link":[""]},
 				 pos, params = (params === undefined || params === null) ? {} : params;
 			params.format = format;
 			console.log(params);
@@ -303,12 +303,6 @@ var options = {
 		// inlineFormat
 		inlineFormat: function( params )
 		{	
-			// console.log(options.cm.getSelection());
-			// console.log(/(?:^|[^_])\_(?:[^_]|$)/g.test(options.cm.getSelection()));
-			// console.log();
-			// console.log();
-			// console.log(/(?:^|[^*])\*\*\*(?:[^*]|$)/g.test(options.cm.getSelection()));		
-			// console.log(removeItalics(options.cm.getSelection()));
 			// remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
@@ -369,20 +363,20 @@ var options = {
 			// add
 			else
 			{
-				// var sel = options.cm.getSelection();
-				// if( sel.trim().length > 0)
-				// {
-				// 	options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
-				// }
-				// // only a carat is set, no selection
-				// else
-				// {
-				// 	if( options.fn.inWord() )
-				// 	{
-				// 		options.fn.getWordBoundaries(true);
-				// 		options.cm.replaceSelection(params.indicator[0]+options.cm.getSelection()+params.indicator[0]);
-				// 	}
-				// }
+				var sel = options.cm.getSelection();
+				if( sel.trim().length > 0)
+				{
+					options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
+				}
+				// only a carat is set, no selection
+				else
+				{
+					if( options.fn.inWord() )
+					{
+						options.fn.getWordBoundaries(true);
+						options.cm.replaceSelection(params.indicator[0]+options.cm.getSelection()+params.indicator[0]);
+					}
+				}
 			}
 		},
 		// check for formatting
