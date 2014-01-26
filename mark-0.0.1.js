@@ -312,19 +312,45 @@ var options = {
 			// remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
+				// get selection
+				var sel = options.cm.getSelection(), repSel, 
+					 re = {
+						 '_': new RegExp("(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)", "g"),
+						 '*': new RegExp("(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)", "g"),
+						 'use': false
+					 };
 				if( params.format === 'em' )
 				{
-					var sel = options.cm.getSelection();
-					var repSel = sel.replace(/(?:^|[^_])(\_|\_{3})([^_]+)(\_|\_{3})(?:[^_]|$)/g, function(matches, match1, match2, match3){
-						return match1.substr(1)+match2+match3.substr(1);
-					});
-					if( sel.length >= repSel.length)
+					if( sel.search(re['_']) !== -1 )
 					{
-						options.cm.replaceSelection(repSel);
+						re.use = '_';
 					}
+					else if( sel.search(re['*']) !== -1 )
+					{
+						re.use = '*';
+					}
+					// grab word
 					else
 					{
-						options.cm.replaceSelection(options.cm.getSelection().replace(/(?:^|[^*])(?:\*|\*{3})([^*]+)(?:\*|\*{3})(?:[^*]|$)/g, "\$1"));
+						// select whole word
+						options.fn.getWordBoundaries(true);
+						sel = options.cm.getSelection();
+						// try replacing again
+						if( sel.search(re['_']) !== -1 )
+						{
+							re.use = '_';
+						}
+						else if( sel.search(re['*']) !== -1 )
+						{
+							re.use = '*';
+						}
+					}
+					if( re.use !== false )
+					{
+						repSel = sel.replace(re[re.use], function(matches, m1,m2,m3,m4,m5){
+							return m1+m2.substr(1)+m3+m4.substr(1)+m5;
+						});
+						options.cm.replaceSelection(repSel);
 					}
 				}
 				// function removeItalics(str) {
@@ -465,7 +491,6 @@ var options = {
 					right = i;
 				}
 			}
-			console.log(left+' '+right);
 			// set selection
 			if( typeof(setSelection) != undefined && setSelection != null && setSelection != false  )
 			{
