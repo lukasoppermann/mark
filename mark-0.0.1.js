@@ -302,36 +302,62 @@ var options = {
 		},
 		// inlineFormat
 		inlineFormat: function( params )
-		{
-			console.log(options.fn.inWord());
+		{	
+			// console.log(options.cm.getSelection());
+			// console.log(/(?:^|[^_])\_(?:[^_]|$)/g.test(options.cm.getSelection()));
+			// console.log();
+			// console.log();
+			// console.log(/(?:^|[^*])\*\*\*(?:[^*]|$)/g.test(options.cm.getSelection()));		
+			// console.log(removeItalics(options.cm.getSelection()));
 			// remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
-				console.log('has');
+				if( params.format === 'em' )
+				{
+					var sel = options.cm.getSelection();
+					var repSel = sel.replace(/(?:^|[^_])(\_|\_{3})([^_]+)(\_|\_{3})(?:[^_]|$)/g, function(matches, match1, match2, match3){
+						return match1.substr(1)+match2+match3.substr(1);
+					});
+					if( sel.length >= repSel.length)
+					{
+						options.cm.replaceSelection(repSel);
+					}
+					else
+					{
+						options.cm.replaceSelection(options.cm.getSelection().replace(/(?:^|[^*])(?:\*|\*{3})([^*]+)(?:\*|\*{3})(?:[^*]|$)/g, "\$1"));
+					}
+				}
+				// function removeItalics(str) {
+				//     var re = /\*+/g;
+				//     return str.replace(re, function(match, index) { return match.length === 1 ? '' : '**'; });
+				// }
+				
 				// 1. go to middle of selection
 				// 1.5 get word boundary as selection
 				// 2. cut part right & cut part left
 				// 3. match all occurrences of indicator  in left and right
+				// if not match, get line
 				// (^|[^_?])(_|___)([^_?]|$) -> works, but needs testing
 				// http://leaverou.github.io/regexplained/
+				// (^|[^_])___([^_]|$)
 			}
 			// add
 			else
 			{
-				var sel = options.cm.getSelection();
-				if( sel.trim().length > 0)
-				{
-					options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
-				}
-				// only a carat is set, no selection
-				else
-				{
-					if( options.fn.inWord() )
-					{
-						options.fn.getWordBoundaries(true);
-						options.cm.replaceSelection(params.indicator[0]+options.cm.getSelection()+params.indicator[0]);
-					}
-				}
+				// var sel = options.cm.getSelection();
+				// if( sel.trim().length > 0)
+				// {
+				// 	options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
+				// }
+				// // only a carat is set, no selection
+				// else
+				// {
+				// 	if( options.fn.inWord() )
+				// 	{
+				// 		options.fn.getWordBoundaries(true);
+				// 		options.cm.replaceSelection(params.indicator[0]+options.cm.getSelection()+params.indicator[0]);
+				// 	}
+				// }
 			}
 		},
 		// check for formatting
@@ -692,13 +718,13 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 		extraKeys: {
 			"Enter": "newlineAndIndentContinueMarkdownList",
 			"Cmd-B": function(){
-				options.fn.toggleFormat('strong');
+				options.fn.inlineFormat({'format':'strong'});
 			},
 			"Ctrl-B": function(){
 				console.log(options.fn.getMiddlePos(true));
 			},
 			"Cmd-I": function(){
-				options.fn.toggleFormat('quote', {"level":1});
+				options.fn.inlineFormat({'format':'em'});
 			},
 			"Ctrl-I": function(){
 				options.fn.toggleFormat('quote', {"level":2});
@@ -708,6 +734,8 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 	// add edit Options	
 	options.cm.on("cursorActivity", function(){
 		editOptions();
+		// options.fn.inlineFormat({'format':'em'});
+						// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
 	});
 	
 });
