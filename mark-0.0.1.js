@@ -313,14 +313,42 @@ var options = {
 			if( options.fn.hasFormat(params.format) !== false )
 			{
 				// get selection
-				var sel = options.cm.getSelection(), repSel, 
+				var sel = options.cm.getSelection(), repSel;
+				// define replacement logic
+				if( params.format === 'em' )
+				{
 					 re = {
 						 '_': new RegExp("(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)", "g"),
 						 '*': new RegExp("(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)", "g"),
-						 'use': false
+						 'use': false,
+						 'length': 1
 					 };
-				if( params.format === 'em' )
+				}
+				else if ( params.format === 'strong' )
 				{
+				 re = {
+					 '_': new RegExp("(^|[^_])(\_{2,3})([^_]+)(\\_{2,3})([^_]|$)", "g"),
+					 '*': new RegExp("(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)", "g"),
+					 'use': false,
+					 'length':2
+				 };
+				}
+				// do replacement magic
+				if( sel.search(re['_']) !== -1 )
+				{
+					re.use = '_';
+				}
+				else if( sel.search(re['*']) !== -1 )
+				{
+					re.use = '*';
+				}
+				// grab word
+				else
+				{
+					// select whole word
+					options.fn.getWordBoundaries(true);
+					sel = options.cm.getSelection();
+					// try replacing again
 					if( sel.search(re['_']) !== -1 )
 					{
 						re.use = '_';
@@ -329,43 +357,14 @@ var options = {
 					{
 						re.use = '*';
 					}
-					// grab word
-					else
-					{
-						// select whole word
-						options.fn.getWordBoundaries(true);
-						sel = options.cm.getSelection();
-						// try replacing again
-						if( sel.search(re['_']) !== -1 )
-						{
-							re.use = '_';
-						}
-						else if( sel.search(re['*']) !== -1 )
-						{
-							re.use = '*';
-						}
-					}
-					if( re.use !== false )
-					{
-						repSel = sel.replace(re[re.use], function(matches, m1,m2,m3,m4,m5){
-							return m1+m2.substr(1)+m3+m4.substr(1)+m5;
-						});
-						options.cm.replaceSelection(repSel);
-					}
 				}
-				// function removeItalics(str) {
-				//     var re = /\*+/g;
-				//     return str.replace(re, function(match, index) { return match.length === 1 ? '' : '**'; });
-				// }
-				
-				// 1. go to middle of selection
-				// 1.5 get word boundary as selection
-				// 2. cut part right & cut part left
-				// 3. match all occurrences of indicator  in left and right
-				// if not match, get line
-				// (^|[^_?])(_|___)([^_?]|$) -> works, but needs testing
-				// http://leaverou.github.io/regexplained/
-				// (^|[^_])___([^_]|$)
+				if( re.use !== false )
+				{
+					repSel = sel.replace(re[re.use], function(matches, m1,m2,m3,m4,m5){
+						return m1+m2.substr(re.length)+m3+m4.substr(re.length)+m5;
+					});
+					options.cm.replaceSelection(repSel);
+				}
 			}
 			// add
 			else
