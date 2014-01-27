@@ -35,12 +35,6 @@ img{
 	border: 0;
 	position: relative;
 }
-a, span, a:active, a:focus{
-	color: inherit;
-	display: inline-block;
-	outline: 0;
-	-webkit-tap-highlight-color: transparent;
-}
 /*------------------*/
 /* general */
 html, body{
@@ -49,7 +43,6 @@ html, body{
 	width: 100%;
 	height: 100%; 
 	position: relative;
-	font-size: 16px;
 	color: rgb(0,0,0);
 	text-rendering: optimizeLegability;
 }
@@ -64,7 +57,7 @@ body{
 /*------------------*/
 /* mark theme */
 .cm-s-mark.CodeMirror {
-	height: 100%;
+	height: auto;
 	background: transparent; 
 	color: rgb(60,60,60);
 	font-family: inherit;
@@ -73,10 +66,7 @@ body{
 		line-height: 140%;
 }
 .cm-s-mark .CodeMirror-selected {
-	background: rgb(55,115,215) !important;
-}
-.cm-s-mark .CodeMirror-selectedtext{
-	color: rgb(255,255,255) !important;
+	background: rgb(180,215,255) !important;
 }
 .cm-s-mark .CodeMirror-gutters {
 	background: rgba(0,0,0,0.05); border-right: 0px;
@@ -90,9 +80,11 @@ body{
 /*	border-left: 2px solid rgb(55,115,215) !important;*/
 	border: 0 !important;
 	width: 2px !important;
-	background: rgb(55,115,215);
-	transform: translate3d(0, 29%, 0);
-	-webkit-transform: translate3d(0, 29%, 0);
+	background-color: rgb(55,170,225);
+/*	background: rgb(55,115,215);*/
+	
+/*	transform: translate3d(0, 29%, 0);
+	-webkit-transform: translate3d(0, 29%, 0);*/
 }
 .cm-s-mark .CodeMirror-activeline-background{
 	background-color: rgba(0,0,0,0.02);
@@ -137,7 +129,6 @@ body{
 	background: rgb(200,80,70); 
 	color: rgb(255,255,255);
 }
-
 .cm-s-mark .CodeMirror-matchingbracket {
   text-decoration: underline;
 	color: rgb(55,115,215) !important;
@@ -187,5 +178,138 @@ body{
 	top: 0;
 	left: 40%;
 }
-
-
+#editOptions{
+	position: absolute;
+	height: 2.5em;
+	background-color: rgb(245,245,245);
+	color: rgb(100,100,100);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+	border-radius: 3px;
+	z-index: 999;
+	margin-top: 10px;
+	opacity: 0;
+	transform: translate(-9999px,0);
+	-webkit-transform: translate(-9999px,0);
+	transition: opacity .3s ease .1s, margin .3s ease .1s, transform 0 ease .4s;
+	-webkit-transition: opacity .3s ease .1s, margin .3s ease .1s, -webkit-transform 0 ease .4s;
+}
+#editOptions.active{
+	margin-top: 0;
+	display: block;
+	opacity: 1;
+	transition: opacity .3s ease .2s, margin .3s ease .1s, left .1s ease 0, transform 0 ease 0;
+	-webkit-transition: opacity .3s ease .2s, margin .3s ease .1s, left .1s ease 0, -webkit-transform 0 ease 0;
+	transform: translate(0,0);
+	-webkit-transform: translate(0,0);
+}
+#editOptions:before, #editOptions:after{
+	position: absolute;
+	bottom: -14px;
+	left: 50%;
+	margin-left: -7px;
+	content: "";
+	width: 0;
+	height: 0;
+	border-width: 7px 7px;
+	border-style: solid;
+	border-color: rgb(245,245,245) transparent transparent transparent;
+	display: block;
+	z-index: 2;
+}
+#editOptions:after{
+	border-color: rgba(0,0,0,0.1) transparent transparent transparent;
+	bottom: -15px;
+	z-index: 1;
+}
+#editOptions.from-top:before{
+	border-color: transparent transparent rgb(245,245,245) transparent;
+	bottom: auto;
+	top: -14px;
+}
+#editOptions.from-top:after{
+	border-color: transparent transparent rgba(0,0,0,0.1) transparent;
+	bottom: auto;
+	top: -14px;
+}
+#editOptions.from-left:before, #editOptions.from-left:after{
+	left: 7px;
+	margin-left: 0;
+}
+#editOptions.from-right:before, #editOptions.from-right:after{
+	left: auto;
+	right: 7px;
+	margin-left: 0;
+}
+/* edit Options content */
+#editOptions .button{
+	height: 100%;
+	width: 1.7em;
+	padding: 0;
+	display: block;
+	-moz-box-sizing: border-box; 
+	-webkit-box-sizing: border-box; 
+	box-sizing: border-box;
+	font-size: 1.5em;
+	text-align: center;
+	line-height: 1.5em;
+	float: left;
+	position: relative;
+	cursor: pointer;
+	background: transparent;
+}
+#editOptions .button:first-child{
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}
+#editOptions .button:last-child{
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+#editOptions .button:hover{
+/*	background: rgb(0,0,0);
+	transition: background .5s ease;*/
+	color: rgb(0,0,0);
+}
+#editOptions .strong{
+	font-weight: 600;
+	font-family: courier;
+}
+#editOptions .em{
+	font-style: italic;
+	font-weight: 600;
+	font-family: times;
+}
+#editOptions .header1, #editOptions .header2{
+	font-family: "Source Sans Pro";
+	font-weight: 600;
+}
+#editOptions .quote{
+	font-weight: 600;
+	font-family: times;
+}
+#editOptions .quote:before, #editOptions .quote:after{
+	font-size: 1.8em;
+	position: absolute;
+	top: .25em;
+}
+#editOptions .quote:before{
+	content: "\2018";
+	left: .25em;
+}
+#editOptions .quote:after{
+	content: "\2018";
+	left: .49em;
+}
+#editOptions.quote-1 .quote:after{
+/*	color: rgba(0,0,0,0.35);*/
+	color: rgba(0,0,0,0.25);	
+}
+#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1, 
+#editOptions.header2 .header2, #editOptions.quote-1 .quote, #editOptions.quote-2 .quote{
+/*	background: rgb(55,115,215);*/
+/*	box-shadow: -1px 0 0 rgba(0,0,0,0.075);*/
+	color: rgb(55,115,215);
+}
+#editOptions.strong .strong{
+	box-shadow: none;
+}
