@@ -216,7 +216,8 @@ var options = {
 			options.cm.focus();
 		},
 		// format
-		toggleFormat: function(format, params){
+		toggleFormat: function(format, params)
+		{
 			var block = {"header":["#"], "quote":[">"], "code":["```"]},
 				 inline = {"strong":["**"], "em":["_"], "link":[""]},
 				 pos, params = (params === undefined || params === null) ? {} : params;
@@ -302,7 +303,7 @@ var options = {
 		},
 		// inlineFormat
 		inlineFormat: function( params )
-		{	
+		{
 			// remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
@@ -380,7 +381,8 @@ var options = {
 			}
 		},
 		// check for formatting
-		hasFormat: function(format){
+		hasFormat: function(format)
+		{
 			var block = ["header", "quote", "code"], isBlock = false,
 				 inline = ["strong", "em", "link"], isInline = false,
 				 pos;
@@ -519,6 +521,7 @@ var options = {
 			// return middle position
 			return { line: curCursor.line , ch: chNum }
 		},
+		// check if carat is inside a word
 		inWord: function()
 		{
 			var curCursor = {
