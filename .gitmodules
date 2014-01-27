@@ -4,3 +4,4 @@
 [submodule "codemirror"]
 	path = codemirror
 	url = https://github.com/marijnh/CodeMirror.git
+	ignore = untracked
