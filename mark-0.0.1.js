@@ -10,7 +10,7 @@ if (!String.prototype.trim) {
 //
 var options = {
 	fn: {
-		s// format
+		// format
 		toggleFormat: function(format, params)
 		{
 			var block = {"header":["#"], "quote":[">"], "code":["```"]},
