@@ -14,12 +14,13 @@ var options = {
 		toggleFormat: function(format, params)
 		{
 			var block = {"header":["#"], "quote":[">"], "code":["```"]},
-				 inline = {"strong":["**"], "em":["_"], "link":[""]},
-				 pos, params = (params === undefined || params === null) ? {} : params;
+          inline = {"strong":["**"], "em":["_"], "link":[""]},
+          pos;
+      params = (params === undefined || params === null) ? {} : params;
 			params.format = format;
- 			// if inline 
- 			if( inline.hasOwnProperty(format) )
- 			{
+      // if inline
+      if( inline.hasOwnProperty(format) )
+      {
 				if( format === "strong" || format === "em" )
 				{
 					params.indicator = inline[format];
@@ -29,9 +30,9 @@ var options = {
 				{
 					// needs to be implemented
 				}
- 			}
+      }
 			// if block
- 			else
+      else
 			{
 				if( format === "header" || format === "quote" )
 				{
@@ -42,20 +43,20 @@ var options = {
 				{
 					// needs to be implemented
 				}
- 			}	 
+      }
 		},
 		// blockFormatFront
 		blockFormatFront: function( params )
 		{
 			var level = options.fn.hasFormat(params.format),
-				 curCursor = options.cm.getCursor(true);
+          curCursor = options.cm.getCursor(true);
 			if( level !== false && typeof(level) === 'number' )
 			{
 				options.cm.setSelection({
 					line: options.cm.getCursor(true).line,
 					ch: 0
 				}, {
-					line: options.cm.getCursor(true).line, 
+					line: options.cm.getCursor(true).line,
 					ch: parseInt(level)+1
 				});
 				var sel = options.cm.getSelection();
@@ -78,52 +79,52 @@ var options = {
 			else
 			{
 				options.cm.setSelection({
-					line: curCursor.line, 
+					line: curCursor.line,
 					ch: 0
 				}, {
-					line: curCursor.line, 
+					line: curCursor.line,
 					ch: 0
 				});
 				// add indicator
 				options.cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator[0] )+' ');
 			}
 			options.cm.setSelection({
-				line: curCursor.line, 
+				line: curCursor.line,
 				ch: 0
 			}, {
-				line: curCursor.line, 
+				line: curCursor.line,
 				ch: options.cm.getLine(curCursor.line).length
 			});
 		},
 		// inlineFormat
 		inlineFormat: function( params )
 		{
-			// remove
+      var sel = options.cm.getSelection();
+      // remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
-				// get selection
-				var sel = options.cm.getSelection(), repSel;
+        var repSel;
 				// define replacement logic
 				if( params.format === 'em' )
 				{
-					 re = {
-						 '_': new RegExp("(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)", "g"),
-						 '*': new RegExp("(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)", "g"),
-						 'use': false,
-						 'length': 1
-					 };
+          re = {
+            '_': new RegExp("(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)", "g"),
+            '*': new RegExp("(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)", "g"),
+            'use': false,
+            'length': 1
+          };
 				}
 				else if ( params.format === 'strong' )
 				{
-				 re = {
-					 '_': new RegExp("(^|[^_])(\_{2,3})([^_]+)(\\_{2,3})([^_]|$)", "g"),
-					 '*': new RegExp("(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)", "g"),
-					 'use': false,
-					 'length':2
-				 };
+          re = {
+            '_': new RegExp("(^|[^_])(_{2,3})([^_]+)(\\_{2,3})([^_]|$)", "g"),
+            '*': new RegExp("(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)", "g"),
+            'use': false,
+            'length':2
+          };
 				}
 				// do replacement magic
-				if( sel.search(re['_']) !== -1 )
+				if( sel.search(re._) !== -1 )
 				{
 					re.use = '_';
 				}
@@ -138,7 +139,7 @@ var options = {
 					options.fn.getWordBoundaries(true);
 					sel = options.cm.getSelection();
 					// try replacing again
-					if( sel.search(re['_']) !== -1 )
+					if( sel.search(re._) !== -1 )
 					{
 						re.use = '_';
 					}
@@ -158,7 +159,6 @@ var options = {
 			// add
 			else
 			{
-				var sel = options.cm.getSelection();
 				if( sel.trim().length > 0)
 				{
 					options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
@@ -178,26 +178,26 @@ var options = {
 		hasFormat: function(format)
 		{
 			var block = ["header", "quote", "code"], isBlock = false,
-				 inline = ["strong", "em", "link"], isInline = false,
-				 pos;
-			// if inline 
+          inline = ["strong", "em", "link"], isInline = false,
+          pos;
+			// if inline
 			if( inline.indexOf(format) !== -1 )
 			{
 				isInline = true;
 				// set selection to middle of selection
 				pos = options.fn.getMiddlePos(false);
 			}
-			else{ 
-				isBlock = true; 
+			else{
+				isBlock = true;
 				pos = options.fn.getLineEndPos();
 			}
 			// check if any type is present
 			var type = options.cm.getTokenTypeAt({
-				line: pos.line, 
+				line: pos.line,
 				ch: pos.ch
 			});
 			var match = false;
-			if( type != null )
+			if( type !== null )
 			{
 				if( isInline === true )
 				{
@@ -222,14 +222,14 @@ var options = {
 		getLastPos: function( setPos )
 		{
 			var pos = {
-				line: options.cm.getCursor(false).line, 
+				line: options.cm.getCursor(false).line,
 				ch: options.cm.getCursor(false).ch
 			};
 			// set selection to position
 			if( setPos === true )
 			{
 				options.cm.setSelection({
-					line: pos.line, 
+					line: pos.line,
 					ch: pos.ch
 				});
 			}
@@ -240,12 +240,12 @@ var options = {
 		getLineEndPos: function( setPos )
 		{
 			var pos = { line: options.cm.getCursor(true).line };
-				 pos.ch = options.cm.getLine(pos.line).length;
+          pos.ch = options.cm.getLine(pos.line).length;
 			// set selection to position
 			if( setPos === true )
 			{
 				options.cm.setSelection({
-					line: pos.line, 
+					line: pos.line,
 					ch: pos.ch
 				});
 			}
@@ -281,39 +281,39 @@ var options = {
 				}
 			}
 			// set selection
-			if( typeof(setSelection) != undefined && setSelection != null && setSelection != false  )
+			if( typeof(setSelection) !== undefined && setSelection !== null && setSelection !== false  )
 			{
 				options.cm.setSelection({
-					line: curCursor.line, 
+					line: curCursor.line,
 					ch: parseInt(curCursor.ch)-parseInt(left)+1
 				}, {
-					line: curCursor.line, 
+					line: curCursor.line,
 					ch: parseInt(curCursor.ch)+parseInt(right)-1
 				});
 			}
 			// return word boundaries
 			return [{ line: curCursor.line, ch: curCursor.ch-left+1 },
-					  { line: curCursor.line, ch: curCursor.ch+right-1 }];
+              { line: curCursor.line, ch: curCursor.ch+right-1 }];
 		},
 		// getMiddlePos: get the middle of a given range
 		getMiddlePos: function(setPos)
 		{
 			var sel = options.cm.getSelection(),
-				 curCursor = options.cm.getCursor(true),
-				 chNum = curCursor.ch + Math.floor(sel.length/2);
+          curCursor = options.cm.getCursor(true),
+          chNum = curCursor.ch + Math.floor(sel.length/2);
 			// set middle
-			if( typeof(setPos) != undefined && setPos != null && setPos != false && sel.length > 0 )
+			if( typeof(setPos) !== undefined && setPos !== null && setPos !== false && sel.length > 0 )
 			{
 				options.cm.setSelection({
-					line: curCursor.line, 
+					line: curCursor.line,
 					ch: chNum
 				}, {
-					line: curCursor.line, 
+					line: curCursor.line,
 					ch: chNum
-				});	
+				});
 			}
 			// return middle position
-			return { line: curCursor.line , ch: chNum }
+			return { line: curCursor.line , ch: chNum };
 		},
 		// check if carat is inside a word
 		inWord: function()
@@ -322,21 +322,21 @@ var options = {
 				start: options.cm.getCursor(true),
 				end: options.cm.getCursor(false)
 			};
-			// set selection for inWord 
+			// set selection for inWord
 			options.cm.setSelection({
-				line: curCursor.start.line, 
+				line: curCursor.start.line,
 				ch: curCursor.start.ch-1
 			}, {
-				line: curCursor.end.line, 
+				line: curCursor.end.line,
 				ch: curCursor.end.ch+1
 			});
 			var tmpSel = options.cm.getSelection();
 			// reset selection
 			options.cm.setSelection({
-				line: curCursor.start.line, 
+				line: curCursor.start.line,
 				ch: curCursor.start.ch
 			}, {
-				line: curCursor.end.line, 
+				line: curCursor.end.line,
 				ch: curCursor.end.ch
 			});
 			// check if in word
@@ -348,11 +348,11 @@ var options = {
 		}
 	},
 	ffn: {
-		addClass: function (el, classes) 
+		addClass: function (el, classes)
 		{
 			options.ffn.changeClass(el, classes, 'add');
 		},
-		removeClass: function (el, classes) 
+		removeClass: function (el, classes)
 		{
 			options.ffn.changeClass(el, classes, 'remove');
 		},
@@ -361,7 +361,7 @@ var options = {
 			if( classes !== undefined && classes.trim().length > 0 )
 			{
 				classes = Array.prototype.slice.call (arguments, 1);
-				for (var i = classes.length; i--;) 
+				for (var i = classes.length; i--;)
 				{
 					classes[i] = classes[i].trim ().split (/\s*,\s*|\s+/);
 					for (var j = classes[i].length; j--;)
@@ -385,7 +385,7 @@ var options = {
 //
 /* functions */
 //
-// EditOptions fn: 
+// EditOptions fn:
 //
 var f, editOptions = function()
 {
@@ -400,7 +400,7 @@ var f, editOptions = function()
 		// start timeout
 		f = window.setTimeout(function()
 		{
-			// check for element	
+			// check for element
 			if( typeof(panel) === undefined || panel === null)
 			{
 				// create element
@@ -415,8 +415,8 @@ var f, editOptions = function()
 				options.cm.addWidget({line:0,ch:0},panel);
 				// select elements
 				panel = document.getElementById('editOptions');
-				// add events			
-				panel.addEventListener("click", function(e) 
+				// add events
+				panel.addEventListener("click", function(e)
 				{
 					// run function
 					var params = e.target.getAttribute("data-parameters");
@@ -424,7 +424,7 @@ var f, editOptions = function()
 					{
 						params = '{"level":2}';
 					}
-					
+
 					options.fn.toggleFormat(e.target.getAttribute("data-format"), JSON.parse( params )); /// !!!!!!!!!! NEEDS PARAMETERS AS JSON IF PRESENT
 					panel.classList.toggle(e.target.getAttribute("data-class"));
 					// set focus
@@ -461,7 +461,7 @@ var f, editOptions = function()
 			var top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
 			// remove class
 			panel.classList.remove('from-top');
-			if( top < 0 ){ 
+			if( top < 0 ){
 				top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(panel).height.replace('px','')));
 				panel.classList.add('from-top');
 			}
@@ -474,7 +474,7 @@ var f, editOptions = function()
 			// remove classes
 			panel.classList.remove('from-left');
 			panel.classList.remove('from-right');
-			if( left < 1 ){ 
+			if( left < 1 ){
 				left = 2;
 				panel.classList.add('from-left');
 			}
@@ -494,7 +494,7 @@ var f, editOptions = function()
 		{
 			if( typeof(panel) !== undefined && panel !== null )
 			{
-				panel.classList.remove('active');		
+				panel.classList.remove('active');
 			}
 		}, 100);
 	}
@@ -506,10 +506,10 @@ var f, editOptions = function()
 //
 // run codemirror on every instance of .mark
 Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
-	
+
 	options.cm = CodeMirror.fromTextArea(editor, {
 		theme: "mark",
-	  // value: "function myScript(){return 100;}\n",
+    // value: "function myScript(){return 100;}\n",
 		mode: {
 			name: "gfm",
 			highlightFormatting: true
@@ -546,11 +546,11 @@ Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(fu
 			}
 		}
 	});
-	// add edit Options	
+	// add edit Options
 	options.cm.on("cursorActivity", function(){
 		editOptions();
 		// options.fn.inlineFormat({'format':'em'});
 						// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
 	});
-	
+
 });
