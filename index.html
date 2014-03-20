@@ -8,6 +8,64 @@
 	<meta name="language" content="en" />
 	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport">
 	<link rel="stylesheet" type="text/css" href="./codemirror/lib/codemirror.css" media="screen" />
+	<style type="text/css" media="screen">
+		/*------------------*/
+		/* Reset */
+		html, body, div, p, span, applet, object, iframe,
+		dl, dt, dd, ol, ul, li,
+		article, aside, canvas, blockquote, pre,
+		figure, figcaption, footer, header, hgroup,
+		menu, nav, section, summary,
+		time, mark, audio, video{
+			margin: 0;
+			padding: 0;
+			border: 0;
+			font-size: 100%;
+			line-height: inherit;
+			vertical-align: baseline;
+			font-weight: inherit;
+		}
+		h1, h2, h3, h4, h5, h6{
+			font-size: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		/* HTML5 display-role reset for older browsers */
+		article, aside, details, figcaption, figure,
+		footer, header, hgroup, menu, nav, section {
+			display: block;
+		}
+		ul { list-style: none; }
+		table {
+			border-collapse: collapse;
+			border-spacing: 0;
+		}
+		img{
+			padding: 0;
+			margin: 0;
+			border: 0;
+			position: relative;
+		}
+		/*------------------*/
+		/* general */
+		html, body{
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 100%;
+			position: relative;
+			color: rgb(0,0,0);
+			text-rendering: optimizeLegability;
+		}
+		/*------------------*/
+		body{
+			font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
+			font-weight: 400;
+			background: rgb(255,255,255);
+			overflow-y: scroll;
+			overflow-x: hidden;
+		}
+	</style>
 	<link rel="stylesheet" type="text/css" href="./mark.css" media="screen" />
 	<title>Mark</title>
 </head>
@@ -79,12 +137,67 @@ for (var i = 0; i < items.length; i++) {
 	<script src="./codemirror/addon/edit/matchbrackets.js"></script>
 	<script src="./codemirror/addon/edit/closebrackets.js"></script>
 	<script src="./codemirror/addon/edit/matchtags.js"></script>
-	<script src="./codemirror/addon/edit/trailingspace.js"></script>	
-	<script src="./codemirror/addon/edit/closetag.js"></script>	
-	<!--<script src="./codemirror/addon/selection/mark-selection.js"></script>-->
+	<script src="./codemirror/addon/edit/trailingspace.js"></script>
+	<script src="./codemirror/addon/edit/closetag.js"></script>
 	<script src="./codemirror/addon/selection/active-line.js"></script>
-	<script src="./codemirror/addon/display/placeholder.js"></script>	
-	<script src="./codemirror/addon/mode/overlay.js"></script>	
+	<script src="./codemirror/addon/display/placeholder.js"></script>
+	<script src="./codemirror/addon/mode/overlay.js"></script>
 	<script charset="utf-8" src="./mark-0.0.1.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		/* ------------------ */
+		//
+		/* RUN EDITOR */
+		//
+		// run codemirror on every instance of .mark
+		Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
+
+			options.cm = CodeMirror.fromTextArea(editor, {
+				theme: "mark",
+				// value: "function myScript(){return 100;}\n",
+				mode: {
+					name: "gfm",
+					highlightFormatting: true
+				},
+				lineNumbers: true,
+				addModeClass: false,
+				lineWrapping: true,
+				flattenSpans: true,
+				cursorHeight: 1,
+				matchBrackets: true,
+				autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
+				matchTags: true,
+				showTrailingSpace: true,
+				autoCloseTags: true,
+				styleSelectedText: false,
+				styleActiveLine: true,
+				placeholder: "",
+					tabMode: 'indent',
+				tabindex: "2",
+				dragDrop: false,
+				extraKeys: {
+					"Enter": "newlineAndIndentContinueMarkdownList",
+					"Cmd-B": function(){
+						options.fn.inlineFormat({'format':'strong'});
+					},
+					"Ctrl-B": function(){
+						console.log(options.fn.getMiddlePos(true));
+					},
+					"Cmd-I": function(){
+						options.fn.inlineFormat({'format':'em'});
+					},
+					"Ctrl-I": function(){
+						options.fn.toggleFormat('quote', {"level":2});
+					}
+				}
+			});
+			// add edit Options
+			options.cm.on("cursorActivity", function(){
+				editOptions();
+				// options.fn.inlineFormat({'format':'em'});
+								// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
+			});
+
+		});
+	</script>
 </body>
 </html>

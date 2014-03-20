@@ -1,64 +1,8 @@
 /*------------------*/
-/* Reset */
-html, body, div, p, span, applet, object, iframe,
-dl, dt, dd, ol, ul, li,
-article, aside, canvas, blockquote, pre,
-figure, figcaption, footer, header, hgroup, 
-menu, nav, section, summary,
-time, mark, audio, video{
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	line-height: inherit;	
-	vertical-align: baseline;
-	font-weight: inherit;
-}
-h1, h2, h3, h4, h5, h6{
-	font-size: 100%;
-	margin: 0;
-	padding: 0;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-ul { list-style: none; }
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-}
-img{
-	padding: 0;
-	margin: 0;	
-	border: 0;
-	position: relative;
-}
-/*------------------*/
-/* general */
-html, body{
-	padding: 0;
-	margin: 0;
-	width: 100%;
-	height: 100%; 
-	position: relative;
-	color: rgb(0,0,0);
-	text-rendering: optimizeLegability;
-}
-/*------------------*/
-body{
-	font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
-	font-weight: 400;
-	background: rgb(255,255,255);
-	overflow-y: scroll;
-	overflow-x: hidden;
-}
-/*------------------*/
 /* mark theme */
 .cm-s-mark.CodeMirror {
 	height: auto;
-	background: transparent; 
+	background: transparent;
 	color: rgb(60,60,60);
 	font-family: inherit;
 }
@@ -77,14 +21,9 @@ body{
 	padding-top: 0.2em;
 }
 .cm-s-mark .CodeMirror-cursor {
-/*	border-left: 2px solid rgb(55,115,215) !important;*/
 	border: 0 !important;
 	width: 2px !important;
 	background-color: rgb(55,170,225);
-/*	background: rgb(55,115,215);*/
-	
-/*	transform: translate3d(0, 29%, 0);
-	-webkit-transform: translate3d(0, 29%, 0);*/
 }
 .cm-s-mark .CodeMirror-activeline-background{
 	background-color: rgba(0,0,0,0.02);
@@ -110,7 +49,7 @@ body{
 	opacity: 0.5;
 }
 .cm-s-mark .cm-qualifier{
-	color: inherit;	
+	color: inherit;
 }
 .cm-s-mark span.cm-variable {color: rgb(55,115,215);}
 .cm-s-mark span.cm-variable-2 { color: inherit; }
@@ -126,7 +65,7 @@ body{
 	color: rgb(55,115,215);
 }
 .cm-s-mark .cm-error {
-	background: rgb(200,80,70); 
+	background: rgb(200,80,70);
 	color: rgb(255,255,255);
 }
 .cm-s-mark .CodeMirror-matchingbracket {
@@ -134,7 +73,7 @@ body{
 	color: rgb(55,115,215) !important;
 }
 .cm-s-mark .CodeMirror-nonmatchingbracket{
-	color: rgb(200,80,70) !important;	
+	color: rgb(200,80,70) !important;
 }
 .cm-s-mark .cm-formatting, .cm-s-mark .cm-formatting-list-ul{
 	color: inherit !important;
@@ -241,13 +180,13 @@ body{
 	margin-left: 0;
 }
 /* edit Options content */
-#editOptions .button{
+#editOptions .mark-button{
 	height: 100%;
 	width: 1.7em;
 	padding: 0;
 	display: block;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	font-size: 1.5em;
 	text-align: center;
@@ -257,17 +196,15 @@ body{
 	cursor: pointer;
 	background: transparent;
 }
-#editOptions .button:first-child{
+#editOptions .mark-button:first-child{
 	border-top-left-radius: 2px;
 	border-bottom-left-radius: 2px;
 }
-#editOptions .button:last-child{
+#editOptions .mark-button:last-child{
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
-#editOptions .button:hover{
-/*	background: rgb(0,0,0);
-	transition: background .5s ease;*/
+#editOptions .mark-button:hover{
 	color: rgb(0,0,0);
 }
 #editOptions .strong{
@@ -302,9 +239,9 @@ body{
 }
 #editOptions.quote-1 .quote:after{
 /*	color: rgba(0,0,0,0.35);*/
-	color: rgba(0,0,0,0.25);	
+	color: rgba(0,0,0,0.25);
 }
-#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1, 
+#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1,
 #editOptions.header2 .header2, #editOptions.quote-1 .quote, #editOptions.quote-2 .quote{
 /*	background: rgb(55,115,215);*/
 /*	box-shadow: -1px 0 0 rgba(0,0,0,0.075);*/

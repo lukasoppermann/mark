@@ -406,11 +406,11 @@ var f, editOptions = function()
 				// create element
 				panel = document.createElement('div');
 				panel.id = 'editOptions';
-				panel.innerHTML = '<div data-class="strong" data-format="strong" class="strong button">B</div>'+
-										'<div data-class="em" data-format="em" class="em button">i</div>'+
-										'<div data-class="header1" data-format="header" data-parameters=\'{"level":1}\' class="header1 button">H1</div>'+
-										'<div data-class="header2" data-format="header" data-parameters=\'{"level":2}\' class="header2 button">H2</div>'+
-										'<div data-class="quote" data-format="quote" data-parameters=\'{"level":1}\' class="quote button"></div>';
+				panel.innerHTML = '<div data-class="strong" data-format="strong" class="strong mark-button">B</div>'+
+										'<div data-class="em" data-format="em" class="em mark-button">i</div>'+
+										'<div data-class="header1" data-format="header" data-parameters=\'{"level":1}\' class="header1 mark-button">H1</div>'+
+										'<div data-class="header2" data-format="header" data-parameters=\'{"level":2}\' class="header2 mark-button">H2</div>'+
+										'<div data-class="quote" data-format="quote" data-parameters=\'{"level":1}\' class="quote mark-button"></div>';
 				// add panel to editor
 				options.cm.addWidget({line:0,ch:0},panel);
 				// select elements
@@ -505,52 +505,52 @@ var f, editOptions = function()
 /* RUN EDITOR */
 //
 // run codemirror on every instance of .mark
-Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
-
-	options.cm = CodeMirror.fromTextArea(editor, {
-		theme: "mark",
-    // value: "function myScript(){return 100;}\n",
-		mode: {
-			name: "gfm",
-			highlightFormatting: true
-		},
-		lineNumbers: true,
-		addModeClass: false,
-		lineWrapping: true,
-		flattenSpans: true,
-		cursorHeight: 1,
-		matchBrackets: true,
-		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
-		matchTags: true,
-		showTrailingSpace: true,
-		autoCloseTags: true,
-		styleSelectedText: false,
-		styleActiveLine: true,
-		placeholder: "",
-      tabMode: 'indent',
-		tabindex: "2",
-		dragDrop: false,
-		extraKeys: {
-			"Enter": "newlineAndIndentContinueMarkdownList",
-			"Cmd-B": function(){
-				options.fn.inlineFormat({'format':'strong'});
-			},
-			"Ctrl-B": function(){
-				console.log(options.fn.getMiddlePos(true));
-			},
-			"Cmd-I": function(){
-				options.fn.inlineFormat({'format':'em'});
-			},
-			"Ctrl-I": function(){
-				options.fn.toggleFormat('quote', {"level":2});
-			}
-		}
-	});
-	// add edit Options
-	options.cm.on("cursorActivity", function(){
-		editOptions();
-		// options.fn.inlineFormat({'format':'em'});
-						// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
-	});
-
-});
+// Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
+//
+// 	options.cm = CodeMirror.fromTextArea(editor, {
+// 		theme: "mark",
+//     // value: "function myScript(){return 100;}\n",
+// 		mode: {
+// 			name: "gfm",
+// 			highlightFormatting: true
+// 		},
+// 		lineNumbers: true,
+// 		addModeClass: false,
+// 		lineWrapping: true,
+// 		flattenSpans: true,
+// 		cursorHeight: 1,
+// 		matchBrackets: true,
+// 		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
+// 		matchTags: true,
+// 		showTrailingSpace: true,
+// 		autoCloseTags: true,
+// 		styleSelectedText: false,
+// 		styleActiveLine: true,
+// 		placeholder: "",
+//       tabMode: 'indent',
+// 		tabindex: "2",
+// 		dragDrop: false,
+// 		extraKeys: {
+// 			"Enter": "newlineAndIndentContinueMarkdownList",
+// 			"Cmd-B": function(){
+// 				options.fn.inlineFormat({'format':'strong'});
+// 			},
+// 			"Ctrl-B": function(){
+// 				console.log(options.fn.getMiddlePos(true));
+// 			},
+// 			"Cmd-I": function(){
+// 				options.fn.inlineFormat({'format':'em'});
+// 			},
+// 			"Ctrl-I": function(){
+// 				options.fn.toggleFormat('quote', {"level":2});
+// 			}
+// 		}
+// 	});
+// 	// add edit Options
+// 	options.cm.on("cursorActivity", function(){
+// 		editOptions();
+// 		// options.fn.inlineFormat({'format':'em'});
+// 						// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
+// 	});
+//
+// });
