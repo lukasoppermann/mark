@@ -402,7 +402,7 @@ var options = {
 //
 // EditOptions fn:
 //
-var f, editOptions = function(editor)
+var f, editOptions = function()
 {
 	// get element
 	var panel = document.getElementById('editOptions');
@@ -485,7 +485,6 @@ var f, editOptions = function(editor)
 			// ------------------------------
 			// calculate top
 			var arrowHeight = 7+2,
-          editorOffset = parent(panel,".CodeMirror-wrap").offsetTop,
           top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
       // remove class
 			panel.classList.remove('from-top');
