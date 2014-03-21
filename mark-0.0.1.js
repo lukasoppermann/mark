@@ -4,6 +4,21 @@ if (!String.prototype.trim) {
     return this.replace(/^\s+|\s+$/gm, '');
   };
 }
+if (window.Element){
+  (function(ElementPrototype) {
+    ElementPrototype.matches = ElementPrototype.matchesSelector =
+    ElementPrototype.matchesSelector ||
+    ElementPrototype.webkitMatchesSelector ||
+    ElementPrototype.mozMatchesSelector ||
+    ElementPrototype.msMatchesSelector ||
+    ElementPrototype.oMatchesSelector ||
+    function (selector) {
+      var nodes = (this.parentNode || this.document).querySelectorAll(selector), i = -1;
+      while (nodes[++i] && nodes[i] !== this);
+      return !!nodes[i];
+    };
+  })(window.Element.prototype);
+}
 /* ------------------ */
 //
 // options object that holds all settings
@@ -387,10 +402,22 @@ var options = {
 //
 // EditOptions fn:
 //
-var f, editOptions = function()
+var f, editOptions = function(editor)
 {
 	// get element
 	var panel = document.getElementById('editOptions');
+  //
+  var parent = function(el, selector)
+  {
+    var parentElement = el.parentNode;
+    if( parentElement !== null )
+    {
+      while (!parentElement.matches(selector) && parentElement.nodeName !== 'BODY'){
+        parentElement = parentElement.parentNode;
+      }
+    }
+    return parentElement;
+  }
 	// clear timeout
 	window.clearTimeout(f);
 	// check for selection
@@ -450,16 +477,17 @@ var f, editOptions = function()
 			};
 			// get coords
 			var coords = {
-				start: options.cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
-				end: options.cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
+				start: options.cm.charCoords({line:cursor.start.line, ch: cursor.start.ch},'local'),
+				end: options.cm.charCoords({line:cursor.end.line, ch: cursor.end.ch},'local')
 			};
 			// add active class
 			panel.classList.add('active');
 			// ------------------------------
 			// calculate top
-			var arrowHeight = 7+2;
-			var top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
-			// remove class
+			var arrowHeight = 7+2,
+          editorOffset = parent(panel,".CodeMirror-wrap").offsetTop,
+          top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
+      // remove class
 			panel.classList.remove('from-top');
 			if( top < 0 ){
 				top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(panel).height.replace('px','')));
@@ -469,7 +497,7 @@ var f, editOptions = function()
 			// ------------------------------
 			// calculate horizontal position
 			//
-			var middle = coords.end.left-((coords.end.left-coords.start.left)/2);
+			var middle = coords.start.left+((coords.end.left-coords.start.left)/2);
 			var left = Math.floor(middle-(window.getComputedStyle(panel).width.replace('px','')/2));
 			// remove classes
 			panel.classList.remove('from-left');
@@ -547,7 +575,7 @@ var f, editOptions = function()
 // 		}
 // 	});
 // 	// add edit Options
-// 	options.cm.on("cursorActivity", function(){
+// 	options.cm.on("cursorActivity", function(editor){
 // 		editOptions();
 // 		// options.fn.inlineFormat({'format':'em'});
 // 						// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );

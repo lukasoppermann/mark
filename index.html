@@ -11,7 +11,7 @@
 	<style type="text/css" media="screen">
 		/*------------------*/
 		/* Reset */
-		html, body, div, p, span, applet, object, iframe,
+/*		html, body, div, p, span, applet, object, iframe,
 		dl, dt, dd, ol, ul, li,
 		article, aside, canvas, blockquote, pre,
 		figure, figcaption, footer, header, hgroup,
@@ -29,9 +29,9 @@
 			font-size: 100%;
 			margin: 0;
 			padding: 0;
-		}
+		}*/
 		/* HTML5 display-role reset for older browsers */
-		article, aside, details, figcaption, figure,
+/*		article, aside, details, figcaption, figure,
 		footer, header, hgroup, menu, nav, section {
 			display: block;
 		}
@@ -45,7 +45,7 @@
 			margin: 0;
 			border: 0;
 			position: relative;
-		}
+		}*/
 		/*------------------*/
 		/* general */
 		html, body{
@@ -64,6 +64,12 @@
 			background: rgb(255,255,255);
 			overflow-y: scroll;
 			overflow-x: hidden;
+		}
+		.padding{
+			height: 100px;
+			width: 100%;
+			display: block;
+			background: red;
 		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="./mark.css" media="screen" />
@@ -192,7 +198,7 @@ for (var i = 0; i < items.length; i++) {
 			});
 			// add edit Options
 			options.cm.on("cursorActivity", function(){
-				editOptions();
+				editOptions(editor);
 				// options.fn.inlineFormat({'format':'em'});
 								// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
 			});
