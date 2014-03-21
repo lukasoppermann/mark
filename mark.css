@@ -2,7 +2,7 @@
 /* mark theme */
 .cm-s-mark.CodeMirror {
 	height: auto;
-	background: transparent; 
+	background: transparent;
 	color: rgb(60,60,60);
 	font-family: inherit;
 }
@@ -48,7 +48,7 @@
 	opacity: 0.5;
 }
 .cm-s-mark .cm-qualifier{
-	color: inherit;	
+	color: inherit;
 }
 .cm-s-mark span.cm-variable {color: rgb(55,115,215);}
 .cm-s-mark span.cm-variable-2 { color: inherit; }
@@ -64,7 +64,7 @@
 	color: rgb(55,115,215);
 }
 .cm-s-mark .cm-error {
-	background: rgb(200,80,70); 
+	background: rgb(200,80,70);
 	color: rgb(255,255,255);
 }
 .cm-s-mark .CodeMirror-matchingbracket {
@@ -72,7 +72,7 @@
 	color: rgb(55,115,215) !important;
 }
 .cm-s-mark .CodeMirror-nonmatchingbracket{
-	color: rgb(200,80,70) !important;	
+	color: rgb(200,80,70) !important;
 }
 .cm-s-mark .cm-formatting, .cm-s-mark .cm-formatting-list-ul{
 	color: inherit !important;
@@ -184,8 +184,8 @@
 	width: 1.7em;
 	padding: 0;
 	display: block;
-	-moz-box-sizing: border-box; 
-	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	font-size: 1.5em;
 	text-align: center;
@@ -237,13 +237,10 @@
 	left: .49em;
 }
 #editOptions.quote-1 .quote:after{
-/*	color: rgba(0,0,0,0.35);*/
-	color: rgba(0,0,0,0.25);	
+	color: rgba(0,0,0,0.25);
 }
-#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1, 
+#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1,
 #editOptions.header2 .header2, #editOptions.quote-1 .quote, #editOptions.quote-2 .quote{
-/*	background: rgb(55,115,215);*/
-/*	box-shadow: -1px 0 0 rgba(0,0,0,0.075);*/
 	color: rgb(55,115,215);
 }
 #editOptions.strong .strong{
