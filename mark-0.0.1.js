@@ -4,6 +4,21 @@ if (!String.prototype.trim) {
     return this.replace(/^\s+|\s+$/gm, '');
   };
 }
+if (window.Element){
+  (function(ElementPrototype) {
+    ElementPrototype.matches = ElementPrototype.matchesSelector =
+    ElementPrototype.matchesSelector ||
+    ElementPrototype.webkitMatchesSelector ||
+    ElementPrototype.mozMatchesSelector ||
+    ElementPrototype.msMatchesSelector ||
+    ElementPrototype.oMatchesSelector ||
+    function (selector) {
+      var nodes = (this.parentNode || this.document).querySelectorAll(selector), i = -1;
+      while (nodes[++i] && nodes[i] !== this);
+      return !!nodes[i];
+    };
+  })(window.Element.prototype);
+}
 /* ------------------ */
 //
 // options object that holds all settings
@@ -12,38 +27,31 @@ var options = {
 	fn: {
 		// format
 		toggleFormat: function(format, params)
-		{
-			var block = {"header":["#"], "quote":[">"], "code":["```"]},
-          inline = {"strong":["**"], "em":["_"], "link":[""]},
-          pos;
+    {
+			var block = {'header':['#'], 'quote':['>'], 'code':['```']},
+          inline = {'strong':['**'], 'em':['_'], 'link':['']};
       params = (params === undefined || params === null) ? {} : params;
 			params.format = format;
       // if inline
-      if( inline.hasOwnProperty(format) )
-      {
-				if( format === "strong" || format === "em" )
-				{
-					params.indicator = inline[format];
-					options.fn.inlineFormat(params);
-				}
-				else if( format === "link" )
-				{
-					// needs to be implemented
-				}
-      }
-			// if block
-      else
+			if( format === 'strong' || format === 'em' )
 			{
-				if( format === "header" || format === "quote" )
-				{
-					params.indicator = block[format];
-					options.fn.blockFormatFront(params);
-				}
-				else if( format === "code" )
-				{
-					// needs to be implemented
-				}
-      }
+				params.indicator = inline[format];
+				options.fn.inlineFormat(params);
+			}
+			else if( format === 'link' )
+			{
+				// needs to be implemented
+			}
+			// if block
+			if( format === 'header' || format === 'quote' )
+			{
+				params.indicator = block[format];
+				options.fn.blockFormatFront(params);
+			}
+			else if( format === 'code' )
+			{
+				// needs to be implemented
+			}
 		},
 		// blockFormatFront
 		blockFormatFront: function( params )
@@ -103,13 +111,13 @@ var options = {
       // remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
-        var repSel;
+        var repSel, re;
 				// define replacement logic
 				if( params.format === 'em' )
 				{
           re = {
-            '_': new RegExp("(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)", "g"),
-            '*': new RegExp("(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)", "g"),
+            '_': new RegExp('(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)', 'g'),
+            '*': new RegExp('(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)', 'g'),
             'use': false,
             'length': 1
           };
@@ -117,8 +125,8 @@ var options = {
 				else if ( params.format === 'strong' )
 				{
           re = {
-            '_': new RegExp("(^|[^_])(_{2,3})([^_]+)(\\_{2,3})([^_]|$)", "g"),
-            '*': new RegExp("(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)", "g"),
+            '_': new RegExp('(^|[^_])(_{2,3})([^_]+)(\\_{2,3})([^_]|$)', 'g'),
+            '*': new RegExp('(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)', 'g'),
             'use': false,
             'length':2
           };
@@ -177,8 +185,8 @@ var options = {
 		// check for formatting
 		hasFormat: function(format)
 		{
-			var block = ["header", "quote", "code"], isBlock = false,
-          inline = ["strong", "em", "link"], isInline = false,
+			var block = ['header', 'quote', 'code'], isBlock = false,
+          inline = ['strong', 'em', 'link'], isInline = false,
           pos;
 			// if inline
 			if( inline.indexOf(format) !== -1 )
@@ -187,7 +195,7 @@ var options = {
 				// set selection to middle of selection
 				pos = options.fn.getMiddlePos(false);
 			}
-			else{
+			else if( block.indexOf(format) !== -1){
 				isBlock = true;
 				pos = options.fn.getLineEndPos();
 			}
@@ -240,7 +248,7 @@ var options = {
 		getLineEndPos: function( setPos )
 		{
 			var pos = { line: options.cm.getCursor(true).line };
-          pos.ch = options.cm.getLine(pos.line).length;
+      pos.ch = options.cm.getLine(pos.line).length;
 			// set selection to position
 			if( setPos === true )
 			{
@@ -416,23 +424,23 @@ var f, editOptions = function()
 				// select elements
 				panel = document.getElementById('editOptions');
 				// add events
-				panel.addEventListener("click", function(e)
+				panel.addEventListener('click', function(e)
 				{
 					// run function
-					var params = e.target.getAttribute("data-parameters");
-					if( e.target.getAttribute("data-format") === "quote" && ( options.ffn.hasClass(panel, "quote-1") || options.ffn.hasClass(panel, "quote-2")) )
+					var params = e.target.getAttribute('data-parameters');
+					if( e.target.getAttribute('data-format') === 'quote' && ( options.ffn.hasClass(panel, 'quote-1') || options.ffn.hasClass(panel, 'quote-2')) )
 					{
 						params = '{"level":2}';
 					}
 
-					options.fn.toggleFormat(e.target.getAttribute("data-format"), JSON.parse( params )); /// !!!!!!!!!! NEEDS PARAMETERS AS JSON IF PRESENT
-					panel.classList.toggle(e.target.getAttribute("data-class"));
+					options.fn.toggleFormat(e.target.getAttribute('data-format'), JSON.parse( params ));
+					panel.classList.toggle(e.target.getAttribute('data-class'));
 					// set focus
 					options.cm.focus();
 				});
 			}
 			// check which elements are active
-			var add = "", remove = "";
+			var add = '', remove = '';
 			options.fn.hasFormat('strong') ? add += 'strong, ' : remove += 'strong, ';
 			options.fn.hasFormat('em') ? add += 'em, ' : remove += 'em, ';
 			options.fn.hasFormat('quote') === 1 ? add += 'quote-1, ' : remove += 'quote-1, ';
@@ -450,16 +458,16 @@ var f, editOptions = function()
 			};
 			// get coords
 			var coords = {
-				start: options.cm.charCoords({line:cursor.start.line, ch: cursor.start.ch}),
-				end: options.cm.charCoords({line:cursor.end.line, ch: cursor.end.ch})
+				start: options.cm.charCoords({line:cursor.start.line, ch: cursor.start.ch},'local'),
+				end: options.cm.charCoords({line:cursor.end.line, ch: cursor.end.ch},'local')
 			};
 			// add active class
 			panel.classList.add('active');
 			// ------------------------------
 			// calculate top
-			var arrowHeight = 7+2;
-			var top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
-			// remove class
+			var arrowHeight = 7+2,
+          top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
+      // remove class
 			panel.classList.remove('from-top');
 			if( top < 0 ){
 				top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(panel).height.replace('px','')));
@@ -469,7 +477,7 @@ var f, editOptions = function()
 			// ------------------------------
 			// calculate horizontal position
 			//
-			var middle = coords.end.left-((coords.end.left-coords.start.left)/2);
+			var middle = coords.start.left+((coords.end.left-coords.start.left)/2);
 			var left = Math.floor(middle-(window.getComputedStyle(panel).width.replace('px','')/2));
 			// remove classes
 			panel.classList.remove('from-left');
@@ -499,58 +507,3 @@ var f, editOptions = function()
 		}, 100);
 	}
 };
-
-/* ------------------ */
-//
-/* RUN EDITOR */
-//
-// run codemirror on every instance of .mark
-// Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
-// 
-// 	options.cm = CodeMirror.fromTextArea(editor, {
-// 		theme: "mark",
-//     // value: "function myScript(){return 100;}\n",
-// 		mode: {
-// 			name: "gfm",
-// 			highlightFormatting: true
-// 		},
-// 		lineNumbers: true,
-// 		addModeClass: false,
-// 		lineWrapping: true,
-// 		flattenSpans: true,
-// 		cursorHeight: 1,
-// 		matchBrackets: true,
-// 		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
-// 		matchTags: true,
-// 		showTrailingSpace: true,
-// 		autoCloseTags: true,
-// 		styleSelectedText: false,
-// 		styleActiveLine: true,
-// 		placeholder: "",
-//       tabMode: 'indent',
-// 		tabindex: "2",
-// 		dragDrop: false,
-// 		extraKeys: {
-// 			"Enter": "newlineAndIndentContinueMarkdownList",
-// 			"Cmd-B": function(){
-// 				options.fn.inlineFormat({'format':'strong'});
-// 			},
-// 			"Ctrl-B": function(){
-// 				console.log(options.fn.getMiddlePos(true));
-// 			},
-// 			"Cmd-I": function(){
-// 				options.fn.inlineFormat({'format':'em'});
-// 			},
-// 			"Ctrl-I": function(){
-// 				options.fn.toggleFormat('quote', {"level":2});
-// 			}
-// 		}
-// 	});
-// 	// add edit Options
-// 	options.cm.on("cursorActivity", function(){
-// 		editOptions();
-// 		// options.fn.inlineFormat({'format':'em'});
-// 						// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
-// 	});
-// 
-// });
