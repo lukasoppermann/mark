@@ -309,7 +309,7 @@ var options = {
 			while( left === false  )
 			{
 				i++;
-				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ' || curCursor.ch-i <= 0)
+				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ' || curCursor.ch-i <= 0 || line.substring((curCursor.ch-i),curCursor.ch-(i-1)).length === 0)
 				{
 					left = i;
 				}
