@@ -309,7 +309,7 @@ var options = {
 			while( left === false  )
 			{
 				i++;
-				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ' || curCursor.ch-i <= 0 || line.substring((curCursor.ch-i),curCursor.ch-(i-1)).length === 0)
+				if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ' || curCursor.ch-i < 0)
 				{
 					left = i;
 				}
@@ -319,7 +319,7 @@ var options = {
 			while( right === false  )
 			{
 				i++;
-				if( /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+(i))) || curCursor.ch+i >= line.length)
+				if( /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+(i))) || curCursor.ch+i > line.length)
 				{
 					right = i;
 				}
