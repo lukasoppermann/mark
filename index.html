@@ -11,43 +11,6 @@
 	<style type="text/css" media="screen">
 		/*------------------*/
 		/* Reset */
-/*		html, body, div, p, span, applet, object, iframe,
-		dl, dt, dd, ol, ul, li,
-		article, aside, canvas, blockquote, pre,
-		figure, figcaption, footer, header, hgroup,
-		menu, nav, section, summary,
-		time, mark, audio, video{
-			margin: 0;
-			padding: 0;
-			border: 0;
-			font-size: 100%;
-			line-height: inherit;
-			vertical-align: baseline;
-			font-weight: inherit;
-		}
-		h1, h2, h3, h4, h5, h6{
-			font-size: 100%;
-			margin: 0;
-			padding: 0;
-		}*/
-		/* HTML5 display-role reset for older browsers */
-/*		article, aside, details, figcaption, figure,
-		footer, header, hgroup, menu, nav, section {
-			display: block;
-		}
-		ul { list-style: none; }
-		table {
-			border-collapse: collapse;
-			border-spacing: 0;
-		}
-		img{
-			padding: 0;
-			margin: 0;
-			border: 0;
-			position: relative;
-		}*/
-		/*------------------*/
-		/* general */
 		html, body{
 			padding: 0;
 			margin: 0;
@@ -64,12 +27,6 @@
 			background: rgb(255,255,255);
 			overflow-y: scroll;
 			overflow-x: hidden;
-		}
-		.padding{
-			height: 100px;
-			width: 100%;
-			display: block;
-			background: red;
 		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="./mark.css" media="screen" />
@@ -183,24 +140,22 @@ for (var i = 0; i < items.length; i++) {
 				extraKeys: {
 					"Enter": "newlineAndIndentContinueMarkdownList",
 					"Cmd-B": function(){
-						options.fn.inlineFormat({'format':'strong'});
+						options.fn.toggleFormat('strong');
 					},
 					"Ctrl-B": function(){
-						console.log(options.fn.getMiddlePos(true));
+						options.fn.toggleFormat('strong');
 					},
 					"Cmd-I": function(){
-						options.fn.inlineFormat({'format':'em'});
+						options.fn.toggleFormat('em');
 					},
 					"Ctrl-I": function(){
-						options.fn.toggleFormat('quote', {"level":2});
+						options.fn.toggleFormat('em');
 					}
 				}
 			});
 			// add edit Options
 			options.cm.on("cursorActivity", function(){
 				editOptions(editor);
-				// options.fn.inlineFormat({'format':'em'});
-								// console.log( '##'+options.cm.getSelection().match( /(?:^|[^_*])_*([*](?:[*]{2})*)?[^*_]+\1_*(?:[^*_]|$)/gm )+'##' );
 			});
 
 		});
