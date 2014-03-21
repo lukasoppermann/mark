@@ -57,7 +57,8 @@ var options = {
 		blockFormatFront: function( params )
 		{
 			var level = options.fn.hasFormat(params.format),
-          curCursor = options.cm.getCursor(true);
+          curCursor = options.cm.getCursor(true),
+          endCursor = options.cm.getCursor(false);
 			if( level !== false && typeof(level) === 'number' )
 			{
 				options.cm.setSelection({
@@ -96,18 +97,22 @@ var options = {
 				// add indicator
 				options.cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator[0] )+' ');
 			}
+      // restore position
 			options.cm.setSelection({
 				line: curCursor.line,
-				ch: 0
+				ch: curCursor.ch
 			}, {
-				line: curCursor.line,
-				ch: options.cm.getLine(curCursor.line).length
+				line: endCursor.line,
+				ch: endCursor.ch
 			});
 		},
 		// inlineFormat
 		inlineFormat: function( params )
 		{
-      var sel = options.cm.getSelection();
+      var sel = options.cm.getSelection(),
+      curCursor = options.cm.getCursor(true),
+      endCursor = options.cm.getCursor(false),
+      selAdd = 0;
       // remove
 			if( options.fn.hasFormat(params.format) !== false )
 			{
@@ -135,10 +140,12 @@ var options = {
 				if( sel.search(re._) !== -1 )
 				{
 					re.use = '_';
+          selAdd = params.indicator[0].length;
 				}
 				else if( sel.search(re['*']) !== -1 )
 				{
 					re.use = '*';
+          selAdd = params.indicator[0].length;
 				}
 				// grab word
 				else
@@ -150,26 +157,45 @@ var options = {
 					if( sel.search(re._) !== -1 )
 					{
 						re.use = '_';
+            curCursor.ch -= params.indicator[0].length;
+            endCursor.ch -= params.indicator[0].length;
 					}
 					else if( sel.search(re['*']) !== -1 )
 					{
 						re.use = '*';
+            curCursor.ch -= params.indicator[0].length;
+            endCursor.ch -= params.indicator[0].length;
 					}
 				}
 				if( re.use !== false )
 				{
+          //
 					repSel = sel.replace(re[re.use], function(matches, m1,m2,m3,m4,m5){
 						return m1+m2.substr(re.length)+m3+m4.substr(re.length)+m5;
 					});
-					options.cm.replaceSelection(repSel);
+          options.cm.replaceSelection(repSel);
+          // reset selection if needed
+          if( selAdd !== 0 )
+          {
+            endCursor.ch -= selAdd*2;
+          }
 				}
-			}
+        // restore position
+        options.cm.setSelection({
+          line: curCursor.line,
+          ch: curCursor.ch
+        }, {
+          line: endCursor.line,
+          ch: endCursor.ch
+        });
+      }
 			// add
 			else
 			{
 				if( sel.trim().length > 0)
 				{
 					options.cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
+          endCursor.ch += params.indicator[0].length*2;
 				}
 				// only a carat is set, no selection
 				else
@@ -178,10 +204,20 @@ var options = {
 					{
 						options.fn.getWordBoundaries(true);
 						options.cm.replaceSelection(params.indicator[0]+options.cm.getSelection()+params.indicator[0]);
+            curCursor.ch += params.indicator[0].length;
+            endCursor.ch = curCursor.ch;
 					}
 				}
 			}
-		},
+      // restore position
+      options.cm.setSelection({
+        line: curCursor.line,
+        ch: curCursor.ch
+      }, {
+        line: endCursor.line,
+        ch: endCursor.ch
+      });
+    },
 		// check for formatting
 		hasFormat: function(format)
 		{
