@@ -241,3 +241,9 @@
 }
 /*------------------------*/
 /* Edit Panel */
+
+/*------------------------*/
+/* Editor */
+.cm-s-mark.CodeMirror.CodeMirror-focused{
+	box-shadow: 0 0 0 0 rgb(55,115,215);
+}
