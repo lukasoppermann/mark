@@ -37,6 +37,7 @@
 	opacity: 0.7;
 	font-style: italic;
 }
+
 .cm-s-mark .cm-property, .cm-s-mark .cm-attribute {
 	color: rgb(120,170,250);
 }
@@ -76,7 +77,7 @@
 }
 .cm-s-mark .cm-formatting, .cm-s-mark .cm-formatting-list-ul{
 	color: inherit !important;
-	opacity: 0.2;
+	opacity: 0.4;
 }
 .cm-s-mark .cm-formatting-task{
 	color: rgb(60,60,60) !important;
@@ -108,7 +109,7 @@
 	width: .5em;
 	position: relative;
 	display: inline-block;
-	color: rgba(0,0,0,0.2);
+	color: rgba(0,0,0,0.3);
 }
 .cm-s-mark .cm-trailingspace:before{
 	content: "•";
@@ -120,7 +121,6 @@
 	position: absolute;
 	height: 2.5em;
 	background-color: rgb(245,245,245);
-	color: rgb(100,100,100);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.15);
 	border-radius: 3px;
 	z-index: 999;
@@ -181,15 +181,12 @@
 /* edit Options content */
 #editOptions .mark-button{
 	height: 100%;
-	width: 1.7em;
+	width: 30px;
 	padding: 0;
 	display: block;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	font-size: 1.5em;
-	text-align: center;
-	line-height: 1.5em;
 	float: left;
 	position: relative;
 	cursor: pointer;
@@ -203,46 +200,41 @@
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 }
-#editOptions .mark-button:hover{
-	color: rgb(0,0,0);
-}
-#editOptions .strong{
-	font-weight: 600;
-	font-family: courier;
+.mark-icon{
+  display: inline-block;
+	margin-top: 6px;
+	width: 30px;
+	height: 20px;
+	pointer-events:none;
+	transition: fill .4s ease;
 }
 #editOptions .em{
-	font-style: italic;
-	font-weight: 600;
-	font-family: times;
+	width: 20px;
 }
-#editOptions .header1, #editOptions .header2{
-	font-family: "Source Sans Pro";
-	font-weight: 600;
+#editOptions .strong{
+	padding-left: 6px;
 }
-#editOptions .quote{
-	font-weight: 600;
-	font-family: times;
+#editOptions .header1, #editOptions .header2, #editOptions .quote{
+	padding: 0 4px;
+	width: 38px;
 }
-#editOptions .quote:before, #editOptions .quote:after{
-	font-size: 1.8em;
-	position: absolute;
-	top: .25em;
+/*------------------------*/
+/* CUSTOMIZE */
+/*------------------------*/
+/* Edit Panel Icons Color*/
+#editOptions .mark-icon{
+	/* default color */
+	fill: rgb(100,100,100);
 }
-#editOptions .quote:before{
-	content: "\2018";
-	left: .25em;
+#editOptions .mark-button:hover .mark-icon{
+	/* hover color */
+	fill: rgb(0,0,0);
 }
-#editOptions .quote:after{
-	content: "\2018";
-	left: .49em;
+#editOptions.strong .strong .mark-icon, #editOptions.em .em .mark-icon, #editOptions.header1 .header1 .mark-icon,
+#editOptions.header2 .header2 .mark-icon, #editOptions.quote-1 .quote .mark-icon .quote-part-1, #editOptions.quote-2 .quote .mark-icon,
+#editOptions.link .link .mark-icon, #editOptions.code-1 .code .mark-icon .code-part-1, #editOptions.code-2 .code .mark-icon{
+	/* active color */
+	fill: rgb(55,115,215);
 }
-#editOptions.quote-1 .quote:after{
-	color: rgba(0,0,0,0.25);
-}
-#editOptions.strong .strong, #editOptions.em .em, #editOptions.header1 .header1,
-#editOptions.header2 .header2, #editOptions.quote-1 .quote, #editOptions.quote-2 .quote{
-	color: rgb(55,115,215);
-}
-#editOptions.strong .strong{
-	box-shadow: none;
-}
+/*------------------------*/
+/* Edit Panel */
