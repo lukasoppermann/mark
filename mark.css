@@ -202,14 +202,21 @@
 }
 .mark-icon{
   display: inline-block;
-	margin-top: .25em;
+	margin-top: 6px;
 	width: 30px;
 	height: 20px;
 	pointer-events:none;
 	transition: fill .4s ease;
 }
-#editOptions .em, #editOptions .strong{
+#editOptions .em{
 	width: 20px;
+}
+#editOptions .strong{
+	padding-left: 6px;
+}
+#editOptions .header1, #editOptions .header2, #editOptions .quote{
+	padding: 0 4px;
+	width: 38px;
 }
 /*------------------------*/
 /* CUSTOMIZE */
@@ -224,7 +231,8 @@
 	fill: rgb(0,0,0);
 }
 #editOptions.strong .strong .mark-icon, #editOptions.em .em .mark-icon, #editOptions.header1 .header1 .mark-icon,
-#editOptions.header2 .header2 .mark-icon, #editOptions.quote-1 .quote .mark-icon .quote-part-1, #editOptions.quote-2 .quote .mark-icon{
+#editOptions.header2 .header2 .mark-icon, #editOptions.quote-1 .quote .mark-icon .quote-part-1, #editOptions.quote-2 .quote .mark-icon,
+#editOptions.link .link .mark-icon, #editOptions.code-1 .code .mark-icon .code-part-1, #editOptions.code-2 .code .mark-icon{
 	/* active color */
 	fill: rgb(55,115,215);
 }
