@@ -77,7 +77,7 @@
 }
 .cm-s-mark .cm-formatting, .cm-s-mark .cm-formatting-list-ul{
 	color: inherit !important;
-	opacity: 0.2;
+	opacity: 0.4;
 }
 .cm-s-mark .cm-formatting-task{
 	color: rgb(60,60,60) !important;
@@ -109,7 +109,7 @@
 	width: .5em;
 	position: relative;
 	display: inline-block;
-	color: rgba(0,0,0,0.2);
+	color: rgba(0,0,0,0.3);
 }
 .cm-s-mark .cm-trailingspace:before{
 	content: "•";
@@ -182,15 +182,12 @@
 /* edit Options content */
 #editOptions .mark-button{
 	height: 100%;
-	width: 1.7em;
+	width: 30px;
 	padding: 0;
 	display: block;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
-	font-size: 1.5em;
-	text-align: center;
-	line-height: 1.5em;
 	float: left;
 	position: relative;
 	cursor: pointer;
@@ -207,35 +204,17 @@
 #editOptions .mark-button:hover{
 	color: rgb(0,0,0);
 }
-#editOptions .strong{
-	font-weight: 600;
-	font-family: courier;
+.mark-icon{
+   display: inline-block;
+	margin-top: .25em;
+	fill: rgb(100,100,100);
+	width: 30px;
+	height: 20px;
+	pointer-events:none;
 }
-#editOptions .em{
-	font-style: italic;
-	font-weight: 600;
-	font-family: times;
-}
-#editOptions .header1, #editOptions .header2{
-	font-family: "Source Sans Pro";
-	font-weight: 600;
-}
-#editOptions .quote{
-	font-weight: 600;
-	font-family: times;
-}
-#editOptions .quote:before, #editOptions .quote:after{
-	font-size: 1.8em;
-	position: absolute;
-	top: .25em;
-}
-#editOptions .quote:before{
-	content: "\2018";
-	left: .25em;
-}
-#editOptions .quote:after{
-	content: "\2018";
-	left: .49em;
+
+#editOptions .em, #editOptions .strong{
+	width: 20px;
 }
 #editOptions.quote-1 .quote:after{
 /*	color: rgba(0,0,0,0.35);*/
