@@ -6,6 +6,9 @@
 	color: rgb(60,60,60);
 	font-family: inherit;
 }
+.cm-s-mark.CodeMirror:focus{
+	outline: none;
+}
 .cm-s-mark.CodeMirror pre, .cm-s-mark.CodeMirror pre span{
 		line-height: 140%;
 }
