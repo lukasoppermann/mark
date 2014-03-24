@@ -20,6 +20,9 @@ if (window.Element){
   })(window.Element.prototype);
 }
 /* ------------------ */
+/* TODO: Change editonOptions from id to class so that there can be one per mark editor */
+/* TODO: Panel when close to right side */
+/* ------------------ */
 //
 // options object that holds all settings
 //
