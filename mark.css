@@ -6,6 +6,9 @@
 	color: rgb(60,60,60);
 	font-family: inherit;
 }
+.cm-s-mark.CodeMirror:focus{
+	outline: none;
+}
 .cm-s-mark.CodeMirror pre, .cm-s-mark.CodeMirror pre span{
 		line-height: 140%;
 }
@@ -208,12 +211,8 @@
 	pointer-events:none;
 	transition: fill .4s ease;
 }
-#editOptions .em{
-	width: 20px;
-}
-#editOptions .strong{
-	padding-left: 6px;
-}
+#editOptions .strong{ width: 20px; }
+#editOptions .em{ width: 20px; }
 #editOptions .header1, #editOptions .header2, #editOptions .quote{
 	padding: 0 4px;
 	width: 38px;
@@ -238,3 +237,14 @@
 }
 /*------------------------*/
 /* Edit Panel */
+
+/*------------------------*/
+/* Editor */
+.cm-s-mark.CodeMirror.CodeMirror-focused{
+	/* focus outline */
+	box-shadow: 0 0 0 0 rgb(55,115,215);
+}
+#content .cm-s-mark .CodeMirror-cursor {
+	/* cursor color */
+	background-color: rgb(65,125,225);
+}
