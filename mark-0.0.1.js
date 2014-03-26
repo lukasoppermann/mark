@@ -434,7 +434,8 @@ var options = {
 var f, editOptions = function()
 {
 	// get element
-	var panel = document.getElementById('editOptions');
+	var editor = options.cm.display.wrapper,
+			panel = editor.getElementsByClassName('edit-options');
 	// clear timeout
 	window.clearTimeout(f);
 	// check for selection
@@ -445,11 +446,11 @@ var f, editOptions = function()
 		f = window.setTimeout(function()
 		{
 			// check for element
-			if( typeof(panel) === undefined || panel === null)
+			if( typeof(panel) === undefined || panel === null || panel.length === 0)
 			{
 				// create element
 				panel = document.createElement('div');
-				panel.id = 'editOptions';
+				panel.className += 'edit-options';
         // add button
         var panelHtml = '';
         if( options.cm.options.excludePanel === undefined || options.cm.options.excludePanel.indexOf("strong") === -1 )
@@ -496,12 +497,11 @@ var f, editOptions = function()
 				// add panel to editor
 				options.cm.addWidget({line:0,ch:0},panel);
 				// select elements
-				panel = document.getElementById('editOptions');
+				panel = editor.getElementsByClassName('edit-options')[0];
 				// add events
 				panel.addEventListener('click', function(e)
 				{
 					// run function
-					console.log(e.target);
 					var params = e.target.getAttribute('data-parameters');
 					if( e.target.getAttribute('data-format') === 'quote' && ( options.ffn.hasClass(panel, 'quote-1') || options.ffn.hasClass(panel, 'quote-2')) )
 					{
@@ -517,6 +517,10 @@ var f, editOptions = function()
 					// set focus
 					options.cm.focus();
 				});
+			}
+			else
+			{
+				panel = panel[0];
 			}
 			// check which elements are active
 			var add = '', remove = '';
