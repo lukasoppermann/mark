@@ -120,7 +120,7 @@
 	top: 0;
 	left: 40%;
 }
-#editOptions{
+.edit-options{
 	font-size: 0.5em; /* reset ems to 10px */
 	position: absolute;
 	background-color: rgb(245,245,245);
@@ -134,7 +134,7 @@
 	transition: opacity .3s ease .1s, margin .3s ease .1s, transform 0 ease .4s;
 	-webkit-transition: opacity .3s ease .1s, margin .3s ease .1s, -webkit-transform 0 ease .4s;
 }
-#editOptions.active{
+.edit-options.active{
 	margin-top: 0;
 	display: block;
 	opacity: 1;
@@ -143,7 +143,7 @@
 	transform: translate(0,0);
 	-webkit-transform: translate(0,0);
 }
-#editOptions:before, #editOptions:after{
+.edit-options:before, .edit-options:after{
 	position: absolute;
 	bottom: -1.5em;
 	left: 50%;
@@ -157,32 +157,32 @@
 	display: block;
 	z-index: 2;
 }
-#editOptions:after{
+.edit-options:after{
 	border-color: rgba(0,0,0,0.1) transparent transparent transparent;
 	z-index: 1;
 	bottom: -1.6em;
 }
-#editOptions.from-top:before{
+.edit-options.from-top:before{
 	border-color: transparent transparent rgb(245,245,245) transparent;
 	bottom: auto;
 	top: -1.6em;
 }
-#editOptions.from-top:after{
+.edit-options.from-top:after{
 	border-color: transparent transparent rgba(0,0,0,0.1) transparent;
 	bottom: auto;
 	top: -1.6em;
 }
-#editOptions.from-left:before, #editOptions.from-left:after{
+.edit-options.from-left:before, .edit-options.from-left:after{
 	left: 7px;
 	margin-left: 0;
 }
-#editOptions.from-right:before, #editOptions.from-right:after{
+.edit-options.from-right:before, .edit-options.from-right:after{
 	left: auto;
 	right: 7px;
 	margin-left: 0;
 }
 /* edit Options content */
-#editOptions .mark-button{
+.edit-options .mark-button{
 	width: 1.875em;
 	height: 2.4em;
 	margin: 1em;
@@ -196,18 +196,18 @@
 	cursor: pointer;
 	background: transparent;
 }
-#editOptions .strong.mark-button{ width: 1.92em; }
-#editOptions .em.mark-button{ width: 1.08em; }
-#editOptions .header1.mark-button, #editOptions .header2.mark-button{ width: 3.4em; }
-#editOptions .quote.mark-button{ width: 2.6em; }
-#editOptions .link.mark-button{ width: 2.64em; }
-#editOptions .code.mark-button{ width: 2.76em; }
-#editOptions .mark-button:first-child{
+.edit-options .strong.mark-button{ width: 1.92em; }
+.edit-options .em.mark-button{ width: 1.08em; }
+.edit-options .header1.mark-button, .edit-options .header2.mark-button{ width: 3.4em; }
+.edit-options .quote.mark-button{ width: 2.6em; }
+.edit-options .link.mark-button{ width: 2.64em; }
+.edit-options .code.mark-button{ width: 2.76em; }
+.edit-options .mark-button:first-child{
 	border-top-left-radius: 2px;
 	border-bottom-left-radius: 2px;
 	margin-left: 1.25em;
 }
-#editOptions .mark-button:last-child{
+.edit-options .mark-button:last-child{
 	border-top-right-radius: 2px;
 	border-bottom-right-radius: 2px;
 	margin-right: 1.25em;
@@ -221,17 +221,17 @@
 /* CUSTOMIZE */
 /*------------------------*/
 /* Edit Panel Icons Color*/
-#editOptions .mark-icon{
+.edit-options .mark-icon{
 	/* default color */
 	fill: rgb(100,100,100);
 }
-#editOptions .mark-button:hover .mark-icon{
+.edit-options .mark-button:hover .mark-icon{
 	/* hover color */
 	fill: rgb(0,0,0);
 }
-#editOptions.strong .strong .mark-icon, #editOptions.em .em .mark-icon, #editOptions.header1 .header1 .mark-icon,
-#editOptions.header2 .header2 .mark-icon, #editOptions.quote-1 .quote .mark-icon .quote-part-1, #editOptions.quote-2 .quote .mark-icon,
-#editOptions.link .link .mark-icon, #editOptions.code-1 .code .mark-icon .code-part-1, #editOptions.code-2 .code .mark-icon{
+.edit-options.strong .strong .mark-icon, .edit-options.em .em .mark-icon, .edit-options.header1 .header1 .mark-icon,
+.edit-options.header2 .header2 .mark-icon, .edit-options.quote-1 .quote .mark-icon .quote-part-1, .edit-options.quote-2 .quote .mark-icon,
+.edit-options.link .link .mark-icon, .edit-options.code-1 .code .mark-icon .code-part-1, .edit-options.code-2 .code .mark-icon{
 	/* active color */
 	fill: rgb(55,115,215);
 }
