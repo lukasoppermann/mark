@@ -181,12 +181,6 @@
 	right: 7px;
 	margin-left: 0;
 }
-#editOptions .strong.mark-button{ width: 1.92em; }
-#editOptions .em.mark-button{ width: 1.08em; }
-#editOptions .header1.mark-button, #editOptions .header2.mark-button{ width: 3.4em; }
-#editOptions .quote.mark-button{ width: 2.6em; }
-#editOptions .link.mark-button{ width: 2.64em; }
-#editOptions .code.mark-button{ width: 2.76em; }
 /* edit Options content */
 #editOptions .mark-button{
 	width: 1.875em;
@@ -202,42 +196,27 @@
 	cursor: pointer;
 	background: transparent;
 }
-#editOptions .mark-button:first-child{
-	border-top-left-radius: 2px;
-	border-bottom-left-radius: 2px;
-}
-#editOptions .mark-button:last-child{
-	border-top-right-radius: 2px;
-	border-bottom-right-radius: 2px;
-}
-.mark-icon{
-  display: inline-block;
-	pointer-events:none;
-	transition: fill .4s ease;
-}
-#editOptions .strong{ width: 20px; }
-#editOptions .em{ width: 20px; }
-#editOptions .header1, #editOptions .header2, #editOptions .quote{
-	width: 38px;
-}
-
-#editOptions .mark-button{
-	width: 1.875em;
-	height: 2.4em;
-	margin: 1em;
-}
-#editOptions .mark-button:first-child{
-	margin-left: 1.25em;
-}
-#editOptions .mark-button:last-child{
-	margin-right: 1.25em;
-}
 #editOptions .strong.mark-button{ width: 1.92em; }
 #editOptions .em.mark-button{ width: 1.08em; }
 #editOptions .header1.mark-button, #editOptions .header2.mark-button{ width: 3.4em; }
 #editOptions .quote.mark-button{ width: 2.6em; }
 #editOptions .link.mark-button{ width: 2.64em; }
 #editOptions .code.mark-button{ width: 2.76em; }
+#editOptions .mark-button:first-child{
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+	margin-left: 1.25em;
+}
+#editOptions .mark-button:last-child{
+	border-top-right-radius: 2px;
+	border-bottom-right-radius: 2px;
+	margin-right: 1.25em;
+}
+.mark-icon{
+  display: inline-block;
+	pointer-events:none;
+	transition: fill .4s ease;
+}
 /*------------------------*/
 /* CUSTOMIZE */
 /*------------------------*/
