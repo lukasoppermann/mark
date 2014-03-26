@@ -1,6 +1,7 @@
 /*------------------*/
 /* mark theme */
 .cm-s-mark.CodeMirror {
+	font-size: 2em;
 	height: auto;
 	background: transparent;
 	color: rgb(60,60,60);
@@ -40,7 +41,6 @@
 	opacity: 0.7;
 	font-style: italic;
 }
-
 .cm-s-mark .cm-property, .cm-s-mark .cm-attribute {
 	color: rgb(120,170,250);
 }
@@ -121,11 +121,11 @@
 	left: 40%;
 }
 #editOptions{
+	font-size: 0.5em; /* reset ems to 10px */
 	position: absolute;
-	height: 2.5em;
 	background-color: rgb(245,245,245);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.15);
-	border-radius: 3px;
+	border-radius: 0.3em;
 	z-index: 999;
 	margin-top: 10px;
 	opacity: 0;
@@ -145,13 +145,13 @@
 }
 #editOptions:before, #editOptions:after{
 	position: absolute;
-	bottom: -14px;
+	bottom: -1.5em;
 	left: 50%;
-	margin-left: -7px;
+	margin-left: -.8em;
 	content: "";
 	width: 0;
 	height: 0;
-	border-width: 7px 7px;
+	border-width: .8em .8em;
 	border-style: solid;
 	border-color: rgb(245,245,245) transparent transparent transparent;
 	display: block;
@@ -159,18 +159,18 @@
 }
 #editOptions:after{
 	border-color: rgba(0,0,0,0.1) transparent transparent transparent;
-	bottom: -15px;
 	z-index: 1;
+	bottom: -1.6em;
 }
 #editOptions.from-top:before{
 	border-color: transparent transparent rgb(245,245,245) transparent;
 	bottom: auto;
-	top: -14px;
+	top: -1.6em;
 }
 #editOptions.from-top:after{
 	border-color: transparent transparent rgba(0,0,0,0.1) transparent;
 	bottom: auto;
-	top: -14px;
+	top: -1.6em;
 }
 #editOptions.from-left:before, #editOptions.from-left:after{
 	left: 7px;
@@ -183,8 +183,9 @@
 }
 /* edit Options content */
 #editOptions .mark-button{
-	height: 100%;
-	width: 30px;
+	width: 1.875em;
+	height: 2.4em;
+	margin: 1em;
 	padding: 0;
 	display: block;
 	-moz-box-sizing: border-box;
@@ -213,6 +214,24 @@
 #editOptions .header1, #editOptions .header2, #editOptions .quote{
 	width: 38px;
 }
+
+#editOptions .mark-button{
+	width: 1.875em;
+	height: 2.4em;
+	margin: 1em;
+}
+#editOptions .mark-button:first-child{
+	margin-left: 1.25em;
+}
+#editOptions .mark-button:last-child{
+	margin-right: 1.25em;
+}
+#editOptions .strong.mark-button{ width: 1.92em; }
+#editOptions .em.mark-button{ width: 1.08em; }
+#editOptions .header1.mark-button, #editOptions .header2.mark-button{ width: 3.4em; }
+#editOptions .quote.mark-button{ width: 2.6em; }
+#editOptions .link.mark-button{ width: 2.64em; }
+#editOptions .code.mark-button{ width: 2.76em; }
 /*------------------------*/
 /* CUSTOMIZE */
 /*------------------------*/
@@ -240,7 +259,7 @@
 	/* focus outline */
 	box-shadow: 0 0 0 0 rgb(55,115,215);
 }
-#content .cm-s-mark .CodeMirror-cursor {
+.cm-s-mark .CodeMirror-cursor {
 	/* cursor color */
 	background-color: rgb(65,125,225);
 }
