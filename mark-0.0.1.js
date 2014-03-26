@@ -431,9 +431,12 @@ var options = {
 //
 // EditOptions fn:
 //
-var f, editOptions = function()
+var f, editOptions = function(editor)
 {
 	// get element
+	console.log('tesd');
+	console.log(editor);
+	console.log(editor.options);
 	var editor = options.cm.display.wrapper,
 			panel = editor.getElementsByClassName('edit-options');
 	// clear timeout
