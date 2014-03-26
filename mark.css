@@ -181,6 +181,12 @@
 	right: 7px;
 	margin-left: 0;
 }
+#editOptions .strong.mark-button{ width: 1.92em; }
+#editOptions .em.mark-button{ width: 1.08em; }
+#editOptions .header1.mark-button, #editOptions .header2.mark-button{ width: 3.4em; }
+#editOptions .quote.mark-button{ width: 2.6em; }
+#editOptions .link.mark-button{ width: 2.64em; }
+#editOptions .code.mark-button{ width: 2.76em; }
 /* edit Options content */
 #editOptions .mark-button{
 	width: 1.875em;
