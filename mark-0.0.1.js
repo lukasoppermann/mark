@@ -418,6 +418,12 @@ var f, editOptions = function(cm, remove)
 	// check for selection
 	if( cm.getSelection().length > 0 && remove !== 'remove' )
 	{
+		Array.prototype.slice.call(document.getElementsByClassName('edit-options'),0).forEach(function(cmPanel){
+			if( cmPanel !== panel )
+			{
+				cmPanel.classList.remove('active');
+			}
+		});
 		// document.getElementsByClassName('edit-options')
 		// ------------------------------
 		// start timeout
