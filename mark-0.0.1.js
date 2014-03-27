@@ -33,7 +33,7 @@ var options = {
 		// blockFormatFront
 		blockFormatFront: function( cm, params )
 		{
-			var level = options.fn.hasFormat(params.format),
+			var level = options.fn.hasFormat(cm, params.format),
           curCursor = cm.getCursor(true),
           endCursor = cm.getCursor(false);
 			if( level !== false && typeof(level) === 'number' )
@@ -488,8 +488,7 @@ var f, editOptions = function(cm, remove)
 					{
 						params = '{"level":2}';
 					}
-
-					options.fn.toggleFormat(e.target.getAttribute('data-format'), JSON.parse( params ));
+					options.fn.toggleFormat(cm, e.target.getAttribute('data-format'), JSON.parse( params ));
 					panel.classList.toggle(e.target.getAttribute('data-class'));
 					// set focus
 					cm.focus();
@@ -654,11 +653,11 @@ var f, editOptions = function(cm, remove)
 				editOptions(cm);
 			});
 			cm.on("blur", function(){
-				editOptions(cm, 'remove');
-				cm.setCursor({
-					line: cm.getCursor(false).line,
-					ch: cm.getCursor(false).ch
-				});
+				// editOptions(cm, 'remove');
+				// cm.setCursor({
+				// 	line: cm.getCursor(false).line,
+				// 	ch: cm.getCursor(false).ch
+				// });
 			});
 		}
 		// --------------------------
