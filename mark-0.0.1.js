@@ -655,6 +655,10 @@ var f, editOptions = function(cm, remove)
 			});
 			cm.on("blur", function(){
 				editOptions(cm, 'remove');
+				cm.setCursor({
+					line: cm.getCursor(false).line,
+					ch: cm.getCursor(false).ch
+				});
 			});
 		}
 		// --------------------------
