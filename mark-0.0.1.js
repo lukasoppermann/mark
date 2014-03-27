@@ -418,6 +418,7 @@ var f, editOptions = function(cm, remove)
 	// check for selection
 	if( cm.getSelection().length > 0 && remove !== 'remove' )
 	{
+		// document.getElementsByClassName('edit-options')
 		// ------------------------------
 		// start timeout
 		f = window.setTimeout(function()
@@ -651,13 +652,6 @@ var f, editOptions = function(cm, remove)
 			// add edit Options
 			cm.on("cursorActivity", function(){
 				editOptions(cm);
-			});
-			cm.on("blur", function(){
-				// editOptions(cm, 'remove');
-				// cm.setCursor({
-				// 	line: cm.getCursor(false).line,
-				// 	ch: cm.getCursor(false).ch
-				// });
 			});
 		}
 		// --------------------------
