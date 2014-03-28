@@ -525,12 +525,13 @@
 				panel.classList.add('active');
 				// ------------------------------
 				// calculate top
-				var arrowHeight = 7+2,
-	          top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
+				var panelHeight = parseInt(window.getComputedStyle(panel).height.replace('px',''),
+						arrowHeight = panelHeight*.18,
+	          top = (coords.start.top-arrowHeight-panelHeight);
 	      // remove class
 				panel.classList.remove('from-top');
 				if( top < 0 ){
-					top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(panel).height.replace('px','')));
+					top = (coords.end.top+arrowHeight+panelHeight);
 					panel.classList.add('from-top');
 				}
 				panel.style.top = top+'px';
