@@ -409,14 +409,11 @@
 				return false;
 			}
 		}
-	};
+	},
 	/* ------------------ */
 	//
 	/* functions */
-	//
-	// EditOptions fn:
-	//
-	var f, editOptions = function(cm, remove)
+	cms = [], f, editOptions = function(cm, remove)
 	{
 		// get element
 		var editor = cm.display.wrapper,
@@ -426,14 +423,6 @@
 		// check for selection
 		if( cm.getSelection().length > 0 && remove !== 'remove' )
 		{
-			// CodeMirror
-			// Array.prototype.slice.call(document.getElementsByClassName('edit-options'),0).forEach(function(cmPanel){
-			// 	if( cmPanel !== panel )
-			// 	{
-			// 		cmPanel.classList.remove('active');
-			// 	}
-			// });
-			// document.getElementsByClassName('edit-options')
 			// ------------------------------
 			// start timeout
 			f = window.setTimeout(function()
@@ -641,22 +630,30 @@
 				}
 			}
 		}, opts);
-		// init codemirror
-		var cm = CodeMirror.fromTextArea(mark, opts);
-		// add edit Options
-		cm.on("cursorActivity", function(){
-			editOptions(cm);
+		// loop through editors
+		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
+			// init codemirror
+			cms[index] = CodeMirror.fromTextArea(editor, opts);
+			// add edit Options
+			cms[index].on("cursorActivity", function(){
+				editOptions(cms[index]);
+			});
+			// blur
+			cms[index].on("focus", function(){
+				cms.forEach(function(cmEditor){
+					if( cmEditor.length !== 0 && cmEditor.display.wrapper !== cms[index].display.wrapper )
+					{
+						// remove selection
+						cmEditor.setCursor({ch: cmEditor.getCursor(true).ch,line: cmEditor.getCursor(true).line});
+						// hide panel
+						var cmPanel = cmEditor.display.wrapper.getElementsByClassName('edit-options')[0];
+						if( cmPanel !== undefined ){
+							cmPanel.classList.remove('active');
+						}
+					}
+				});
+			});
 		});
-		// blur
-		// console.log(cm.display);
-		// cm.on("blur", function(){
-		// 	Array.prototype.slice.call(document.getElementsByClassName('CodeMirror-wrap'),0).forEach(function(cmEditor){
-		// 		if( cmEditor !== cm.display.wrapper )
-		// 		{
-		// 			cmEditor.setCursor({ch: 0,line: 0});
-		// 		}
-		// 	});
-		// });
 	}
 	// --------------------------
 	// expose mark
