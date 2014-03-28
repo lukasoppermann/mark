@@ -537,18 +537,20 @@
 				panel.style.top = top+'px';
 				// ------------------------------
 				// calculate horizontal position
-				var middle = coords.start.left+((coords.end.left-coords.start.left)/2);
-				var left = Math.floor(middle-(window.getComputedStyle(panel).width.replace('px','')/2));
+				var middle = coords.start.left+((coords.end.left-coords.start.left)/2),
+						panelWidth = parseInt(window.getComputedStyle(panel).width.replace('px','')),
+						left = Math.floor(middle-(panelWidth/2)),
+						editorWidth = parseInt(window.getComputedStyle(editor.getElementsByClassName('CodeMirror-sizer')[0]).width.replace('px',''));
 				// remove classes
 				panel.classList.remove('from-left');
 				panel.classList.remove('from-right');
 				if( left < 1 ){
-					left = 2;
+					left = 4;
 					panel.classList.add('from-left');
 				}
-				else if( left + parseInt((window.getComputedStyle(panel)["margin-right"].replace('px','')*2)+window.getComputedStyle(panel).width.replace('px','')) >= window.innerWidth )
+				else if( parseInt(left + panelWidth) >= editorWidth )
 				{
-					left = window.innerWidth - ((parseInt(window.getComputedStyle(panel)["margin-right"].replace('px','')*2))+parseInt(window.getComputedStyle(panel).width.replace('px','')) + 2);
+					left = (editorWidth - panelWidth) - 6;
 					panel.classList.add('from-right');
 				}
 				// set position
