@@ -85,10 +85,10 @@
 	      // restore position
 				cm.setSelection({
 					line: curCursor.line,
-					ch: curCursor.ch
+					ch: 0
 				}, {
 					line: endCursor.line,
-					ch: endCursor.ch
+					ch: options.fn.getLineEndPos(cm, false).ch
 				});
 			},
 			// inlineFormat
@@ -413,7 +413,7 @@
 	/* ------------------ */
 	//
 	/* functions */
-	cms = [], f, editOptions = function(cm, remove)
+	cms = [], f, editOptions = function(cm)
 	{
 		// get element
 		var editor = cm.display.wrapper,
@@ -421,7 +421,7 @@
 		// clear timeout
 		window.clearTimeout(f);
 		// check for selection
-		if( cm.getSelection().length > 0 && remove !== 'remove' )
+		if( cm.getSelection().length > 0)
 		{
 			// ------------------------------
 			// start timeout
@@ -525,12 +525,13 @@
 				panel.classList.add('active');
 				// ------------------------------
 				// calculate top
-				var arrowHeight = 7+2,
-	          top = (coords.start.top-arrowHeight-window.getComputedStyle(panel).height.replace('px',''));
+				var panelHeight = parseInt(window.getComputedStyle(panel).height.replace('px','')),
+						arrowHeight = panelHeight*.18,
+	          top = (coords.start.top-arrowHeight-panelHeight);
 	      // remove class
 				panel.classList.remove('from-top');
 				if( top < 0 ){
-					top = (coords.end.top+arrowHeight+parseInt(window.getComputedStyle(panel).height.replace('px','')));
+					top = (coords.end.top+arrowHeight+panelHeight);
 					panel.classList.add('from-top');
 				}
 				panel.style.top = top+'px';
@@ -658,6 +659,5 @@
 	// --------------------------
 	// expose mark
 	window.mark = mark;
-	
-	
+	//
 }(window, window.document, undefined));
