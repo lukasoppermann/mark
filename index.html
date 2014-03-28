@@ -35,6 +35,8 @@
 </head>
 <body>
 <textarea class="mark">
+some normal copy
+
 # MARK 0.1
 ## headline 2
 ### headline 3
@@ -114,57 +116,7 @@ for (var i = 0; i < items.length; i++) {
 		/* ------------------ */
 		//
 		/* RUN EDITOR */
-		//
-		// run codemirror on every instance of .mark
 		mark(document.getElementsByClassName('mark'));
-		Array.prototype.slice.call(document.getElementsByClassName('mark'),0).forEach(function(editor){
-			// mark(editor);
-			// cm = CodeMirror.fromTextArea(editor, {
-		// 		theme: "mark",
-		// 		// value: "function myScript(){return 100;}\n",
-		// 		mode: {
-		// 			name: "gfm",
-		// 			highlightFormatting: true
-		// 		},
-		// 		lineNumbers: true,
-		// 		addModeClass: false,
-		// 		lineWrapping: true,
-		// 		flattenSpans: true,
-		// 		cursorHeight: 1,
-		// 		matchBrackets: true,
-		// 		autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
-		// 		matchTags: true,
-		// 		showTrailingSpace: true,
-		// 		autoCloseTags: true,
-		// 		styleSelectedText: false,
-		// 		styleActiveLine: true,
-		// 		placeholder: "",
-		// 		// excludePanel: ['code'],
-		// 		tabMode: 'indent',
-		// 		tabindex: "2",
-		// 		dragDrop: false,
-		// 		extraKeys: {
-		// 			"Enter": "newlineAndIndentContinueMarkdownList",
-		// 			"Cmd-B": function(){
-		// 				options.fn.toggleFormat('strong');
-		// 			},
-		// 			"Ctrl-B": function(){
-		// 				options.fn.toggleFormat('strong');
-		// 			},
-		// 			"Cmd-I": function(){
-		// 				options.fn.toggleFormat('em');
-		// 			},
-		// 			"Ctrl-I": function(){
-		// 				options.fn.toggleFormat('em');
-		// 			}
-		// 		}
-		// 	});
-		// 	// add edit Options
-		// 	cm.on("cursorActivity", function(){
-		// 		editOptions(cm);
-		// 	});
-		// 
-		});
 	</script>
 </body>
 </html>

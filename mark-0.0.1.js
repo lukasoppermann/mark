@@ -531,13 +531,12 @@
 	      // remove class
 				panel.classList.remove('from-top');
 				if( top < 0 ){
-					top = (coords.end.top+arrowHeight+panelHeight);
+					top = (coords.end.bottom+arrowHeight);
 					panel.classList.add('from-top');
 				}
 				panel.style.top = top+'px';
 				// ------------------------------
 				// calculate horizontal position
-				//
 				var middle = coords.start.left+((coords.end.left-coords.start.left)/2);
 				var left = Math.floor(middle-(window.getComputedStyle(panel).width.replace('px','')/2));
 				// remove classes
@@ -547,9 +546,9 @@
 					left = 2;
 					panel.classList.add('from-left');
 				}
-				else if( left + parseInt(window.getComputedStyle(panel).width.replace('px','')) >= window.innerWidth )
+				else if( left + parseInt((window.getComputedStyle(panel)["margin-right"].replace('px','')*2)+window.getComputedStyle(panel).width.replace('px','')) >= window.innerWidth )
 				{
-					left = window.innerWidth - (parseInt(window.getComputedStyle(panel).width.replace('px','')) + 2);
+					left = window.innerWidth - ((parseInt(window.getComputedStyle(panel)["margin-right"].replace('px','')*2))+parseInt(window.getComputedStyle(panel).width.replace('px','')) + 2);
 					panel.classList.add('from-right');
 				}
 				// set position
