@@ -603,22 +603,22 @@
 	var mark = function( mark, opts )
 	{
 		// extend fn
-		var extend = function(out){
-		  out = out || {};
-		  for (var i = 1; i < arguments.length; i++) {
-		    var obj = arguments[i];
-		    if (!obj)
-		      continue;
-		    for (var key in obj) {
-		      if (obj.hasOwnProperty(key)) {
-		        if (typeof obj[key] === 'object')
-		          extend(out[key], obj[key]);
-		        else
-		          out[key] = obj[key];
-		      }
-		    }
-		  }
-		  return out;
+		var extend = function(obj, extend) {
+		  for(i in extend)
+			{
+				if( obj.hasOwnProperty(i) )
+				{
+				  for(a in extend[i])
+					{
+						obj[i][a] = extend[i][a];
+					}
+				}
+				else
+				{
+		   		obj[i] = extend[i];
+				}
+			}
+			return obj;
 		};
 		//
 		opts = extend({
@@ -641,6 +641,7 @@
 			styleSelectedText: false,
 			styleActiveLine: true,
 			placeholder: "",
+			// excludePanel: ['code'],
 			tabMode: 'indent',
 			tabindex: "2",
 			dragDrop: false,
@@ -660,6 +661,7 @@
 				}
 			}
 		},opts);
+		console.log(opts);
 		// loop through editors
 		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
 			// init codemirror
