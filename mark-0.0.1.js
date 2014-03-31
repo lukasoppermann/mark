@@ -605,7 +605,6 @@
 		// extend fn
 		var extend = function(out){
 		  out = out || {};
-			console.log(out);
 		  for (var i = 1; i < arguments.length; i++) {
 		    var obj = arguments[i];
 		    if (!obj)
@@ -622,7 +621,7 @@
 		  return out;
 		};
 		//
-		opts = extend(opts, {
+		opts = extend({
 			theme: "mark",
 			// value: "function myScript(){return 100;}\n",
 			mode: {
@@ -642,7 +641,6 @@
 			styleSelectedText: false,
 			styleActiveLine: true,
 			placeholder: "",
-			// excludePanel: ['code'],
 			tabMode: 'indent',
 			tabindex: "2",
 			dragDrop: false,
@@ -661,7 +659,7 @@
 					options.fn.toggleFormat(cm,'em');
 				}
 			}
-		});
+		},opts);
 		// loop through editors
 		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
 			// init codemirror
