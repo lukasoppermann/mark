@@ -463,7 +463,6 @@
 					panel.className += 'edit-options';
 	        // add button
 	        var panelHtml = '';
-					console.log(cm.options);
 	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf("strong") === -1 )
 	        {
 	          panelHtml += '<div data-class="strong" data-format="strong" class="strong mark-button"><svg viewBox="0 0 16 20" class="mark-icon shape-strong">'+
@@ -606,7 +605,7 @@
 		var extend = function(obj, extend) {
 		  for(i in extend)
 			{
-				if( obj.hasOwnProperty(i) )
+				if( typeof(obj[i]) === 'object' && obj.hasOwnProperty(i) )
 				{
 				  for(a in extend[i])
 					{
@@ -661,7 +660,6 @@
 				}
 			}
 		},opts);
-		console.log(opts);
 		// loop through editors
 		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
 			// init codemirror
