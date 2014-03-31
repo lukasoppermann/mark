@@ -79,7 +79,17 @@
 					{
 						if( sel.substr(0,1) != params.indicator)
 						{
-							// cm.replaceSelection( sel.substr(params.level + (sel.substr(2) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+							// needes reselect
+							cm.setSelection({
+								line: curCursor.line,
+								ch: 0
+							}, {
+								line: curCursor.line,
+								ch: 0
+							});
+							sel = cm.getSelection();
+							// replace empty selection
+							cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator[0] )+' ');
 						}
 						else
 						{
