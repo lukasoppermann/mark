@@ -606,7 +606,7 @@
 		var extend = function(obj, extend) {
 		  for(i in extend)
 			{
-				if( obj.hasOwnProperty(i) )
+				if( typeof(obj[i]) === 'object' && obj.hasOwnProperty(i) )
 				{
 				  for(a in extend[i])
 					{
