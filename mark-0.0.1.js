@@ -67,24 +67,23 @@
 					// remove format
 					if( level === params.level )
 					{
-						cm.replaceSelection( sel.substr(params.level + (sel.substr(2) == ' ' ? 1 : 0) ) );
+						cm.replaceSelection( sel.substr(params.level + (sel.substr(level) == ' ' ? 1 : 0) ) );
 					}
 					// change format
 					else if( level > params.level)
 					{
 						cm.replaceSelection( sel.substr(level - params.level));
 					}
-					// level < params.level
+					// level < params.level (means adding depth to format)
 					else
 					{
-						console.log(sel);
-						if( sel.substr(0,1) == params.indicator || sel.substr(0,2) == ' '+params.indicator)
+						if( sel.substr(0,1) != params.indicator)
 						{
-							cm.replaceSelection( sel.substr(params.level + (sel.substr(2) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+							// cm.replaceSelection( sel.substr(params.level + (sel.substr(2) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
 						}
 						else
 						{
-							cm.replaceSelection( sel.substr(start + (sel.substr(2) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+							cm.replaceSelection( sel.substr(level + (sel.substr(level,level+1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
 						}
 					}
 				}
