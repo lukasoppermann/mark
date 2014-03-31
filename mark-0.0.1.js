@@ -44,29 +44,57 @@
 				var level = options.fn.hasFormat(cm, params.format),
 	          curCursor = cm.getCursor(true),
 	          endCursor = cm.getCursor(false);
+				// trim line
+				cm.setSelection({
+					line: curCursor.line,
+					ch: 0
+				}, {
+					line: endCursor.line,
+					ch:  cm.getLine(endCursor.line).length
+				});
+				cm.replaceSelection(cm.getSelection().trim());
+				
 				if( level !== false && typeof(level) === 'number' )
-				{
+				{					
 					cm.setSelection({
-						line: cm.getCursor(true).line,
+						line: curCursor.line,
 						ch: 0
 					}, {
-						line: cm.getCursor(true).line,
+						line: curCursor.line,
 						ch: parseInt(level)+1
 					});
 					var sel = cm.getSelection();
 					// remove format
 					if( level === params.level )
 					{
-						cm.replaceSelection( sel.substr(params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) );
+						cm.replaceSelection( sel.substr(params.level + (sel.substr(level) == ' ' ? 1 : 0) ) );
 					}
 					// change format
 					else if( level > params.level)
 					{
 						cm.replaceSelection( sel.substr(level - params.level));
 					}
+					// level < params.level (means adding depth to format)
 					else
 					{
-						cm.replaceSelection( sel.substr( params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');
+						if( sel.substr(0,1) != params.indicator)
+						{
+							// needes reselect
+							cm.setSelection({
+								line: curCursor.line,
+								ch: 0
+							}, {
+								line: curCursor.line,
+								ch: 0
+							});
+							sel = cm.getSelection();
+							// replace empty selection
+							cm.replaceSelection(new Array( params.level + 1 ).join( params.indicator[0] )+' ');
+						}
+						else
+						{
+							cm.replaceSelection( sel.substr(level + (sel.substr(level,level+1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+						}
 					}
 				}
 				// add format
