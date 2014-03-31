@@ -661,7 +661,6 @@
 				}
 			}
 		},opts);
-		console.log(opts);
 		// loop through editors
 		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
 			// init codemirror
