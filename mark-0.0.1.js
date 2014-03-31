@@ -44,29 +44,48 @@
 				var level = options.fn.hasFormat(cm, params.format),
 	          curCursor = cm.getCursor(true),
 	          endCursor = cm.getCursor(false);
+				// trim line
+				cm.setSelection({
+					line: curCursor.line,
+					ch: 0
+				}, {
+					line: endCursor.line,
+					ch:  cm.getLine(endCursor.line).length
+				});
+				cm.replaceSelection(cm.getSelection().trim());
+				
 				if( level !== false && typeof(level) === 'number' )
-				{
+				{					
 					cm.setSelection({
-						line: cm.getCursor(true).line,
+						line: curCursor.line,
 						ch: 0
 					}, {
-						line: cm.getCursor(true).line,
+						line: curCursor.line,
 						ch: parseInt(level)+1
 					});
 					var sel = cm.getSelection();
 					// remove format
 					if( level === params.level )
 					{
-						cm.replaceSelection( sel.substr(params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) );
+						cm.replaceSelection( sel.substr(params.level + (sel.substr(2) == ' ' ? 1 : 0) ) );
 					}
 					// change format
 					else if( level > params.level)
 					{
 						cm.replaceSelection( sel.substr(level - params.level));
 					}
+					// level < params.level
 					else
 					{
-						cm.replaceSelection( sel.substr( params.level + (sel.substr(-1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');
+						console.log(sel);
+						if( sel.substr(0,1) == params.indicator || sel.substr(0,2) == ' '+params.indicator)
+						{
+							cm.replaceSelection( sel.substr(params.level + (sel.substr(2) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+						}
+						else
+						{
+							cm.replaceSelection( sel.substr(start + (sel.substr(2) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+						}
 					}
 				}
 				// add format
