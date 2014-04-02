@@ -204,11 +204,27 @@
 					}
 					else if( params.format === 'link' )
 					{
-						options.fn.getWordBoundaries(cm, true, {
+						var boundaries = options.fn.getWordBoundaries(cm, true, {
 							start:'[',
 							end: ']',
-							include: true
+							include: true,
+							endLine: false
 						});
+						console.log(boundaries);
+						if(boundaries === false)
+						{
+							boundaries = options.fn.getWordBoundaries(cm, true);
+							sel = cm.getSelection();
+							//
+							if(sel.substr(0,4) === 'www.' || sel.substr(0,7) === 'http://' || sel.substr(0,8) === 'https://')
+							{
+								cm.replaceSelection( '['+sel+'](http://)','around');
+								setTimeout(function () {
+									cm.setCursor({line:endCursor.line,ch:cm.getCursor(false).ch-1});
+								}, 10);
+							}
+							
+						}
 			      curCursor = cm.getCursor(true);
 			      endCursor = cm.getCursor(false);
 					}
@@ -334,8 +350,7 @@
 			// getWordBoundaries: get the bundaries of a word
 			getWordBoundaries: function(cm, setSelection, char)
 			{
-				// TODO: FIX positions
-				// TODO: Check selection first for boundaries
+				// TODO: Fix only accept .,;: as end if a space is following
 				char === undefined ? char = ' ' : '';
 				// get cursor position
 				var curCursor = cm.getCursor(true);
@@ -361,7 +376,14 @@
 						{
 							left = i;
 						}
-						return;
+						else
+						{
+							left = false;
+						}
+					}
+					else if( char.end !== undefined && line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == char.end)
+					{
+						left = false;
 					}
 					i++;
 				}
@@ -370,7 +392,7 @@
 				while( right === undefined  )
 				{
 					indicator = typeof(char) === 'string' ? char : char.end;
-
+					///[\.\s,:;?\!]/
 					if( (indicator === " " && /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i ))) || line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == indicator )
 					{
 						right = i;
@@ -385,16 +407,22 @@
 						{
 							right = i;
 						}
-						return;
+						else
+						{
+							right = false;
+						}
+					}
+					else if( char.start !== undefined && line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == char.start)
+					{
+						right = false;
 					}
 					i++;
 				}
 				// check right and left
 				right === undefined ? right = 0 : '';
 				left === undefined ? left = 0 : '';
-				
 				// set selection
-				if( typeof(setSelection) !== undefined && setSelection !== null && setSelection !== false )
+				if( typeof(setSelection) !== undefined && setSelection !== null && setSelection !== false && left !== false && right !== false)
 				{
 					cm.setSelection({
 						line: curCursor.line,
@@ -404,9 +432,13 @@
 						ch: parseInt(curCursor.ch)+parseInt(right)
 					});
 				}
-				// return word boundaries
-				return [{ line: curCursor.line, ch: curCursor.ch-left },
-	              { line: curCursor.line, ch: curCursor.ch+right }];
+				if( left !== false && right !== false )
+				{
+					// return word boundaries
+					return [{ line: curCursor.line, ch: curCursor.ch-left },
+		              { line: curCursor.line, ch: curCursor.ch+right }];
+				}
+				return false;
 			},
 			// getMiddlePos: get the middle of a given range
 			getMiddlePos: function(cm, setPos)
