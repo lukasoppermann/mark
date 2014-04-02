@@ -25,7 +25,8 @@
 				}
 				else if( format === 'link' )
 				{
-					// needs to be implemented
+					params.indicator = inline[format];
+					options.fn.inlineFormat(cm, params);
 				}
 				// if block
 				if( format === 'header' || format === 'quote' )
@@ -129,69 +130,87 @@
 	      // remove
 				if( options.fn.hasFormat(cm, params.format) !== false )
 				{
-	        var repSel, re;
-					// define replacement logic
-					if( params.format === 'em' )
+					if( params.format === 'em' || params.format === 'strong' )
 					{
-	          re = {
-	            '_': new RegExp('(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)', 'g'),
-	            '*': new RegExp('(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)', 'g'),
-	            'use': false,
-	            'length': 1
-	          };
-					}
-					else if ( params.format === 'strong' )
-					{
-	          re = {
-	            '_': new RegExp('(^|[^_])(_{2,3})([^_]+)(\\_{2,3})([^_]|$)', 'g'),
-	            '*': new RegExp('(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)', 'g'),
-	            'use': false,
-	            'length':2
-	          };
-					}
-					// do replacement magic
-					if( sel.search(re._) !== -1 )
-					{
-						re.use = '_';
-	          selAdd = params.indicator[0].length;
-					}
-					else if( sel.search(re['*']) !== -1 )
-					{
-						re.use = '*';
-	          selAdd = params.indicator[0].length;
-					}
-					// grab word
-					else
-					{
-						// select whole word
-						options.fn.getWordBoundaries(cm, true);
-						sel = cm.getSelection();
-						// try replacing again
+		        var repSel, re;
+						// define replacement logic
+						if( params.format === 'em' )
+						{
+		          re = {
+		            '_': new RegExp('(^|[^_])(\\_|\\_{3})([^_]+)(\\_|\\_{3})([^_]|$)', 'g'),
+		            '*': new RegExp('(^|[^*])(\\*|\\*{3})([^*]+)(\\*|\\*{3})([^*]|$)', 'g'),
+		            'use': false,
+		            'length': 1
+		          };
+						}
+						else if ( params.format === 'strong' )
+						{
+		          re = {
+		            '_': new RegExp('(^|[^_])(_{2,3})([^_]+)(\\_{2,3})([^_]|$)', 'g'),
+		            '*': new RegExp('(^|[^*])(\\*{2,3})([^*]+)(\\*{2,3})([^*]|$)', 'g'),
+		            'use': false,
+		            'length':2
+		          };
+						}
+						// do replacement magic
 						if( sel.search(re._) !== -1 )
 						{
 							re.use = '_';
-	            curCursor.ch -= params.indicator[0].length;
-	            endCursor.ch -= params.indicator[0].length;
+		          selAdd = params.indicator[0].length;
 						}
 						else if( sel.search(re['*']) !== -1 )
 						{
 							re.use = '*';
-	            curCursor.ch -= params.indicator[0].length;
-	            endCursor.ch -= params.indicator[0].length;
+		          selAdd = params.indicator[0].length;
+						}
+						// grab word
+						else
+						{
+							// select whole word
+							options.fn.getWordBoundaries(cm, true);
+							sel = cm.getSelection();
+							// try replacing again
+							if( sel.search(re._) !== -1 ||  sel.search(re['*']) !== -1 )
+							{
+								re.use = '*';
+								if( sel.search(re._) !== -1 )
+								{
+									re.use = '_';
+								}
+								if( endCursor.ch-curCursor.ch > 0 )
+								{
+		            	curCursor.ch -= params.indicator[0].length;
+		            	endCursor.ch -= params.indicator[0].length;
+								}
+								else
+								{
+									curCursor.ch -= params.indicator[0].length;
+								}
+							}
+						}
+						if( re.use !== false )
+						{
+		          //
+							repSel = sel.replace(re[re.use], function(matches, m1,m2,m3,m4,m5){
+								return m1+m2.substr(re.length)+m3+m4.substr(re.length)+m5;
+							});
+		          cm.replaceSelection(repSel);
+		          // reset selection if needed
+		          if( selAdd !== 0 )
+		          {
+		            endCursor.ch -= selAdd*2;
+		          }
 						}
 					}
-					if( re.use !== false )
+					else if( params.format === 'link' )
 					{
-	          //
-						repSel = sel.replace(re[re.use], function(matches, m1,m2,m3,m4,m5){
-							return m1+m2.substr(re.length)+m3+m4.substr(re.length)+m5;
+						options.fn.getWordBoundaries(cm, true, {
+							start:'[',
+							end: ']',
+							include: true
 						});
-	          cm.replaceSelection(repSel);
-	          // reset selection if needed
-	          if( selAdd !== 0 )
-	          {
-	            endCursor.ch -= selAdd*2;
-	          }
+			      curCursor = cm.getCursor(true);
+			      endCursor = cm.getCursor(false);
 					}
 	        // restore position
 	        cm.setSelection({
@@ -207,8 +226,19 @@
 				{
 					if( sel.trim().length > 0)
 					{
-						cm.replaceSelection( params.indicator[0]+sel+params.indicator[0] );
-	          endCursor.ch += params.indicator[0].length*2;
+						if( params.format == 'link' )
+						{
+							cm.replaceSelection( '['+sel+'](http://)','around');
+							setTimeout(function () {
+								cm.setCursor({line:endCursor.line,ch:cm.getCursor(false).ch-1});
+							}, 10);
+
+						}
+						else
+						{
+							cm.replaceSelection( params.indicator[0]+sel+params.indicator[0], 'around' );
+	          	endCursor.ch += params.indicator[0].length*2;
+						}
 					}
 					// only a carat is set, no selection
 					else
@@ -216,20 +246,12 @@
 						if( options.fn.inWord(cm) )
 						{
 							options.fn.getWordBoundaries(cm, true);
-							cm.replaceSelection(params.indicator[0]+cm.getSelection()+params.indicator[0]);
+							cm.replaceSelection(params.indicator[0]+cm.getSelection()+params.indicator[0],'around');
 	            curCursor.ch += params.indicator[0].length;
 	            endCursor.ch = curCursor.ch;
 						}
 					}
 				}
-	      // restore position
-	      cm.setSelection({
-	        line: curCursor.line,
-	        ch: curCursor.ch
-	      }, {
-	        line: endCursor.line,
-	        ch: endCursor.ch
-	      });
 	    },
 			// check for formatting
 			hasFormat: function(cm, format)
@@ -263,7 +285,7 @@
 							match = true;
 						}
 					}
-					else if( isBlock === true )
+					else if( isBlock === true && type !== undefined )
 					{
 						var tmpMatch = type.match(new RegExp(format+'-?(\\d+)'));
 						if( tmpMatch !== null && tmpMatch[1] !== null )
@@ -310,47 +332,81 @@
 				return pos;
 			},
 			// getWordBoundaries: get the bundaries of a word
-			getWordBoundaries: function(cm, setSelection)
+			getWordBoundaries: function(cm, setSelection, char)
 			{
+				// TODO: FIX positions
+				// TODO: Check selection first for boundaries
+				char === undefined ? char = ' ' : '';
 				// get cursor position
 				var curCursor = cm.getCursor(true);
 				// get line
 				var line = cm.getLine(curCursor.line);
 				// get boundries
-				var right = false, left = false, i = 0;
+				var right = undefined, left = undefined, i = 0;
 				// left
-				while( left === false  )
+				while( left === undefined  )
 				{
-					i++;
-					if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == ' ' || curCursor.ch-i < 0)
+					var indicator = typeof(char) === 'string' ? char : char.start;
+					if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == indicator )
 					{
 						left = i;
+						if( char.include === undefined )
+						{
+							left = i-1;
+						}
 					}
+					else if( curCursor.ch-i < 0 )
+					{
+						if( char.endLine === undefined )
+						{
+							left = i;
+						}
+						return;
+					}
+					i++;
 				}
 				i = 0;
 				// right
-				while( right === false  )
+				while( right === undefined  )
 				{
-					i++;
-					if( /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+(i))) || curCursor.ch+i > line.length)
+					indicator = typeof(char) === 'string' ? char : char.end;
+
+					if( (indicator === " " && /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i ))) || line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == indicator )
 					{
 						right = i;
+						if( char.include !== undefined )
+						{
+							right++;
+						}
 					}
+					else if( curCursor.ch+i > line.length )
+					{
+						if( char.endLine === undefined )
+						{
+							right = i;
+						}
+						return;
+					}
+					i++;
 				}
+				// check right and left
+				right === undefined ? right = 0 : '';
+				left === undefined ? left = 0 : '';
+				
 				// set selection
-				if( typeof(setSelection) !== undefined && setSelection !== null && setSelection !== false  )
+				if( typeof(setSelection) !== undefined && setSelection !== null && setSelection !== false )
 				{
 					cm.setSelection({
 						line: curCursor.line,
-						ch: parseInt(curCursor.ch)-parseInt(left)+1
+						ch: parseInt(curCursor.ch)-parseInt(left)
 					}, {
 						line: curCursor.line,
-						ch: parseInt(curCursor.ch)+parseInt(right)-1
+						ch: parseInt(curCursor.ch)+parseInt(right)
 					});
 				}
 				// return word boundaries
-				return [{ line: curCursor.line, ch: curCursor.ch-left+1 },
-	              { line: curCursor.line, ch: curCursor.ch+right-1 }];
+				return [{ line: curCursor.line, ch: curCursor.ch-left },
+	              { line: curCursor.line, ch: curCursor.ch+right }];
 			},
 			// getMiddlePos: get the middle of a given range
 			getMiddlePos: function(cm, setPos)
@@ -535,6 +591,7 @@
 				options.fn.hasFormat(cm, 'quote') === 2 ? add += 'quote-2, ' : remove += 'quote-2, ';
 				options.fn.hasFormat(cm, 'header') === 1 ? add += 'header1, ' : remove += 'header1, ';
 				options.fn.hasFormat(cm, 'header') === 2 ? add += 'header2, ' : remove += 'header2, ';
+				options.fn.hasFormat(cm, 'link') ? add += 'link, ' : remove += 'link, ';
 				// add & remove classes
 				options.ffn.addClass(panel, add.replace(/\,\s+$/gm, ''));
 				options.ffn.removeClass(panel, remove.replace(/\,\s+$/gm, ''));
@@ -619,8 +676,10 @@
 			}
 			return obj;
 		};
-		//
-		opts = extend({
+		// loop through editors
+		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
+			// init codemirror
+			cms[index] = CodeMirror.fromTextArea(editor, extend({
 			theme: "mark",
 			// value: "function myScript(){return 100;}\n",
 			mode: {
@@ -647,23 +706,19 @@
 			extraKeys: {
 				"Enter": "newlineAndIndentContinueMarkdownList",
 				"Cmd-B": function(){
-					options.fn.toggleFormat(cm,'strong');
+					options.fn.toggleFormat(cms[index],'strong');
 				},
 				"Ctrl-B": function(){
-					options.fn.toggleFormat(cm,'strong');
+					options.fn.toggleFormat(cms[index],'strong');
 				},
 				"Cmd-I": function(){
-					options.fn.toggleFormat(cm,'em');
+					options.fn.toggleFormat(cms[index],'em');
 				},
 				"Ctrl-I": function(){
-					options.fn.toggleFormat(cm,'em');
+					options.fn.toggleFormat(cms[index],'em');
 				}
 			}
-		},opts);
-		// loop through editors
-		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
-			// init codemirror
-			cms[index] = CodeMirror.fromTextArea(editor, opts);
+		},opts));
 			// add edit Options
 			cms[index].on("cursorActivity", function(){
 				editOptions(cms[index]);
