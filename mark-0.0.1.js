@@ -210,7 +210,6 @@
 							include: true,
 							endLine: false
 						});
-						console.log(boundaries);
 						if(boundaries === false)
 						{
 							boundaries = options.fn.getWordBoundaries(cm, true);
@@ -393,12 +392,16 @@
 				{
 					indicator = typeof(char) === 'string' ? char : char.end;
 					///[\.\s,:;?\!]/
-					if( (indicator === " " && /[\.\s,:;?\!]/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i ))) || line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == indicator )
+					if( (indicator === " " && /[\.,:;?\!]\s/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i+1 ))) || line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == indicator )
 					{
 						right = i;
 						if( char.include !== undefined )
 						{
 							right++;
+						}
+						else if( indicator === " " && /[\.,:;?\!]\s/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i+1 )) )
+						{
+							right--;
 						}
 					}
 					else if( curCursor.ch+i > line.length )
