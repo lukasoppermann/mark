@@ -123,7 +123,11 @@ for (var i = 0; i < items.length; i++) {
 		//
 		/* RUN EDITOR */
 		mark(document.getElementsByClassName('mark'), {
-			excludePanel: ['code']
+			excludePanel: ['code'],
+			mode: {
+				name: "gfm",
+				highlightFormatting: true
+			}
 		});
 	</script>
 </body>

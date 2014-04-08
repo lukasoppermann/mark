@@ -550,7 +550,7 @@
 					panel = document.createElement('div');
 					panel.className += 'edit-options';
 	        // add button
-	        var panelHtml = '';
+	        var panelHtml = '<div class="panel-arrow"></div>';
 	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf("strong") === -1 )
 	        {
 	          panelHtml += '<div data-class="strong" data-format="strong" class="strong mark-button"><svg viewBox="0 0 16 20" class="mark-icon shape-strong">'+
@@ -672,6 +672,8 @@
 				}
 				// set position
 				panel.style.left = left+'px';
+				// set arrow pos
+				panel.getElementsByClassName('panel-arrow')[0].style.left = (coords.start.left-left+(coords.end.left-coords.start.left)/2)+'px';
 			// close timeout
 			}, 200);
 		}
