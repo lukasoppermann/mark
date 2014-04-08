@@ -143,11 +143,23 @@
 	transform: translate(0,0);
 	-webkit-transform: translate(0,0);
 }
-.edit-options:before, .edit-options:after{
+.edit-options .panel-arrow{
+	width: 1.6em;
+	height: 1.6em;
 	position: absolute;
 	bottom: -1.5em;
 	left: 50%;
-	margin-left: -.8em;
+	transform: translate(-50%, 0);
+	-webkit-transform: translate(-50%, 0);
+}
+.edit-options.from-top .panel-arrow{
+	top: -1.5em;
+	bottom: auto;
+}
+.edit-options .panel-arrow:before, .edit-options .panel-arrow:after{
+	position: absolute;
+	top: 0;
+	left: 0;
 	content: "";
 	width: 0;
 	height: 0;
@@ -157,29 +169,16 @@
 	display: block;
 	z-index: 2;
 }
-.edit-options:after{
+.edit-options .panel-arrow:after{
 	border-color: rgba(0,0,0,0.1) transparent transparent transparent;
 	z-index: 1;
-	bottom: -1.6em;
+	top: .1em;
 }
-.edit-options.from-top:before{
+.edit-options.from-top .panel-arrow:before{
 	border-color: transparent transparent rgb(245,245,245) transparent;
-	bottom: auto;
-	top: -1.6em;
 }
-.edit-options.from-top:after{
-	border-color: transparent transparent rgba(0,0,0,0.1) transparent;
-	bottom: auto;
-	top: -1.6em;
-}
-.edit-options.from-left:before, .edit-options.from-left:after{
-	left: 7px;
-	margin-left: 0;
-}
-.edit-options.from-right:before, .edit-options.from-right:after{
-	left: auto;
-	right: 7px;
-	margin-left: 0;
+.edit-options.from-top .panel-arrow:after{
+	border-color: transparent;
 }
 /* edit Options content */
 .edit-options .mark-button{
