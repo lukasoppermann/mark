@@ -212,8 +212,14 @@
 						});
 						if(boundaries === false)
 						{
-							boundaries = options.fn.getWordBoundaries(cm, true);
+							boundaries = options.fn.getWordBoundaries(cm, true,{
+								start:' ',
+								end: ' ',
+								include: false,
+								endLine: true
+							});
 							sel = cm.getSelection();
+							console.log(sel);
 							//
 							if(sel.substr(0,4) === 'www.' || sel.substr(0,7) === 'http://' || sel.substr(0,8) === 'https://')
 							{
@@ -226,7 +232,24 @@
 									cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch+1}, {line:endCursor.line,ch:cm.getCursor(true).ch+5});
 								}, 10);
 							}
-							
+							else
+							{
+								boundaries = options.fn.getWordBoundaries(cm, true, {
+									start:'<',
+									end: '>',
+									include: true,
+									endLine: false
+								});
+								if(boundaries !== false)
+								{
+									sel = cm.getSelection();
+									sel = sel.substring(1,sel.length-1);
+									cm.replaceSelection( sel,'around');
+									setTimeout(function () {
+										cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch}, {line:endCursor.line,ch:cm.getCursor(false).ch});
+									}, 10);
+								}
+							}
 						}
 			      curCursor = cm.getCursor(true);
 			      endCursor = cm.getCursor(false);
@@ -357,25 +380,26 @@
 				char === undefined ? char = ' ' : '';
 				// get cursor position
 				var curCursor = cm.getCursor(true);
+				var endCursor = cm.getCursor(false);
 				// get line
 				var line = cm.getLine(curCursor.line);
 				// get boundries
 				var right = undefined, left = undefined, i = 0;
 				// left
+				var indicator = typeof(char) === 'string' ? char : char.start;
 				while( left === undefined  )
 				{
-					var indicator = typeof(char) === 'string' ? char : char.start;
 					if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == indicator )
 					{
 						left = i;
-						if( char.include === undefined )
+						if( char.include === undefined || char.include === false )
 						{
-							left = i-1;
+							left--;
 						}
 					}
 					else if( curCursor.ch-i < 0 )
 					{
-						if( char.endLine === undefined )
+						if( char.endLine === undefined || char.endLine === true )
 						{
 							left = i;
 						}
@@ -391,26 +415,28 @@
 					i++;
 				}
 				i = 0;
+				indicator = typeof(char) === 'string' ? char : char.end;
 				// right
 				while( right === undefined  )
 				{
-					indicator = typeof(char) === 'string' ? char : char.end;
 					///[\.\s,:;?\!]/
-					if( (indicator === " " && /[\.,:;?\!]\s/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i+1 ))) || line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == indicator )
+					
+					console.log('##'+line.substring((endCursor.ch+i-1),endCursor.ch+(i))+'=='+indicator+'##');
+					if( (indicator === " " && /[\.,:;?\!]\s/.test(line.substring((endCursor.ch+i-1),endCursor.ch+i+1 ))) || line.substring((endCursor.ch+i-1),endCursor.ch+(i)) == indicator )
 					{
 						right = i;
-						if( char.include !== undefined )
+						if( char.include === undefined || char.include === false )
 						{
-							right++;
+							right--;
 						}
-						else if( indicator === " " && /[\.,:;?\!]\s/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i+1 )) )
+						else if( indicator === " " && /[\.,:;?\!]\s/.test(line.substring((endCursor.ch+i-1),endCursor.ch+i+1 )) )
 						{
 							right--;
 						}
 					}
-					else if( curCursor.ch+i > line.length )
+					else if( endCursor.ch+i > line.length )
 					{
-						if( char.endLine === undefined )
+						if( char.endLine === undefined || char.endLine === true )
 						{
 							right = i;
 						}
@@ -419,7 +445,7 @@
 							right = false;
 						}
 					}
-					else if( char.start !== undefined && line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == char.start)
+					else if( char.start != char.end && char.start !== undefined && line.substring((endCursor.ch+i),endCursor.ch+(i+1)) == char.start)
 					{
 						right = false;
 					}
@@ -436,7 +462,7 @@
 						ch: parseInt(curCursor.ch)-parseInt(left)
 					}, {
 						line: curCursor.line,
-						ch: parseInt(curCursor.ch)+parseInt(right)
+						ch: parseInt(endCursor.ch)+parseInt(right)
 					});
 				}
 				if( left !== false && right !== false )
