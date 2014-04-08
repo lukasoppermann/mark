@@ -212,7 +212,12 @@
 						});
 						if(boundaries === false)
 						{
-							boundaries = options.fn.getWordBoundaries(cm, true);
+							boundaries = options.fn.getWordBoundaries(cm, true,{
+								start:' ',
+								end: ' ',
+								include: false,
+								endLine: true
+							});
 							sel = cm.getSelection();
 							//
 							if(sel.substr(0,4) === 'www.' || sel.substr(0,7) === 'http://' || sel.substr(0,8) === 'https://')
@@ -226,7 +231,24 @@
 									cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch+1}, {line:endCursor.line,ch:cm.getCursor(true).ch+5});
 								}, 10);
 							}
-							
+							else
+							{
+								boundaries = options.fn.getWordBoundaries(cm, true, {
+									start:'<',
+									end: '>',
+									include: false,
+									endLine: false
+								});
+								if(boundaries !== false)
+								{
+									sel = cm.getSelection();
+									sel = sel.substring(1,sel.length-1);
+									cm.replaceSelection( sel,'around');
+									setTimeout(function () {
+										cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch}, {line:endCursor.line,ch:cm.getCursor(false).ch});
+									}, 10);
+								}
+							}
 						}
 			      curCursor = cm.getCursor(true);
 			      endCursor = cm.getCursor(false);
@@ -368,14 +390,14 @@
 					if( line.substring((curCursor.ch-i),curCursor.ch-(i-1)) == indicator )
 					{
 						left = i;
-						if( char.include === undefined )
+						if( char.include === undefined || char.include === false )
 						{
 							left = i-1;
 						}
 					}
 					else if( curCursor.ch-i < 0 )
 					{
-						if( char.endLine === undefined )
+						if( char.endLine === undefined || char.endLine === true )
 						{
 							left = i;
 						}
@@ -399,7 +421,7 @@
 					if( (indicator === " " && /[\.,:;?\!]\s/.test(line.substring((curCursor.ch+i-1),curCursor.ch+i+1 ))) || line.substring((curCursor.ch+i),curCursor.ch+(i+1)) == indicator )
 					{
 						right = i;
-						if( char.include !== undefined )
+						if( char.include !== undefined || char.include === false )
 						{
 							right++;
 						}
@@ -410,7 +432,7 @@
 					}
 					else if( curCursor.ch+i > line.length )
 					{
-						if( char.endLine === undefined )
+						if( char.endLine === undefined || char.endLine === true )
 						{
 							right = i;
 						}
