@@ -217,9 +217,13 @@
 							//
 							if(sel.substr(0,4) === 'www.' || sel.substr(0,7) === 'http://' || sel.substr(0,8) === 'https://')
 							{
-								cm.replaceSelection( '['+sel+'](http://)','around');
+								if(sel.substr(0,4) === 'www.')
+								{
+									sel = 'http://'+sel;
+								}
+								cm.replaceSelection( '[link]('+sel+')','around');
 								setTimeout(function () {
-									cm.setCursor({line:endCursor.line,ch:cm.getCursor(false).ch-1});
+									cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch+1}, {line:endCursor.line,ch:cm.getCursor(true).ch+5});
 								}, 10);
 							}
 							
