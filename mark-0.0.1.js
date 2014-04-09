@@ -6,6 +6,12 @@
 	    return this.replace(/^\s+|\s+$/gm, '');
 	  };
 	}
+	if (!document.getElementsByClassName) {
+		document.getElementsByClassName = function (classNames) {
+	    classNames = String(classNames).replace(/^|\s+/g, '.');
+	    return document.querySelectorAll(classNames);
+	  };
+	}
 	/* ------------------ */
 	// options object that holds all settings
 	var options = {
