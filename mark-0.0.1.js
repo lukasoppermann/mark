@@ -207,18 +207,56 @@
 		            endCursor.ch -= selAdd*2;
 		          }
 						}
+		        // restore position
+		        cm.setSelection({
+		          line: curCursor.line,
+		          ch: curCursor.ch
+		        }, {
+		          line: endCursor.line,
+		          ch: endCursor.ch
+		        });
 					}
 					else if( params.format === 'link' )
 					{
-						var boundaries = options.fn.getWordBoundaries(cm, true, {
-							start:'[',
-							end: ']',
-							include: true,
-							endLine: false
-						});
-						if(boundaries === false)
+						if( options.fn.getWordBoundaries(cm, true, { start:'[', end: ')', include: true, endLine: false }) )
 						{
-							boundaries = options.fn.getWordBoundaries(cm, true,{
+							// remove link in []
+							cm.setCursor({line:cm.getCursor(true).line, ch:cm.getCursor(true).ch+1});
+							options.fn.getWordBoundaries(cm, true, { start:'[', end: ']', include: true, endLine: false });
+							sel = cm.getSelection();
+							cm.replaceSelection( sel.substring(1,sel.length-1),'around');
+							var selection = {
+								start:{line:cm.getCursor(true).line, ch:cm.getCursor(true).ch},
+								end:{line:cm.getCursor(false).line, ch:cm.getCursor(false).ch}
+							};
+							// remove link in ()
+							cm.setCursor({line:cm.getCursor(false).line, ch:cm.getCursor(false).ch+1});
+							options.fn.getWordBoundaries(cm, true, {
+								start:'(',
+								end: ')',
+								include: true,
+								endLine: false
+							});
+							sel = cm.getSelection();
+							cm.replaceSelection( '','around');
+							// reset selection
+							setTimeout(function () {
+								cm.setSelection(selection.start, selection.end);
+							}, 10);
+						}
+						else if( options.fn.getWordBoundaries(cm, true, { start:'<', end: '>', include: true, endLine: false }) )
+						{
+							sel = cm.getSelection();
+							sel = sel.substring(1,sel.length-1);
+							cm.replaceSelection( sel,'around');
+							// reset selection
+							setTimeout(function () {
+								cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch}, {line:endCursor.line,ch:cm.getCursor(false).ch});
+							}, 10);
+						}
+						else
+						{
+							options.fn.getWordBoundaries(cm, true,{
 								start:' ',
 								end: ' ',
 								include: false,
@@ -233,62 +271,13 @@
 									sel = 'http://'+sel;
 								}
 								cm.replaceSelection( '[link]('+sel+')','around');
+								// reset selection
 								setTimeout(function () {
 									cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch+1}, {line:endCursor.line,ch:cm.getCursor(true).ch+5});
 								}, 10);
 							}
-							else
-							{
-								boundaries = options.fn.getWordBoundaries(cm, true, {
-									start:'<',
-									end: '>',
-									include: true,
-									endLine: false
-								});
-								if(boundaries !== false)
-								{
-									sel = cm.getSelection();
-									sel = sel.substring(1,sel.length-1);
-									cm.replaceSelection( sel,'around');
-									setTimeout(function () {
-										cm.setSelection({line:endCursor.line,ch:cm.getCursor(true).ch}, {line:endCursor.line,ch:cm.getCursor(false).ch});
-									}, 10);
-								}
-							}
 						}
-						else
-						{
-							sel = cm.getSelection();
-							cm.replaceSelection( sel.substring(1,sel.length-1),'around');
-							var selection = {
-								start:{line:cm.getCursor(true).line, ch:cm.getCursor(true).ch},
-								end:{line:cm.getCursor(false).line, ch:cm.getCursor(false).ch}
-							};
-							cm.setCursor({line:cm.getCursor(false).line, ch:cm.getCursor(false).ch+1});
-							boundaries = options.fn.getWordBoundaries(cm, true, {
-								start:'(',
-								end: ')',
-								include: true,
-								endLine: false
-							});
-							sel = cm.getSelection();
-							cm.replaceSelection( '','around');
-							
-							setTimeout(function () {
-								cm.setSelection(selection.start, selection.end);
-							}, 10);
-						}
-			      curCursor = cm.getCursor(true);
-			      endCursor = cm.getCursor(false);
 					}
-	        // restore position
-	        cm.setSelection({
-	          line: curCursor.line,
-	          ch: curCursor.ch
-	        }, {
-	          line: endCursor.line,
-	          ch: endCursor.ch
-	        });
 	      }
 				// add
 				else
