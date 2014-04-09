@@ -6,6 +6,12 @@
 	    return this.replace(/^\s+|\s+$/gm, '');
 	  };
 	}
+	if (!document.getElementsByClassName) {
+		document.getElementsByClassName = function (classNames) {
+	    classNames = String(classNames).replace(/^|\s+/g, '.');
+	    return document.querySelectorAll(classNames);
+	  };
+	}
 	/* ------------------ */
 	// options object that holds all settings
 	var options = {
@@ -219,7 +225,6 @@
 								endLine: true
 							});
 							sel = cm.getSelection();
-							console.log(sel);
 							//
 							if(sel.substr(0,4) === 'www.' || sel.substr(0,7) === 'http://' || sel.substr(0,8) === 'https://')
 							{
@@ -250,6 +255,28 @@
 									}, 10);
 								}
 							}
+						}
+						else
+						{
+							sel = cm.getSelection();
+							cm.replaceSelection( sel.substring(1,sel.length-1),'around');
+							var selection = {
+								start:{line:cm.getCursor(true).line, ch:cm.getCursor(true).ch},
+								end:{line:cm.getCursor(false).line, ch:cm.getCursor(false).ch}
+							};
+							cm.setCursor({line:cm.getCursor(false).line, ch:cm.getCursor(false).ch+1});
+							boundaries = options.fn.getWordBoundaries(cm, true, {
+								start:'(',
+								end: ')',
+								include: true,
+								endLine: false
+							});
+							sel = cm.getSelection();
+							cm.replaceSelection( '','around');
+							
+							setTimeout(function () {
+								cm.setSelection(selection.start, selection.end);
+							}, 10);
 						}
 			      curCursor = cm.getCursor(true);
 			      endCursor = cm.getCursor(false);
@@ -420,8 +447,6 @@
 				while( right === undefined  )
 				{
 					///[\.\s,:;?\!]/
-					
-					console.log('##'+line.substring((endCursor.ch+i-1),endCursor.ch+(i))+'=='+indicator+'##');
 					if( (indicator === " " && /[\.,:;?\!]\s/.test(line.substring((endCursor.ch+i-1),endCursor.ch+i+1 ))) || line.substring((endCursor.ch+i-1),endCursor.ch+(i)) == indicator )
 					{
 						right = i;
