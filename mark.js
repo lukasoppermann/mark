@@ -1,6 +1,6 @@
 (function(window, document, define, undefined){
 	// --------------------------
-	// polyfills
+	// POLYFILLS
 	if (!String.prototype.trim) {
 	  String.prototype.trim = function () {
 	    return this.replace(/^\s+|\s+$/gm, '');
@@ -755,15 +755,20 @@
 	};
 	// --------------------------
 	// mark
-
+	// function mark( selection, opts ){
+	// 	return new mark.init(selection, opts);
+	//   };
+	var mark = {};
 	// --------------------------
 	// export mark
 	if ( typeof define === "function" && define.amd ) {
 		define(['codemirror/lib/codemirror','codemirror/mode/xml/xml','codemirror/mode/markdown/markdown','codemirror/mode/gfm/gfm','codemirror/mode/javascript/javascript','codemirror/mode/css/css','codemirror/mode/htmlmixed/htmlmixed','codemirror/addon/fold/markdown-fold','codemirror/addon/fold/xml-fold','codemirror/addon/edit/continuelist','codemirror/addon/edit/matchbrackets', 'codemirror/addon/edit/closebrackets', 'codemirror/addon/edit/matchtags','codemirror/addon/edit/trailingspace','codemirror/addon/edit/closetag','codemirror/addon/display/placeholder','codemirror/addon/mode/overlay'], function(CodeMirror){
-			return mark = function( mark, opts )
+			//
+			mark.version = '0.9.1';
+			mark.init = function( editor, opts )
 			{
 				// loop through editors
-				Array.prototype.slice.call(mark,0).forEach(function(editor, index){
+				Array.prototype.slice.call(editor,0).forEach(function(editor, index){
 					// init codemirror
 					cms[index] = CodeMirror.fromTextArea(editor, extend(
 					{
@@ -825,8 +830,18 @@
 							}
 						});
 					});
+					//
 				});
 			};
+			//
+			mark.get = function(editor){
+				var output = [];
+				Array.prototype.slice.call(editor,0).forEach(function(editor, index){
+					output[index] = cms[index].getValue();
+				});
+				return output;
+			}
+			return mark;
 		});
 	}
 	else{
