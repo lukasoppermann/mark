@@ -1,5 +1,5 @@
 {
-	"name": "mark",
+"name": "mark",
   "main": "mark.js",
   "version": "0.9.1",
   "homepage": "https://github.com/lukasoppermann/mark",
@@ -22,7 +22,7 @@
     "test",
     "tests"
   ],
-	"dependencies": {
-		"codemirror": "latest"
-	}
+"dependencies": {
+"codemirror": "latest"
+}
 }
