@@ -1,28 +1,23 @@
 {
-	"name": "mark",
-	"main": "mark.js",
-	"version": "0.9.1",
-	"homepage": "https://github.com/lukasoppermann/mark",
-	"authors": [
-		"Lukas Oppermann <lukas@vea.re>"
-	],
-	"description": "A what you see is kindof what you get markdown editor based on codemirror.",
-	"keywords": [
-		"markdown",
-		"wysiwyg",
-		"editor",
-		"wysiwyg",
-		"editor"
-	],
-	"license": "MIT",
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"dependencies": {
-		"codemirror": "latest"
-	}
+  "name": "mark",
+  "main": "mark.js",
+  "version": "0.9.1",
+  "homepage": "https://github.com/lukasoppermann/mark",
+  "authors": [
+    "Lukas Oppermann <lukas@vea.re>"
+  ],
+  "description": "A what you see is kindof what you get markdown editor based on codemirror.",
+  "keywords": [
+    "markdown",
+    "wysiwyg",
+    "editor"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
