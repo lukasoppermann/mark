@@ -6,7 +6,7 @@
   "authors": [
     "Lukas Oppermann"
   ],
-  "description": "A 'what you see is kindof what you get' markdown editor based on codemirror.",
+  "description": "A what you see is kindof what you get markdown editor based on codemirror.",
   "keywords": [
     "markdown",
     "wysiwyg",
