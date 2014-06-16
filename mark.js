@@ -6,12 +6,6 @@
 	    return this.replace(/^\s+|\s+$/gm, '');
 	  };
 	}
-	if (!document.getElementsByClassName) {
-		document.getElementsByClassName = function (classNames) {
-	    classNames = String(classNames).replace(/^|\s+/g, '.');
-	    return document.querySelectorAll(classNames);
-	  };
-	}
 	/* ------------------ */
 	// options object that holds all settings
 	var options = {
@@ -573,6 +567,8 @@
 			}
 		}
 	},
+	// store editor instances
+	editors = [],
 	/* ------------------ */
 	//
 	/* functions */
@@ -734,35 +730,75 @@
 				}
 			}, 100);
 		}
-	},
-	// extend fn
-	extend = function(obj, extend) {
-	  for(i in extend)
-		{
-			if( typeof(obj[i]) === 'object' && obj.hasOwnProperty(i) )
-			{
-			  for(a in extend[i])
-				{
-					obj[i][a] = extend[i][a];
-				}
-			}
-			else
-			{
-	   		obj[i] = extend[i];
-			}
-		}
-		return obj;
 	};
-	// --------------------------
-	// mark
-	// function mark( selection, opts ){
-	// 	return new mark.init(selection, opts);
-	//   };
-	var mark = {};
+
+	// var mark = {};
 	// --------------------------
 	// export mark
 	if ( typeof define === "function" && define.amd ) {
-		define(['codemirror/lib/codemirror','codemirror/mode/xml/xml','codemirror/mode/markdown/markdown','codemirror/mode/gfm/gfm','codemirror/mode/javascript/javascript','codemirror/mode/css/css','codemirror/mode/htmlmixed/htmlmixed','codemirror/addon/fold/markdown-fold','codemirror/addon/fold/xml-fold','codemirror/addon/edit/continuelist','codemirror/addon/edit/matchbrackets', 'codemirror/addon/edit/closebrackets', 'codemirror/addon/edit/matchtags','codemirror/addon/edit/trailingspace','codemirror/addon/edit/closetag','codemirror/addon/display/placeholder','codemirror/addon/mode/overlay'], function(CodeMirror){
+		define(['engine/engine','codemirror/lib/codemirror','engine/functions/each','codemirror/mode/xml/xml','codemirror/mode/markdown/markdown','codemirror/mode/gfm/gfm','codemirror/mode/javascript/javascript','codemirror/mode/css/css','codemirror/mode/htmlmixed/htmlmixed','codemirror/addon/fold/markdown-fold','codemirror/addon/fold/xml-fold','codemirror/addon/edit/continuelist','codemirror/addon/edit/matchbrackets', 'codemirror/addon/edit/closebrackets', 'codemirror/addon/edit/matchtags','codemirror/addon/edit/trailingspace','codemirror/addon/edit/closetag','codemirror/addon/display/placeholder','codemirror/addon/mode/overlay'], function(_, CodeMirror){
+			//
+			// --------------------------
+			// mark
+			function mark( selector, opts ){
+				var current = [];
+				_(selector).each(function(editor){
+					var id = editor.getAttribute('data-editorid');
+					if( id !== undefined && editors[id] !== undefined )
+					{
+						current.push(editors[id])
+					}
+					else
+					{
+						var newEditor = CodeMirror.fromTextArea(editor, _.extend(
+						{
+							theme: "mark",
+							// value: "function myScript(){return 100;}\n",
+							mode: {
+								name: "gfm",
+								highlightFormatting: true
+							},
+							lineNumbers: true,
+							addModeClass: false,
+							lineWrapping: true,
+							flattenSpans: true,
+							cursorHeight: 1,
+							matchBrackets: true,
+							autoCloseBrackets: { pairs: "()[]{}''\"\"", explode: "{}" },
+							matchTags: true,
+							showTrailingSpace: true,
+							autoCloseTags: true,
+							styleSelectedText: false,
+							styleActiveLine: true,
+							placeholder: "",
+							// excludePanel: ['code'],
+							tabMode: 'indent',
+							tabindex: "2",
+							dragDrop: false,
+							extraKeys: {
+								"Enter": "newlineAndIndentContinueMarkdownList",
+								"Cmd-B": function(){
+									options.fn.toggleFormat(cms[index],'strong');
+								},
+								"Ctrl-B": function(){
+									options.fn.toggleFormat(cms[index],'strong');
+								},
+								"Cmd-I": function(){
+									options.fn.toggleFormat(cms[index],'em');
+								},
+								"Ctrl-I": function(){
+									options.fn.toggleFormat(cms[index],'em');
+								}
+							}
+						},opts));
+						editors.push(newEditor);
+						editor.setAttribute('data-editorid', editors.length-1);
+						current.push(newEditor);
+					}
+				});
+				current.get = mark.get;
+				return current;
+			};
 			//
 			mark.version = '0.9.1';
 			mark.init = function( editor, opts )
@@ -770,7 +806,7 @@
 				// loop through editors
 				Array.prototype.slice.call(editor,0).forEach(function(editor, index){
 					// init codemirror
-					cms[index] = CodeMirror.fromTextArea(editor, extend(
+					cms[index] = CodeMirror.fromTextArea(editor, _.extend(
 					{
 						theme: "mark",
 						// value: "function myScript(){return 100;}\n",
@@ -836,8 +872,8 @@
 			//
 			mark.get = function(editor){
 				var output = [];
-				Array.prototype.slice.call(editor,0).forEach(function(editor, index){
-					output[index] = cms[index].getValue();
+				this.forEach(function(editor, id){
+					output[id] = editors[id].getValue();
 				});
 				return output;
 			}
@@ -850,7 +886,7 @@
 			// loop through editors
 			Array.prototype.slice.call(mark,0).forEach(function(editor, index){
 				// init codemirror
-				cms[index] = CodeMirror.fromTextArea(editor, extend(
+				cms[index] = CodeMirror.fromTextArea(editor, _.extend(
 				{
 					theme: "mark",
 					// value: "function myScript(){return 100;}\n",
