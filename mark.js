@@ -658,12 +658,15 @@
 			// additional function
 			mark.fn = mark.prototype = {
 				// get plain content of editor
-				get: function(){
-					var output = [];
+				get: function(firstOnly){
+					var output = {};
 					this.forEach(function(editor){
 						var id = editor.getTextArea().getAttribute('data-editorid');
 						output[id] = mark.editors[id].getValue();
 					});
+					if( firstOnly === true ){
+						return output[Object.keys(output)[0]];
+					}
 					return output;
 				}
 			};
