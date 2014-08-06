@@ -1,4 +1,4 @@
-var f, editOptions = function(cm, options)
+var f, editOptions = function(cm)
 {
 	// get element
 	var editor = cm.display.wrapper,
@@ -78,7 +78,7 @@ var f, editOptions = function(cm, options)
 					{
 						params = '{"level":2}';
 					}
-					options.fn.toggleFormat(cm, e.target.getAttribute('data-format'), JSON.parse( params ));
+					mark.options.fn.toggleFormat(cm, e.target.getAttribute('data-format'), JSON.parse( params ));
 					panel.classList.toggle(e.target.getAttribute('data-class'));
 					// set focus
 					cm.focus();
@@ -86,13 +86,13 @@ var f, editOptions = function(cm, options)
 			}
 			// check which elements are active
 			var add = '', remove = '';
-			options.fn.hasFormat(cm, 'strong') ? add += 'strong, ' : remove += 'strong, ';
-			options.fn.hasFormat(cm, 'em') ? add += 'em, ' : remove += 'em, ';
-			options.fn.hasFormat(cm, 'quote') === 1 ? add += 'quote-1, ' : remove += 'quote-1, ';
-			options.fn.hasFormat(cm, 'quote') === 2 ? add += 'quote-2, ' : remove += 'quote-2, ';
-			options.fn.hasFormat(cm, 'header') === 1 ? add += 'header1, ' : remove += 'header1, ';
-			options.fn.hasFormat(cm, 'header') === 2 ? add += 'header2, ' : remove += 'header2, ';
-			options.fn.hasFormat(cm, 'link') ? add += 'link, ' : remove += 'link, ';
+			mark.options.fn.hasFormat(cm, 'strong') ? add += 'strong, ' : remove += 'strong, ';
+			mark.options.fn.hasFormat(cm, 'em') ? add += 'em, ' : remove += 'em, ';
+			mark.options.fn.hasFormat(cm, 'quote') === 1 ? add += 'quote-1, ' : remove += 'quote-1, ';
+			mark.options.fn.hasFormat(cm, 'quote') === 2 ? add += 'quote-2, ' : remove += 'quote-2, ';
+			mark.options.fn.hasFormat(cm, 'header') === 1 ? add += 'header1, ' : remove += 'header1, ';
+			mark.options.fn.hasFormat(cm, 'header') === 2 ? add += 'header2, ' : remove += 'header2, ';
+			mark.options.fn.hasFormat(cm, 'link') ? add += 'link, ' : remove += 'link, ';
 			// add & remove classes
 			_(panel).addClass(add.replace(/\,\s+$/gm, ''));
 			_(panel).removeClass(remove.replace(/\,\s+$/gm, ''));

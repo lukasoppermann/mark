@@ -22,7 +22,6 @@
   ],
   "dependencies": {
     "engine": "*",
-    "codemirror": "~4.2.*",
-    "mark": "*"
+    "codemirror": "~4.2.*"
   }
 }

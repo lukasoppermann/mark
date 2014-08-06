@@ -18,11 +18,21 @@
 	if ( typeof define === "function" && define.amd ) {
 		define(
 			[
-			'engine/engine','codemirror/lib/codemirror','engine/functions/each','engine/functions/addclass','engine/functions/removeclass','engine/functions/hasclass','mark/plugins/panel','codemirror/mode/xml/xml','codemirror/mode/markdown/markdown','codemirror/mode/gfm/gfm','codemirror/mode/javascript/javascript','codemirror/mode/css/css','codemirror/mode/htmlmixed/htmlmixed','codemirror/addon/fold/markdown-fold','codemirror/addon/fold/xml-fold','codemirror/addon/edit/continuelist','codemirror/addon/edit/matchbrackets', 'codemirror/addon/edit/closebrackets', 'codemirror/addon/edit/matchtags','codemirror/addon/edit/trailingspace','codemirror/addon/edit/closetag','codemirror/addon/display/placeholder','codemirror/addon/mode/overlay'
+			'engine/engine','codemirror/lib/codemirror','engine/functions/each','engine/functions/class','mark/plugins/panel','codemirror/mode/xml/xml','codemirror/mode/markdown/markdown','codemirror/mode/gfm/gfm','codemirror/mode/javascript/javascript','codemirror/mode/css/css','codemirror/mode/htmlmixed/htmlmixed','codemirror/addon/fold/markdown-fold','codemirror/addon/fold/xml-fold','codemirror/addon/edit/continuelist','codemirror/addon/edit/matchbrackets', 'codemirror/addon/edit/closebrackets', 'codemirror/addon/edit/matchtags','codemirror/addon/edit/trailingspace','codemirror/addon/edit/closetag','codemirror/addon/display/placeholder','codemirror/addon/mode/overlay'
 			], function(_, CodeMirror){
+			// --------------------------
+			// define mark
+			mark = function( selector, opts ){
+				if( selector !== undefined ){
+					// define selection and editors if undefined
+					mark.selection = [];
+					// return markl object with fns
+					return mark.init(selector, opts);
+				}
+			};
 			/* ------------------ */
-			// options object that holds all settings
-			var options = {
+			// options
+			mark.options = {
 				fn: {
 					// format
 					toggleFormat: function(cm, format, params)
@@ -35,18 +45,18 @@
 						if( format === 'strong' || format === 'em' )
 						{
 							params.indicator = inline[format];
-							options.fn.inlineFormat(cm, params);
+							mark.options.fn.inlineFormat(cm, params);
 						}
 						else if( format === 'link' )
 						{
 							params.indicator = inline[format];
-							options.fn.inlineFormat(cm, params);
+							mark.options.fn.inlineFormat(cm, params);
 						}
 						// if block
 						if( format === 'header' || format === 'quote' )
 						{
 							params.indicator = block[format];
-							options.fn.blockFormatFront(cm, params);
+							mark.options.fn.blockFormatFront(cm, params);
 						}
 						else if( format === 'code' )
 						{
@@ -56,7 +66,7 @@
 					// blockFormatFront
 					blockFormatFront: function( cm, params )
 					{
-						var level = options.fn.hasFormat(cm, params.format),
+						var level = mark.options.fn.hasFormat(cm, params.format),
 			          curCursor = cm.getCursor(true),
 			          endCursor = cm.getCursor(false);
 						// trim line
@@ -131,7 +141,7 @@
 							ch: 0
 						}, {
 							line: endCursor.line,
-							ch: options.fn.getLineEndPos(cm, false).ch
+							ch: mark.options.fn.getLineEndPos(cm, false).ch
 						});
 					},
 					// inlineFormat
@@ -142,7 +152,7 @@
 			      endCursor = cm.getCursor(false),
 			      selAdd = 0;
 			      // remove
-						if( options.fn.hasFormat(cm, params.format) !== false )
+						if( mark.options.fn.hasFormat(cm, params.format) !== false )
 						{
 							if( params.format === 'em' || params.format === 'strong' )
 							{
@@ -181,7 +191,7 @@
 								else
 								{
 									// select whole word
-									options.fn.getWordBoundaries(cm, true);
+									mark.options.fn.getWordBoundaries(cm, true);
 									sel = cm.getSelection();
 									// try replacing again
 									if( sel.search(re._) !== -1 ||  sel.search(re['*']) !== -1 )
@@ -226,11 +236,11 @@
 							}
 							else if( params.format === 'link' )
 							{
-								if( options.fn.getWordBoundaries(cm, true, { start:'[', end: ')', include: true, endLine: false }) )
+								if( mark.options.fn.getWordBoundaries(cm, true, { start:'[', end: ')', include: true, endLine: false }) )
 								{
 									// remove link in []
 									cm.setCursor({line:cm.getCursor(true).line, ch:cm.getCursor(true).ch+1});
-									options.fn.getWordBoundaries(cm, true, { start:'[', end: ']', include: true, endLine: false });
+									mark.options.fn.getWordBoundaries(cm, true, { start:'[', end: ']', include: true, endLine: false });
 									sel = cm.getSelection();
 									cm.replaceSelection( sel.substring(1,sel.length-1),'around');
 									var selection = {
@@ -239,7 +249,7 @@
 									};
 									// remove link in ()
 									cm.setCursor({line:cm.getCursor(false).line, ch:cm.getCursor(false).ch+1});
-									options.fn.getWordBoundaries(cm, true, {
+									mark.options.fn.getWordBoundaries(cm, true, {
 										start:'(',
 										end: ')',
 										include: true,
@@ -252,7 +262,7 @@
 										cm.setSelection(selection.start, selection.end);
 									}, 10);
 								}
-								else if( options.fn.getWordBoundaries(cm, true, { start:'<', end: '>', include: true, endLine: false }) )
+								else if( mark.options.fn.getWordBoundaries(cm, true, { start:'<', end: '>', include: true, endLine: false }) )
 								{
 									sel = cm.getSelection();
 									sel = sel.substring(1,sel.length-1);
@@ -264,7 +274,7 @@
 								}
 								else
 								{
-									options.fn.getWordBoundaries(cm, true,{
+									mark.options.fn.getWordBoundaries(cm, true,{
 										start:' ',
 										end: ' ',
 										include: false,
@@ -309,9 +319,9 @@
 							// only a carat is set, no selection
 							else
 							{
-								if( options.fn.inWord(cm) )
+								if( mark.options.fn.inWord(cm) )
 								{
-									options.fn.getWordBoundaries(cm, true);
+									mark.options.fn.getWordBoundaries(cm, true);
 									cm.replaceSelection(params.indicator[0]+cm.getSelection()+params.indicator[0],'around');
 			            curCursor.ch += params.indicator[0].length;
 			            endCursor.ch = curCursor.ch;
@@ -330,11 +340,11 @@
 						{
 							isInline = true;
 							// set selection to middle of selection
-							pos = options.fn.getMiddlePos(cm, false);
+							pos = mark.options.fn.getMiddlePos(cm, false);
 						}
 						else if( block.indexOf(format) !== -1){
 							isBlock = true;
-							pos = options.fn.getLineEndPos(cm);
+							pos = mark.options.fn.getLineEndPos(cm);
 						}
 						// check if any type is present
 						var type = cm.getTokenTypeAt({
@@ -547,17 +557,7 @@
 						return false;
 					}
 				}
-			},
-			// --------------------------
-			// define mark
-			mark = function( selector, opts ){
-				if( selector !== undefined ){
-					// define selection and editors if undefined
-					mark.selection = [];
-					// return markl object with fns
-					return mark.init(selector, opts);
-				}
-			};	
+			};
 			// chain fns to mark object
 			mark.chain = function( )
 			{
@@ -614,23 +614,21 @@
 							extraKeys: {
 								"Enter": "newlineAndIndentContinueMarkdownList",
 								"Cmd-B": function(){
-									options.fn.toggleFormat(mark.editors[id],'strong');
+									mark.options.fn.toggleFormat(mark.editors[id],'strong');
 								},
 								"Ctrl-B": function(){
-									options.fn.toggleFormat(mark.editors[id],'strong');
+									mark.options.fn.toggleFormat(mark.editors[id],'strong');
 								},
 								"Cmd-I": function(){
-									options.fn.toggleFormat(mark.editors[id],'em');
+									mark.options.fn.toggleFormat(mark.editors[id],'em');
 								},
 								"Ctrl-I": function(){
-									options.fn.toggleFormat(mark.editors[id],'em');
+									mark.options.fn.toggleFormat(mark.editors[id],'em');
 								}
 							}
 						},opts));
 						// add edit Options
-						newEditor.on("cursorActivity", function(){
-							editOptions(newEditor, options);
-						});
+						newEditor.on("cursorActivity", editOptions);
 						// blur
 						newEditor.on("focus", function(){
 							mark.editors.forEach(function(cmEditor){
@@ -656,6 +654,10 @@
 				return mark.chain();
 			};
 			// additional function
+			mark.preventDefault = function(){
+				event.preventDefault();
+			};
+			// additional function
 			mark.fn = mark.prototype = {
 				// get plain content of editor
 				get: function(firstOnly){
@@ -668,7 +670,27 @@
 						return output[Object.keys(output)[0]];
 					}
 					return output;
-				}
+				},
+				// disable
+				disable: function(){
+					this.forEach(function(editor){
+						var id = editor.getTextArea().getAttribute('data-editorid');
+						mark.editors[id].setOption("readOnly", "nocursor");
+						mark.editors[id].off("cursorActivity", editOptions);
+						mark.editors[id].on("mousedown", mark.preventDefault);
+						mark.editors[id].display.wrapper.classList.add('disabled');
+					});
+				},
+				// enable
+				enable: function(){
+					this.forEach(function(editor){
+						var id = editor.getTextArea().getAttribute('data-editorid');
+						mark.editors[id].setOption("readOnly", false);
+						mark.editors[id].on("cursorActivity", editOptions);
+						mark.editors[id].display.wrapper.classList.remove('disabled');
+						mark.editors[id].off("mousedown", mark.preventDefault);
+					});
+				},
 			};
 			// expose mark
 			return mark;
