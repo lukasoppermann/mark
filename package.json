@@ -1,0 +1,29 @@
+{
+  "name": "mark",
+  "version": "0.7.0",
+  "description": "A rich markdown editor.",
+  "main": "mark.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukasoppermann/mark.git"
+  },
+  "keywords": [
+    "markdown",
+    "wysiwyg",
+    "editor",
+    "codemirror"
+  ],
+  "author": {
+      "name": "Lukas Oppermann",
+      "email": "lukas@vea.re",
+      "url": "http://vea.re"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lukasoppermann/mark/issues"
+  },
+  "homepage": "https://github.com/lukasoppermann/mark#readme"
+}
