@@ -1,29 +1,16 @@
 (function(window, document, define, undefined){
-	// --------------------------
-	// polyfills
-	if (!String.prototype.trim) {
-	  String.prototype.trim = function () {
-	    return this.replace(/^\s+|\s+$/gm, '');
-	  };
-	}
-	if (!document.getElementsByClassName) {
-		document.getElementsByClassName = function (classNames) {
-	    classNames = String(classNames).replace(/^|\s+/g, '.');
-	    return document.querySelectorAll(classNames);
-	  };
-	}
 	/* ------------------ */
 	// options object that holds all settings
 	var options = {
 		fn: {
 			// format
 			toggleFormat: function(cm, format, params)
-	    {
-				var block = {'header':['#'], 'quote':['>'], 'code':['`']},
-	          inline = {'strong':['**'], 'em':['_'], 'link':['']};
-	      params = (params === undefined || params === null) ? {} : params;
+			{
+				var block = {'header':['#'], 'quote':['>'], 'code':['`']};
+				var inline = {'strong':['**'], 'em':['_'], 'link':['']};
+				var params = (params === undefined || params === null) ? {} : params;
 				params.format = format;
-	      // if inline
+	      		// if inline
 				if( format === 'strong' || format === 'em' )
 				{
 					params.indicator = inline[format];
@@ -60,9 +47,9 @@
 					ch:  cm.getLine(endCursor.line).length
 				});
 				cm.replaceSelection(cm.getSelection().trim());
-				
+
 				if( level !== false && typeof(level) === 'number' )
-				{					
+				{
 					cm.setSelection({
 						line: curCursor.line,
 						ch: 0
@@ -100,7 +87,7 @@
 						}
 						else
 						{
-							cm.replaceSelection( sel.substr(level + (sel.substr(level,level+1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');	
+							cm.replaceSelection( sel.substr(level + (sel.substr(level,level+1) == ' ' ? 1 : 0) ) + new Array( params.level + 1 ).join( params.indicator[0] )+' ');
 						}
 					}
 				}
@@ -692,7 +679,7 @@
 				var panelHeight = parseInt(window.getComputedStyle(panel).height.replace('px','')),
 						arrowHeight = panelHeight*.18,
 	          top = (coords.start.top-arrowHeight-panelHeight);
-	      // remove class
+	      	// remove class
 				panel.classList.remove('from-top');
 				if( top < 0 ){
 					top = (coords.end.bottom+arrowHeight);
