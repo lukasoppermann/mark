@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="author" content="Lukas Oppermann - vea.re" />
+	<meta name="description" content="" />
+	<meta name="robots" content="index,follow" />
+	<meta name="language" content="en" />
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1" name="viewport">
+	<link rel="stylesheet" type="text/css" href="../bower_components/codemirror/lib/codemirror.css" media="screen" />
+	<style type="text/css" media="screen">
+		/*------------------*/
+		/* Reset */
+		html, body{
+			padding: 0;
+			margin: 0;
+			width: 100%;
+			height: 100%;
+			position: relative;
+			color: rgb(0,0,0);
+			text-rendering: optimizeLegability;
+		}
+		/*------------------*/
+		body{
+			font-size: 0.625em; /* makes 1em 10px*/
+			font-family: "Helvetica Neue", Helvetica, Arial, Sans-serif;
+			font-weight: 400;
+			background: rgb(255,255,255);
+			overflow-y: scroll;
+			overflow-x: hidden;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="../mark.css" media="screen" />
+	<title>Mark</title>
+</head>
+<body>
+<textarea class="mark">
+some normal copy
+
+# MARK 0.1
+## headline 2
+### headline 3
+#### headline 4
+##### headline 5
+###### headline 6
+* item
+* item
+some normal copy
+
+  [LINK text](http://www.vea.re)
+
+<http://link.de>
+
+[LINK text](http://www.vea.re)  http://www.vea.re  [LINK text](http://www.vea.re)
+
+www.test.de
+
+Some Text **bold** and so on. A __whole__ pargraph. _Lorem_ ipsum ___dolor___ ***sit*** *amet*, _consectetur_ adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quisds nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est lorum.
+
+Test
+===
+
+*italic*
+
+1. List
+2. List
+
+- list
+- list
+
+- [ ] item
+- [x] done
+
+```javascript
+for (var i = 0; i < items.length; i++) {
+    console.log(items[i], i); // log them
+}
+```
+
+```html
+<html>
+<ul>
+	<li>list</li>
+</ul>
+</html>
+```
+
+```css
+#id{
+	color: red;
+}
+.class{
+	opacity: 0.5;
+}
+```
+
+> Quote
+>> quote in quote
+</textarea>
+<textarea class="mark">
+	Area 2
+</textarea>
+	<script charset="utf-8" src="../bower_components/codemirror/lib/codemirror.js"></script>
+	<script src="../bower_components/codemirror/mode/xml/xml.js"></script>
+	<script src="../bower_components/codemirror/mode/markdown/markdown.js"></script>
+	<script src="../bower_components/codemirror/mode/gfm/gfm.js"></script>
+	<script src="../bower_components/codemirror/mode/javascript/javascript.js"></script>
+	<script src="../bower_components/codemirror/mode/css/css.js"></script>
+	<script src="../bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+	<script src="../bower_components/codemirror/addon/fold/xml-fold.js"></script>
+	<script src="../bower_components/codemirror/addon/edit/continuelist.js"></script>
+	<script src="../bower_components/codemirror/addon/edit/matchbrackets.js"></script>
+	<script src="../bower_components/codemirror/addon/edit/closebrackets.js"></script>
+	<script src="../bower_components/codemirror/addon/edit/matchtags.js"></script>
+	<script src="../bower_components/codemirror/addon/edit/trailingspace.js"></script>
+	<script src="../bower_components/codemirror/addon/edit/closetag.js"></script>
+	<script src="../bower_components/codemirror/addon/selection/active-line.js"></script>
+	<script src="../bower_components/codemirror/addon/display/placeholder.js"></script>
+	<script src="../bower_components/codemirror/addon/mode/overlay.js"></script>
+	<script charset="utf-8" src="../mark.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		/* ------------------ */
+		//
+        function ready(fn) {
+          if (document.readyState != 'loading'){
+            fn();
+          } else {
+            document.addEventListener('DOMContentLoaded', fn);
+          }
+        }
+		var initMark = function(){
+            console.log(document.querySelectorAll('.mark'));
+            mark(document.querySelectorAll('.mark'), {
+                excludePanel: ['code'],
+                mode: {
+                    name: "gfm",
+                    highlightFormatting: true
+                }
+            });
+        }
+		/* RUN EDITOR */
+        ready(initMark);
+	</script>
+</body>
+</html>
