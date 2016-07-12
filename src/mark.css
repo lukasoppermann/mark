@@ -13,8 +13,11 @@
 .cm-s-mark.CodeMirror pre, .cm-s-mark.CodeMirror pre span{
 		line-height: 140%;
 }
-.cm-s-mark .CodeMirror-selected {
+.cm-s-mark.CodeMirror-focused .CodeMirror-selected {
 	background: rgb(180,215,255) !important;
+}
+.cm-s-mark:not(.CodeMirror-focused) .CodeMirror-selected {
+	background: transparent !important;
 }
 .cm-s-mark .CodeMirror-gutters {
 	background: rgba(0,0,0,0.05); border-right: 0px;
