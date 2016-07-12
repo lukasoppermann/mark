@@ -129,14 +129,35 @@ for (var i = 0; i < items.length; i++) {
           }
         }
 		var initMark = function(){
-            console.log(document.querySelectorAll('.mark'));
-            mark(document.querySelectorAll('.mark'), {
-                excludePanel: ['code'],
-                mode: {
-                    name: "gfm",
-                    highlightFormatting: true
-                }
-            });
+			// init codemirror
+			Array.prototype.forEach.call(document.querySelectorAll('.mark'), function(item){
+				item.editor = CodeMirror.fromTextArea(item,
+				{
+					theme: 'mark',
+					mode: {
+						name: 'gfm',
+						highlightFormatting: true
+					},
+					lineNumbers: true,
+					addModeClass: false,
+					lineWrapping: true,
+					flattenSpans: true,
+					cursorHeight: 1,
+					matchBrackets: true,
+					autoCloseBrackets: { pairs: '()[]{}\'\'""', explode: '{}' },
+					matchTags: true,
+					showTrailingSpace: true,
+					autoCloseTags: true,
+					styleSelectedText: false,
+					styleActiveLine: true,
+					placeholder: '',
+					excludePanel: ['code'],
+					tabMode: 'indent',
+					tabindex: '2',
+					dragDrop: false,
+				});
+				mark(item.editor);
+			});
         }
 		/* RUN EDITOR */
         ready(initMark);

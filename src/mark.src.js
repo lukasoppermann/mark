@@ -753,70 +753,36 @@
 	};
 	// --------------------------
 	// mark
-	var mark = function( mark )
+	var mark = function( editor )
 	{
-		// loop through editors
-		Array.prototype.slice.call(mark,0).forEach(function(editor, index){
-			// init codemirror
-			cms[index] = CodeMirror.fromTextArea(editor,
-			{
-				theme: 'mark',
-				mode: {
-					name: 'gfm',
-					highlightFormatting: true
-				},
-				lineNumbers: true,
-				addModeClass: false,
-				lineWrapping: true,
-				flattenSpans: true,
-				cursorHeight: 1,
-				matchBrackets: true,
-				autoCloseBrackets: { pairs: '()[]{}\'\'""', explode: '{}' },
-				matchTags: true,
-				showTrailingSpace: true,
-				autoCloseTags: true,
-				styleSelectedText: false,
-				styleActiveLine: true,
-				placeholder: '',
-				// excludePanel: ['code'],
-				tabMode: 'indent',
-				tabindex: '2',
-				dragDrop: false,
-				extraKeys: {
-					'Enter': 'newlineAndIndentContinueMarkdownList',
-					'Cmd-B': function(){
-						_toggleFormat(cms[index],'strong');
-					},
-					'Ctrl-B': function(){
-						_toggleFormat(cms[index],'strong');
-					},
-					'Cmd-I': function(){
-						_toggleFormat(cms[index],'em');
-					},
-					'Ctrl-I': function(){
-						_toggleFormat(cms[index],'em');
-					}
-				}
-			});
-			// add edit Options
-			cms[index].on('cursorActivity', function(){
-				editOptions(cms[index]);
-			});
-			// blur
-			cms[index].on('focus', function(){
-				cms.forEach(function(cmEditor){
-					if( cmEditor.length !== 0 && cmEditor.display.wrapper !== cms[index].display.wrapper )
-					{
-						// remove selection
-						cmEditor.setCursor({ch: cmEditor.getCursor(true).ch,line: cmEditor.getCursor(true).line});
-						// hide panel
-						var cmPanel = cmEditor.display.wrapper.getElementsByClassName('edit-options')[0];
-						if( cmPanel !== undefined ){
-							cmPanel.classList.remove('active');
-						}
-					}
-				});
-			});
+        editor.setOption("extraKeys", {
+            'Enter': 'newlineAndIndentContinueMarkdownList',
+            'Cmd-B': function(){
+                _toggleFormat(editor,'strong');
+            },
+            'Ctrl-B': function(){
+                _toggleFormat(editor,'strong');
+            },
+            'Cmd-I': function(){
+                _toggleFormat(editor,'em');
+            },
+            'Ctrl-I': function(){
+                _toggleFormat(editor,'em');
+            }
+        });
+    	// add edit Options
+		editor.on('cursorActivity', function(){
+			editOptions(editor);
+		});
+		// blur
+		editor.on('blur', function(){
+            // remove selection
+            editor.setCursor({ch: editor.getCursor(true).ch,line: editor.getCursor(true).line});
+            // hide panel
+            var cmPanel = editor.display.wrapper.querySelector('.edit-options');
+            if( cmPanel !== undefined ){
+                cmPanel.classList.remove('active');
+            }
 		});
 	};
 	return mark;
