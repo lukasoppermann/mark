@@ -614,11 +614,11 @@
 	        }
 	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('header') === -1 )
 	        {
-	              panelHtml += '<div data-class="header1" data-format="header" class="header mark-button"></div>';
+	              panelHtml += '<div data-class="header" data-format="header" class="header mark-button"></div>';
 	        }
 	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('quote') === -1 )
 	        {
-	              panelHtml += '<div data-class="quote" data-format="quote" data-parameters=\'{"level":1}\' class="quote mark-button"></div>';
+	              panelHtml += '<div data-class="quote" data-format="quote" class="quote mark-button"></div>';
 	        }
 	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('link') === -1 )
 	        {
@@ -635,20 +635,9 @@
 				// select elements
 				panel = editor.getElementsByClassName('edit-options')[0];
 				// add events
-				panel.addEventListener('click', function(e)
-				{
+				panel.addEventListener('click', function(e){
 					// run function
-					var params = e.target.getAttribute('data-parameters');
-					if( e.target.getAttribute('data-format') === 'quote' && ( panel.classList.contains('quote-1') || panel.classList.contains('quote-2')) )
-					{
-						params = '{"level":2}';
-					}
-					else if( e.target.getAttribute('data-format') === 'code' && ( panel.classList.contains('code-1') || panel.classList.contains('code-2')) )
-					{
-						params = '{"level":2}';
-					}
-					_toggleFormat(cm, e.target.getAttribute('data-format'), JSON.parse( params ));
-					panel.classList.toggle(e.target.getAttribute('data-class'));
+					_toggleFormat(cm, e.target.getAttribute('data-format'));
 					// set focus
 					cm.focus();
 				});
@@ -759,7 +748,7 @@
                 if( cmPanel !== undefined ){
                     cmPanel.classList.remove('active');
                 }
-            },500)
+            },750)
 		});
         // blur
 		editor.on('focus', function(){

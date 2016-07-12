@@ -137,14 +137,12 @@
 	transition: opacity .3s ease .1s, margin .3s ease .1s, transform 0 ease .4s;
 	-webkit-transition: opacity .3s ease .1s, margin .3s ease .1s, -webkit-transform 0 ease .4s;
 }
-.edit-options, .edit-options.active{
+.edit-options.active{
 	margin-top: 0;
 	display: block;
 	opacity: 1;
-	transition: opacity .3s ease .2s, margin .3s ease .1s, left .1s ease 0, transform 0 ease 0;
-	-webkit-transition: opacity .3s ease .2s, margin .3s ease .1s, left .1s ease 0, -webkit-transform 0 ease 0;
+	transition: opacity .5s ease .2s, margin .3s ease .1s, left .1s ease 0, transform 0 ease 0;
 	transform: translate(0,0);
-	-webkit-transform: translate(0,0);
 }
 .edit-options .panel-arrow{
 	width: 1.6em;
