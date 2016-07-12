@@ -557,14 +557,6 @@
 						}
 					}
 				}
-			},
-			hasClass: function(el, classname)
-			{
-				if( el.classList.contains(classname) )
-				{
-					return true;
-				}
-				return false;
 			}
 		}
 	},
@@ -574,8 +566,8 @@
 	cms = [], f, editOptions = function(cm)
 	{
 		// get element
-		var editor = cm.display.wrapper,
-				panel = editor.getElementsByClassName('edit-options')[0];
+		var editor = cm.display.wrapper;
+        var panel = editor.getElementsByClassName('edit-options')[0];
 		// clear timeout
 		window.clearTimeout(f);
 		// check for selection
@@ -638,11 +630,11 @@
 					{
 						// run function
 						var params = e.target.getAttribute('data-parameters');
-						if( e.target.getAttribute('data-format') === 'quote' && ( options.ffn.hasClass(panel, 'quote-1') || options.ffn.hasClass(panel, 'quote-2')) )
+						if( e.target.getAttribute('data-format') === 'quote' && ( panel.classList.contains('quote-1') || panel.classList.contains('quote-2')) )
 						{
 							params = '{"level":2}';
 						}
-						else if( e.target.getAttribute('data-format') === 'code' && ( options.ffn.hasClass(panel, 'code-1') || options.ffn.hasClass(panel, 'code-2')) )
+						else if( e.target.getAttribute('data-format') === 'code' && ( panel.classList.contains('code-1') || panel.classList.contains('code-2')) )
 						{
 							params = '{"level":2}';
 						}
