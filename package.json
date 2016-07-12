@@ -25,5 +25,32 @@
   "bugs": {
     "url": "https://github.com/lukasoppermann/mark/issues"
   },
-  "homepage": "https://github.com/lukasoppermann/mark#readme"
+  "homepage": "https://github.com/lukasoppermann/mark#readme",
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "coveralls": "^2.11.2",
+    "del": "2.x.x",
+    "gulp": "^3.8.11",
+    "gulp-jscs": "4.0.x",
+    "jshint": "2.x.x",
+    "gulp-jshint": "2.x.x",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-strip-code": "^0.1.2",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "^3.0.4",
+    "istanbul": "0.4.x",
+    "jquery": "^3.0.*",
+    "jsdom": "^9.2.1",
+    "jshint-stylish": "2.x.x",
+    "mocha": "^2.2.4",
+    "mocha-istanbul": "^0.2.0"
+    },
+    "scripts": {
+      "test": "npm run test-plugin && gulp test",
+      "travis": "npm run cover && ./node_modules/.bin/mocha test/umd/module.js && gulp test",
+      "test-plugin": "./node_modules/.bin/mocha test/umd/module.js && ./node_modules/.bin/mocha test/*.js",
+      "cover": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha test/*.js --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
+      "build": "gulp build"
+    }
 }
