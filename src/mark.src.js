@@ -217,9 +217,11 @@
      */
     var _hasFormat = function(cm, format)
     {
-        var block = ['header', 'quote', 'code'], isBlock = false,
-      inline = ['strong', 'em', 'link'], isInline = false,
-      pos;
+        var block = ['header', 'quote', 'code'];
+        var isBlock = false;
+        var inline = ['strong', 'em', 'link'];
+        var isInline = false;
+        var pos;
         // if inline
         if( inline.indexOf(format) !== -1 )
         {
@@ -453,9 +455,9 @@
      */
     var _blockFormatFront = function( cm, params )
     {
-        var level = _hasFormat(cm, params.format),
-      curCursor = cm.getCursor(true),
-      endCursor = cm.getCursor(false);
+        var level = _hasFormat(cm, params.format);
+        var curCursor = cm.getCursor(true);
+        var endCursor = cm.getCursor(false);
         // trim line
         cm.setSelection({
             line: curCursor.line,

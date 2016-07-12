@@ -185,9 +185,11 @@
 }
 /* edit Options content */
 .edit-options .mark-button{
-	width: 1.875em;
-	height: 2.4em;
-	margin: 1em;
+	/*width: 1.875em;
+	height: 2.4em;*/
+	width: 2em;
+	height: 1.6em;
+	margin: .75em .3rem;
 	padding: 0;
 	display: block;
 	-moz-box-sizing: border-box;
@@ -198,12 +200,12 @@
 	cursor: pointer;
 	background: transparent;
 }
-.edit-options .strong.mark-button{ width: 1.92em; }
-.edit-options .em.mark-button{ width: 1.08em; }
-.edit-options .header1.mark-button, .edit-options .header2.mark-button{ width: 3.4em; }
+.edit-options .strong.mark-button{ width: 1rem; }
+.edit-options .em.mark-button{ width: .8rem; }
+/*.edit-options .header1.mark-button, .edit-options .header2.mark-button{ width: 3.4em; }
 .edit-options .quote.mark-button{ width: 2.6em; }
 .edit-options .link.mark-button{ width: 2.64em; }
-.edit-options .code.mark-button{ width: 2.76em; }
+.edit-options .code.mark-button{ width: 2.76em; }*/
 .edit-options .mark-button:first-child{
 	border-top-left-radius: 2px;
 	border-bottom-left-radius: 2px;
@@ -215,9 +217,11 @@
 	margin-right: 1.25em;
 }
 .mark-icon{
-  display: inline-block;
+	display: inline-block;
 	pointer-events:none;
 	transition: fill .4s ease;
+	height: 16px;
+	width: 100%;
 }
 /*------------------------*/
 /* CUSTOMIZE */
