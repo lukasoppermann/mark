@@ -778,14 +778,20 @@
 		});
 		// blur
 		editor.on('blur', function(){
-            // remove selection
-            editor.setCursor({ch: editor.getCursor(true).ch,line: editor.getCursor(true).line});
-            // hide panel
-            var cmPanel = editor.display.wrapper.querySelector('.edit-options');
-            if( cmPanel !== undefined ){
-                cmPanel.classList.remove('active');
-            }
+            editor.timeout = window.setTimeout(function(){
+                // remove selection
+                editor.setCursor({ch: editor.getCursor(true).ch,line: editor.getCursor(true).line});
+                // hide panel
+                var cmPanel = editor.display.wrapper.querySelector('.edit-options');
+                if( cmPanel !== undefined ){
+                    cmPanel.classList.remove('active');
+                }
+            },500)
 		});
+        // blur
+		editor.on('focus', function(){
+            window.clearTimeout(editor.timeout);
+        });
 	};
 	return mark;
 	//

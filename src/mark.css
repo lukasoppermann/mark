@@ -189,7 +189,7 @@
 	height: 2.4em;*/
 	width: 2em;
 	height: 1.6em;
-	margin: .75em .3rem;
+	margin: .75em .3em;
 	padding: 0;
 	display: block;
 	-moz-box-sizing: border-box;
@@ -200,8 +200,8 @@
 	cursor: pointer;
 	background: transparent;
 }
-.edit-options .strong.mark-button{ width: 1rem; }
-.edit-options .em.mark-button{ width: .8rem; }
+.edit-options .strong.mark-button{ width: 1em; }
+.edit-options .em.mark-button{ width: .8em; }
 /*.edit-options .header1.mark-button, .edit-options .header2.mark-button{ width: 3.4em; }
 .edit-options .quote.mark-button{ width: 2.6em; }
 .edit-options .link.mark-button{ width: 2.64em; }
