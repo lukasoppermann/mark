@@ -21,7 +21,6 @@
     "tests"
   ],
   "dependencies": {
-    "engine": "*",
-    "codemirror": "~4.8.*"
+    "codemirror": "~5.1.*"
   }
 }
