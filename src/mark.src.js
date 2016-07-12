@@ -479,7 +479,7 @@
             // remove format
             if( level === params.level )
             {
-                cm.replaceSelection( sel.substr(params.level + (sel.substr(level) === ' ' ? 1 : 0) ) );
+                cm.replaceSelection( sel.substr(params.level + (sel.substr(level) == ' ' ? 1 : 0) ) );
             }
             // change format
             else if( level > params.level)
@@ -735,7 +735,8 @@
 				// set position
 				panel.style.left = left+'px';
 				// set arrow pos
-				panel.getElementsByClassName('panel-arrow')[0].style.left = (coords.start.left-left+(coords.end.left-coords.start.left)/2)+'px';
+				var leftPos = (coords.start.left-left+(coords.end.left-coords.start.left)/2);
+				panel.getElementsByClassName('panel-arrow')[0].style.left = (leftPos > 12 ? leftPos : 12)+'px';
 			// close timeout
 			}, 200);
 		}
