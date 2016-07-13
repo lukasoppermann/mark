@@ -537,7 +537,7 @@
     };
     /* ------------------------------
      *
-     * stoggle a format
+     * toggle a format
      *
      */
     var _toggleFormat = function(cm, format, params)
@@ -577,14 +577,118 @@
             formats[format].fn(cm, formats[format]);
         }
     };
-	/* ------------------ */
+    /* ------------------------------
+     *
+     * create new empty panel and attach to editor
+     *
+     * @return Node   panel
+     */
+    var _newPanel = function(editor, offset, classString){
+        // create panel
+        var panel = document.createElement('div');
+        // add class and attribute
+        panel.className = classString || 'panel active CodeMirror-panel';
+        panel.setAttribute('data-CodeMirror-panel', true);
+        // add offsets to panel
+        panel._offsetLeft = editor.charCoords({line:1, ch: 0},'local').left;
+        // attach to editor
+        editor.addWidget({line:0,ch:0},panel);
+        // return panel node
+        return panel;
+    };
+    /* ------------------------------
+     *
+     * get panel and open or close it
+     *
+     * @return Node   panel
+     */
+    var _panel = function(editor){
+        // get panel, create if it does not exists
+        if( !(panel = editor.display.wrapper.querySelector('[data-CodeMirror-panel]') )){
+            panel = _newPanel(editor);
+        }
+        // return panel
+        return panel;
+    };
+    /* ------------------------------
+     *
+     * get the current selection
+     *
+     */
+    var _getSelection = function(editor, panel){
+        // get selection coordinats
+        var selectionFrom       = editor.charCoords({line:editor.getCursor('from').line, ch: editor.getCursor('from').ch},'local');
+            selectionFrom.line  = editor.getCursor('from').line;
+        var selectionTo         = editor.charCoords({line:editor.getCursor('to').line, ch:editor.getCursor('to').ch },'local');
+            selectionTo.line    = editor.getCursor('to').line;
+        // return current selection
+        return {
+            get top(){
+                return Math.round(Math.min(selectionFrom.top, selectionTo.top));
+            },
+            get bottom(){
+                return Math.round(Math.max(selectionFrom.bottom, selectionTo.bottom));
+            },
+            get _firstLine(){
+                if(selectionFrom.line > selectionTo.line){
+                    return selectionTo;
+                }
+                return selectionFrom;
+            },
+            get _lastLine(){
+                if(selectionFrom.line > selectionTo.line){
+                    return selectionFrom;
+                }
+                return selectionTo;
+            },
+            get center(){
+                // set right to line end
+                var right = this._lastLine.right;
+                // change right if multiline
+                if(this._firstLine.line !== this._lastLine.line){
+                    right = editor.charCoords({line:this._firstLine.line, ch: editor.getLine(this._firstLine.line).length },'local').right;
+                }
+                // calc center
+                var center = this._firstLine.left - panel._offsetLeft + ( right - this._firstLine.left )/2;
+                return Math.round(center);
+            },
+            get centerLastLine(){
+                // var center = this.firstLine.left + ( editor.getLine(this.firstLine.line).length - this.firstLine.left )/2;
+                // return Math.round(center);
+            }
+        };
+    };
+    /* ------------------------------
+     *
+     * position panel and arrow
+     *
+     */
+    var _setPanelPosition = function(editor, panel){
+        // get current selection
+        var currentSelection = _getSelection(editor, panel);
+        // panel halfWidth
+        var panelHalfWidth = parseInt(window.getComputedStyle(panel).width.replace('px','')/2);
+        var panelHeight = parseInt(window.getComputedStyle(panel).height.replace('px',''));
+        // set position left
+        panel.style.left = (currentSelection.center - panelHalfWidth)+'px';
+        // set position top
+        var top = currentSelection.top - panelHeight;
+        console.log(top);
+        // if item is out of view
+        if( top < 10){
+            // show below line
+            top = currentSelection.bottom;
+        }
+        panel.style.top = top+'px';
+    };
+    /* ------------------ */
 	//
 	/* functions */
 	var cms = [];
     var f;
     var editOptions = function(cm)
 	{
-		// get element
+		// // get element
 		var editor = cm.display.wrapper;
         var panel = editor.getElementsByClassName('edit-options')[0];
 		// clear timeout
@@ -630,17 +734,17 @@
 	        }
 	        // add items to panel
 	        panel.innerHTML = panelHtml;
-				// add panel to editor
-				cm.addWidget({line:0,ch:0},panel);
-				// select elements
-				panel = editor.getElementsByClassName('edit-options')[0];
-				// add events
-				panel.addEventListener('click', function(e){
-					// run function
-					_toggleFormat(cm, e.target.getAttribute('data-format'));
-					// set focus
-					cm.focus();
-				});
+			// add panel to editor
+			cm.addWidget({line:0,ch:0},panel);
+			// select elements
+			panel = editor.querySelector('.edit-options');
+			// add events
+			panel.addEventListener('click', function(e){
+				// run function
+				_toggleFormat(cm, e.target.getAttribute('data-format'));
+				// set focus
+				cm.focus();
+			});
 			}
 				// check which elements are active
 				// normal elements
@@ -736,7 +840,9 @@
         });
     	// add edit Options
 		editor.on('cursorActivity', function(){
-			editOptions(editor);
+			var panel = _panel(editor);
+            _setPanelPosition(editor, panel);
+            editOptions(editor);
 		});
 		// blur
 		editor.on('blur', function(){
