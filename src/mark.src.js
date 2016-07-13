@@ -583,14 +583,15 @@
      *
      * @return Node   panel
      */
-    var _newPanel = function(editor, offset, classString){
+    var _newPanel = function(editor, contentFn){
         // create panel
         var panel = document.createElement('div');
         // add class and attribute
-        panel.className = classString || 'panel active CodeMirror-panel';
+        panel.className = 'active CodeMirror-panel';
         panel.setAttribute('data-CodeMirror-panel', true);
         // add offsets to panel
         panel._offsetLeft = editor.charCoords({line:1, ch: 0},'local').left;
+        panel.innerHTML = contentFn(editor);
         // attach to editor
         editor.addWidget({line:0,ch:0},panel);
         // return panel node
@@ -602,10 +603,10 @@
      *
      * @return Node   panel
      */
-    var _panel = function(editor){
+    var _panel = function(editor, contentFn){
         // get panel, create if it does not exists
         if( !(panel = editor.display.wrapper.querySelector('[data-CodeMirror-panel]') )){
-            panel = _newPanel(editor);
+            panel = _newPanel(editor, contentFn);
         }
         // return panel
         return panel;
@@ -653,8 +654,15 @@
                 return Math.round(center);
             },
             get centerLastLine(){
-                // var center = this.firstLine.left + ( editor.getLine(this.firstLine.line).length - this.firstLine.left )/2;
-                // return Math.round(center);
+                // set right to line end
+                var left = this._firstLine.left;
+                // change right if multiline
+                if(this._firstLine.line !== this._lastLine.line){
+                    left = editor.charCoords({line:this._lastLine.line, ch: 0 },'local').left;
+                }
+                // calc center
+                var center = left - panel._offsetLeft + ( this._lastLine.right - left )/2;
+                return Math.round(center);
             }
         };
     };
@@ -663,23 +671,32 @@
      * position panel and arrow
      *
      */
-    var _setPanelPosition = function(editor, panel){
+    var _setPanelPosition = function(editor, panel, customFn){
         // get current selection
         var currentSelection = _getSelection(editor, panel);
+        panel.position = currentSelection;
         // panel halfWidth
         var panelHalfWidth = parseInt(window.getComputedStyle(panel).width.replace('px','')/2);
         var panelHeight = parseInt(window.getComputedStyle(panel).height.replace('px',''));
-        // set position left
-        panel.style.left = (currentSelection.center - panelHalfWidth)+'px';
-        // set position top
-        var top = currentSelection.top - panelHeight;
-        console.log(top);
+        // set position
+        var left = currentSelection.center - panelHalfWidth;
+        var top  = currentSelection.top - panelHeight;
         // if item is out of view
         if( top < 10){
             // show below line
-            top = currentSelection.bottom;
+            top  = currentSelection.bottom;
+            left = currentSelection.centerLastLine - panelHalfWidth;
         }
+        // set left to 5 if left is small 5
+        if( left < 5){
+            left = 5;
+        }
+        // set style on panel
         panel.style.top = top+'px';
+        panel.style.left = left+'px';
+        panel.style.position = 'absolute';
+        // run custom fn
+        customFn(editor, panel);
     };
     /* ------------------ */
 	//
@@ -840,8 +857,41 @@
         });
     	// add edit Options
 		editor.on('cursorActivity', function(){
-			var panel = _panel(editor);
-            _setPanelPosition(editor, panel);
+			var panel = _panel(editor, function(cm){
+                panelHtml = '<div class="panel-arrow"></div>';
+                if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('strong') === -1 )
+    	        {
+    	          panelHtml += '<div data-class="strong" data-format="strong" class="strong mark-button"></div>';
+    	        }
+    	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('em') === -1 )
+    	        {
+    	              panelHtml += '<div data-class="em" data-format="em" class="em mark-button"></div>';
+    	        }
+    	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('header') === -1 )
+    	        {
+    	              panelHtml += '<div data-class="header" data-format="header" class="header mark-button"></div>';
+    	        }
+    	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('quote') === -1 )
+    	        {
+    	              panelHtml += '<div data-class="quote" data-format="quote" class="quote mark-button"></div>';
+    	        }
+    	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('link') === -1 )
+    	        {
+    	          panelHtml += '<div data-class="link" data-format="link" class="link mark-button"></div>';
+    	        }
+    	        if( cm.options.excludePanel === undefined || cm.options.excludePanel.indexOf('code') === -1 )
+    	        {
+    	          panelHtml += '<div data-class="code" data-format="code" data-parameters=\'{"level":1}\' class="code mark-button"></div>';
+    	        }
+                return '<div class="panel">'+panelHtml+'</div>';
+            });
+
+            _setPanelPosition(editor, panel, function(editor, panel){
+                console.log(panel.position);
+                if(panel.position.center < panel.position.left - parseInt(window.getComputedStyle(panel).width.replace('px','')/2)){
+                    panel.querySelector('.panel-arrow').style.left = '12px';
+                }
+            });
             editOptions(editor);
 		});
 		// blur

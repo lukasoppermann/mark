@@ -144,13 +144,12 @@
 	transition: opacity .5s ease .2s, margin .3s ease .1s, left .1s ease 0, transform 0 ease 0;
 	transform: translate(0,0);
 }
-.CodeMirror-panel{
-	width: 100px;
+.panel{
+	background: black;
 	height: 50px;
-	background: red;
+	width: 100px;
 }
-
-.edit-options .panel-arrow{
+.edit-options .panel-arrow, .panel-arrow{
 	width: 1.6em;
 	height: 1.6em;
 	position: absolute;
@@ -163,7 +162,7 @@
 	top: -1.5em;
 	bottom: auto;
 }
-.edit-options .panel-arrow:before, .edit-options .panel-arrow:after{
+.panel-arrow:before, .panel-arrow:after{
 	position: absolute;
 	top: 0;
 	left: 0;
