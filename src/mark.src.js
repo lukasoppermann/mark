@@ -587,7 +587,7 @@
         // create panel
         var panel = document.createElement('div');
         // add class and attribute
-        panel.className = 'active CodeMirror-panel';
+        panel.className = 'CodeMirror-panel active';
         panel.setAttribute('data-CodeMirror-panel', true);
         // add offsets to panel
         panel._offsetLeft = editor.charCoords({line:1, ch: 0},'local').left;
@@ -646,8 +646,13 @@
                 // set right to line end
                 var right = this._lastLine.right;
                 // change right if multiline
-                if(this._firstLine.line !== this._lastLine.line){
-                    right = editor.charCoords({line:this._firstLine.line, ch: editor.getLine(this._firstLine.line).length },'local').right;
+                var endOfLine = editor.coordsChar({
+                    left:editor.getScrollerElement().getBoundingClientRect().right,
+                    top:this._firstLine.top
+                });
+                // if line is wrapped
+                if(this._firstLine.line !== this._lastLine.line || editor.charCoords(endOfLine,'local').top < this._lastLine.top){
+                    right = editor.charCoords(endOfLine,'local').right;
                 }
                 // calc center
                 var center = this._firstLine.left - panel._offsetLeft + ( right - this._firstLine.left )/2;
@@ -887,7 +892,7 @@
             });
 
             _setPanelPosition(editor, panel, function(editor, panel){
-                console.log(panel.position);
+
                 if(panel.position.center < panel.position.left - parseInt(window.getComputedStyle(panel).width.replace('px','')/2)){
                     panel.querySelector('.panel-arrow').style.left = '12px';
                 }
